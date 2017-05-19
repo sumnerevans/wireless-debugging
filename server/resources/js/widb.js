@@ -2,6 +2,6 @@
  * widb.js
  */
 
-$(document).ready(function() {
+$(document).ready(() => {
     $('.log-panel-body').html('Hello world');
 });
