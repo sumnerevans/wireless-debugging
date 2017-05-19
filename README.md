@@ -17,6 +17,9 @@ WiDebug (widb)
         bottle
         markupsafe
         requests
+        gevent
+        gevent-websocket
+        PyYaml
 
 3. Run `compass compile`
 
