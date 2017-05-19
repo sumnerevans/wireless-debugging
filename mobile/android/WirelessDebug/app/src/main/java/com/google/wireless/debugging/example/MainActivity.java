@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.google.wireless.debugger.WirelessDebugger;
 import com.google.wireless.debugging.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -13,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        WirelessDebugger.start("NA", 0.0f);
 
         setContentView(R.layout.activity_fragment);
 
