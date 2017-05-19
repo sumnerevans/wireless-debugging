@@ -1,4 +1,6 @@
 .vim-template:*
+*/resources/css/*
+
 # Created by https://www.gitignore.io/api/python,android,androidstudio,appengine,vim,linux,windows,macos,sublimetext,gradle,java,jetbrains,pycharm,pydev,sass,xcode
 
 ### Android ###
