@@ -1,9 +1,11 @@
-package com.google.wireless.debugging;
+package com.google.wireless.debugging.app;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.google.wireless.debugging.R;
 
 public class MainActivity extends AppCompatActivity {
 

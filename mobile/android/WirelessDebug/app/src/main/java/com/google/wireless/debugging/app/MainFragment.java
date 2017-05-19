@@ -1,4 +1,4 @@
-package com.google.wireless.debugging;
+package com.google.wireless.debugging.app;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.google.wireless.debugging.R;
 
 public class MainFragment extends Fragment implements SensorEventListener {
 
