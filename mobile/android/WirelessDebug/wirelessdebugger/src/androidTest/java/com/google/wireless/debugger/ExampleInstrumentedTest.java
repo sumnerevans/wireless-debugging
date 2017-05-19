@@ -1,4 +1,4 @@
-package com.google.wireless.debugging;
+package com.google.wireless.debugger;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.google.wireless.debugging.test", appContext.getPackageName());
+        assertEquals("com.google.wireless.debugger.test", appContext.getPackageName());
     }
 }

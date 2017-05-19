@@ -1,4 +1,4 @@
-package com.google.wireless.debugging;
+package com.google.wireless.debugger;
 
 import org.junit.Test;
 

@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/WirelessDebug.iml" filepath="$PROJECT_DIR$/WirelessDebug.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wirelessdebugging/wirelessdebugging.iml" filepath="$PROJECT_DIR$/wirelessdebugging/wirelessdebugging.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wirelessdebugger/wirelessdebugger.iml" filepath="$PROJECT_DIR$/wirelessdebugger/wirelessdebugger.iml" />
     </modules>
   </component>
 </project>

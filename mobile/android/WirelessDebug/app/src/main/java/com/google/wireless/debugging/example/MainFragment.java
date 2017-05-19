@@ -1,4 +1,4 @@
-package com.google.wireless.debugging.app;
+package com.google.wireless.debugging.example;
 
 import android.content.Context;
 import android.hardware.Sensor;

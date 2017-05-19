@@ -1,4 +1,4 @@
-package com.google.wireless.debugging.app;
+package com.google.wireless.debugging.example;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

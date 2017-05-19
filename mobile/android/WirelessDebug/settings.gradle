@@ -1,1 +1,1 @@
-include ':app', ':wirelessdebugging'
+include ':app', ':wirelessdebugger'
