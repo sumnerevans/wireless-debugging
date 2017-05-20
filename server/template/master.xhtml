@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8" />
+    <title py:block="master_title">WiDb</title>
+    <link rel="stylesheet" media="screen" href="/resources/css/app.css" />
+    <script src="/resources/js/jquery-3.2.0.min.js"></script>
+    <script src="/resources/js/bootstrap.min.js"></script>
+    <script src="/resources/js/widb.js"></script>
+    <py:block name="head"></py:block>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fixed">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-content">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">WiDb</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-content">
+          <ul class="nav navbar-nav">
+            <li class="${('', 'active')[self.defined('page') and page=='index']}"><a href="/">Home</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <!-- Flash messages -->
+      <div py:if="self.defined('flash') and len(flash) &gt; 0">
+        <div class="row" id="flash">
+          <div class="col-md-8 col-md-offset-2 ${flash['cls']}">
+            ${flash['content']}
+          </div>
+        </div>
+      </div>
+      <!-- Main included content -->
+      <py:block name="body"></py:block>
+    </div>
+    <!-- Footer -->
+    <footer class="footer">
+      Made by Jonathan Sumner Evans, Amanda Giles, Reece Hughes, Daichi
+      Jameson, and Tiffany Kalin
+    </footer>
+  </body>
+</html>
