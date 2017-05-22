@@ -93,11 +93,12 @@ public class MainFragment extends Fragment implements SensorEventListener {
             public void onClick(View v) {
 
                 if (mLogAccelerometerData){
-                    mAccelerometerToggleButton.setText(R.string.stop_accel_data);
-                    mLogAccelerometerData = true;
-                } else {
                     mAccelerometerToggleButton.setText(R.string.start_accel_data);
                     mLogAccelerometerData = false;
+
+                } else {
+                    mAccelerometerToggleButton.setText(R.string.stop_accel_data);
+                    mLogAccelerometerData = true;
                 }
             }
         });
