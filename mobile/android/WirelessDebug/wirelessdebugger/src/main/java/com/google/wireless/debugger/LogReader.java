@@ -51,6 +51,8 @@ class LogReader implements Runnable {
         catch (IOException ioe) {
             Log.e(TAG, "IO Exception Occurred in run() thread " + ioe.toString());
         }
+
+        // Signals to owning service that thread operations are complete
         threadRunning = false;
     }
 

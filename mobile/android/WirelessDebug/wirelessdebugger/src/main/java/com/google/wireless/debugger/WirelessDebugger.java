@@ -76,6 +76,7 @@ public class WirelessDebugger extends Service{
         logReader.setAppTerminated();
         while (logReader.isThreadRunning()){
             // Wait for logReader to finish sending logs
+            // Probably should set timeouts for this
         }
         stopSelf();
     }
