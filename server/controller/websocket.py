@@ -67,6 +67,12 @@ def logDump(message, wsock):
                 'tag': 'TEST',
                 'logType': 'Info',
             },
+            {
+                'time': '2017-11-06T16:34:55.000Z',
+                'text': 'Cool Log',
+                'tag': 'TEST',
+                'logType': 'Error',
+            },
         ]
     })
 
