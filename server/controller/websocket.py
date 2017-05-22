@@ -16,13 +16,20 @@ _web_interface_ws_connections = []
 
 @route('/ws')
 def handle_websocket():
-    wsock = request.environ.get('wsgi.websocket')
-    if not wsock:
+    """ Handle an incomming WebSocket connection.
+
+    This function handles incomming WebSocket connections and waits for
+    incomming messages from the connection. When a message is recieved, it
+    calls the appropriate function.
+    """
+
+    websocket = request.environ.get('wsgi.websocket')
+    if not websocket:
         abort(400, 'Expected WebSocket request.')
 
-    while not wsock.closed:
+    while not websocket.closed:
         try:
-            message = wsock.receive()
+            message = websocket.receive()
             if message is None:
                 continue
 
@@ -32,16 +39,16 @@ def handle_websocket():
                 # TODO: blow up
                 pass
 
-            _ws_routes[messageType](decoded_message, wsock)
+            _ws_routes[messageType](decoded_message, websocket)
         except WebSocketError:
             break
 
-    # Remove the websocket connection once it is closed
-    _web_interface_ws_connections.remove(wsock)
+    # Remove the WebSocket connection from the list once it is closed
+    _web_interface_ws_connections.remove(websocket)
 
 
 def ws_router(messageType):
-    """Provide a decorator for adding functions to the _ws_route dictionary"""
+    """ Provide a decorator for adding functions to the _ws_route dictionary """
     def decorator(function):
         _ws_routes[messageType] = function
 
@@ -49,7 +56,16 @@ def ws_router(messageType):
 
 
 @ws_router('logDump')
-def logDump(message, wsock):
+def logDump(message, websocket):
+    """ Handles Log Dumps from the Mobile API
+
+    When a log dump comes in from the Mobile API, this function takes the raw
+    log data, parses it and sends the parsed data to all connected web clients.
+
+    Args:
+        message: the decoded JSON message from the Mobile API
+        websocket: the full websocket connection
+    """
     # TODO: This function is entirely a placeholder for testing purposes
     parsed_logs = json.dumps({
         'messageType': 'logData',
@@ -83,8 +99,17 @@ def logDump(message, wsock):
 
 
 @ws_router('associateSession')
-def associateSession(message, wsock):
+def associateSession(message, websocket):
+    """ Associates a WebSocket connection with a session
+
+    When a browser requests to be associated with a session, add the associated
+    WebSocket connection to the list connections for that session.
+
+    Args:
+        message: the decoded JSON message from the Mobile API
+        websocket: the full websocket connection
     """
-    Associate a WebSocket connection with a session.
-    """
-    _web_interface_ws_connections.append(wsock)
+
+    # TODO: Currently we only have one session, when we implement multiple
+    #       connections, modify this to handle it
+    _web_interface_ws_connections.append(websocket)
