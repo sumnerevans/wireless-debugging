@@ -10,7 +10,7 @@ import java.util.ArrayList;
 class LogReader implements Runnable {
 
     private static final String TAG = "--- WDB Log Reader ---";
-
+    private ArrayList<String> logs = new ArrayList<>();
 
     @Override
     public void run() {
@@ -19,7 +19,6 @@ class LogReader implements Runnable {
             BufferedReader bufferedReader = new BufferedReader(
                     new InputStreamReader(process.getInputStream()));
 
-            ArrayList<String> log = new ArrayList<>();
             String line;
 
             Log.d(TAG, "Begin Read line in buffer");
@@ -38,22 +37,39 @@ class LogReader implements Runnable {
                     }
                     continue;
                 }
-                log.add(line);
+                logs.add(line);
 
+                /*
                 if (log.size() > 100){
                     break;
                 }
+                */
             }
+            /*
             Log.d(TAG, "End Read line in buffer");
             Log.d(TAG, "BEGIN LOG OUTPUT");
-            for (String logLine : log){
+            for (String logLine : logs){
                 Log.i(TAG, logLine);
             }
             Log.d(TAG, "END LOG OUTPUT");
+            */
 
         }
         catch (IOException ioe) {
             Log.e(TAG, "IO Exception Occurred in run() thread " + ioe.toString());
         }
     }
+
+    /**
+     * Temporary function.
+     * Called if the app terminates
+     */
+    void sendLogs(){
+        Log.d(TAG, "BEGIN LOG OUTPUT");
+        for (String logLine : logs){
+            Log.i(TAG, logLine);
+        }
+        Log.d(TAG, "END LOG OUTPUT");
+    }
+
 }

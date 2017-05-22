@@ -16,6 +16,7 @@
             </intent-filter>
         </activity>
 
+        <service android:name="com.google.wireless.debugger.WirelessDebugger" />
 
     </application>
 
