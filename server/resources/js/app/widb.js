@@ -11,31 +11,34 @@ class Widb {
   constructor() {
     /** @private @const {!jQuery} */
     this.logTable_ = $('.log-table');
+    this.ws_ = null;
   }
 
   /**
   * Opens a websockets connection to the server
   */
   start() {
-    let ws = new WebSocket('ws://localhost:8080/ws');
-    ws.onopen = this.websocketOnOpen;
-    ws.onmessage = this.websocketOnMessage;
+    this.ws_ = new WebSocket('ws://localhost:8080/ws');
+    console.log(this);
+    this.ws_.onopen = this.websocketOnOpen;
+    this.ws_.onmessage = this.websocketOnMessage;
   }
 
   /** Handles websocket opening */
   websocketOnOpen() {
+    console.log(this);
     let payload = {
       messageType: 'associateSession',
     };
 
-    ws.send(JSON.stringify(payload));
+    this.send(JSON.stringify(payload));
 
     // TODO: get rid of this function, only for testing purposes
     payload = {
       messageType: 'logDump',
     };
 
-    ws.send(JSON.stringify(payload));
+    this.send(JSON.stringify(payload));
   }
 
   /** Decodes the websocket message and adds to table */
