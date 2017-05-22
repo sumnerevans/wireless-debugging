@@ -1,11 +1,11 @@
 /*
-* @fileoverview This contains the main app logic
-*/
+ * @fileoverview This contains the main app logic
+ */
 
 /**
-* Creates a table from log data received through websockets
-* @class
-*/
+ * Creates a table from log data received through websockets
+ * @class
+ */
 class Widb {
   /** Initialize the app */
   constructor() {
@@ -15,30 +15,28 @@ class Widb {
   }
 
   /**
-  * Opens a websockets connection to the server
-  */
+   * Opens a websockets connection to the server
+   */
   start() {
     this.ws_ = new WebSocket('ws://localhost:8080/ws');
-    console.log(this);
-    this.ws_.onopen = this.websocketOnOpen;
-    this.ws_.onmessage = this.websocketOnMessage;
+    this.ws_.onopen = () => this.websocketOnOpen();
+    this.ws_.onmessage = (message) => this.websocketOnMessage(message);
   }
 
   /** Handles websocket opening */
   websocketOnOpen() {
-    console.log(this);
     let payload = {
       messageType: 'associateSession',
     };
 
-    this.send(JSON.stringify(payload));
+    this.ws_.send(JSON.stringify(payload));
 
     // TODO: get rid of this function, only for testing purposes
     payload = {
       messageType: 'logDump',
     };
 
-    this.send(JSON.stringify(payload));
+    this.ws_.send(JSON.stringify(payload));
   }
 
   /** Decodes the websocket message and adds to table */
@@ -54,13 +52,15 @@ class Widb {
   /** Formats new table entries from log data */
   renderLog(logEntry) {
     let type = logEntry.logType;
-    let color = "";
+    let color = '';
 
-    if (type === `Warning`) {
-      color = "warning";
-    }
-    else if (type === `Error`) {
-      color = "danger";
+    switch (type) {
+      case 'Warning':
+        color = 'warning';
+        break;
+      case 'Error':
+        color = 'danger';
+        break;
     }
 
     return `<tr class="${color}">
