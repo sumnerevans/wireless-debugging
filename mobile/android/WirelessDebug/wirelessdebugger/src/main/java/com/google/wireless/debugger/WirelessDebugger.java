@@ -55,7 +55,8 @@ public class WirelessDebugger extends Service{
 
         Log.d(TAG, "Service Started");
         // Create and start threads
-        mLogThread = new Thread(logReader = new LogReader());
+        logReader = new LogReader();
+        mLogThread = new Thread(logReader);
         mLogThread.start();
 
 
@@ -73,7 +74,7 @@ public class WirelessDebugger extends Service{
         super.onTaskRemoved(rootIntent);
         Log.d(TAG, "Service Stopped, Task Removed");
         logReader.setDone();
-        while (logReader.isRunning()){
+        while (logReader.isThreadRunning()){
             // Wait for logReader to finish sending logs
         }
         stopSelf();
