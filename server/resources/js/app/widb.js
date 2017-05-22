@@ -11,6 +11,8 @@ class Widb {
   constructor() {
     /** @private @const {!jQuery} */
     this.logTable_ = $('.log-table');
+
+    /** @private @const {?WebSocket} */
     this.ws_ = null;
   }
 
@@ -31,7 +33,7 @@ class Widb {
 
     this.ws_.send(JSON.stringify(payload));
 
-    // TODO: get rid of this function, only for testing purposes
+    // TODO: get rid of this, only for testing purposes
     payload = {
       messageType: 'logDump',
     };
@@ -43,18 +45,17 @@ class Widb {
   websocketOnMessage(message) {
     let messageData = JSON.parse(message.data);
     if (messageData.messageType === 'logData') {
-      for (let l of messageData.logEntries) {
-        this.logTable_.append(this.renderLog(l));
+      for (let entry of messageData.logEntries) {
+        this.logTable_.append(this.renderLog(entry));
       }
     }
   }
 
   /** Formats new table entries from log data */
   renderLog(logEntry) {
-    let type = logEntry.logType;
     let color = '';
 
-    switch (type) {
+    switch (logEntry.logType) {
       case 'Warning':
         color = 'warning';
         break;
