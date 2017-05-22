@@ -11,6 +11,7 @@ class LogReader implements Runnable {
 
     private static final String TAG = "--- WDB Log Reader ---";
 
+
     @Override
     public void run() {
         try {
@@ -19,7 +20,7 @@ class LogReader implements Runnable {
                     new InputStreamReader(process.getInputStream()));
 
             ArrayList<String> log = new ArrayList<>();
-            String line = "";
+            String line;
 
             Log.d(TAG, "Begin Read line in buffer");
             while (true) {
@@ -27,7 +28,7 @@ class LogReader implements Runnable {
 
                 if (line == null){
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -48,8 +49,7 @@ class LogReader implements Runnable {
 
         }
         catch (IOException ioe) {
-            Log.e(TAG,
-                    "IO Exception Occurred in Net Logging Thread " + ioe.toString());
+            Log.e(TAG, "IO Exception Occurred in run() thread " + ioe.toString());
         }
     }
 }

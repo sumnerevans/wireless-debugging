@@ -22,7 +22,6 @@ public class MainFragment extends Fragment implements SensorEventListener {
     private static final String TAG = "WiDB Example";
 
     // Buttons and Text
-    private Button mLogButton;
     private EditText mLogText;
     private Button mAccelerometerToggleButton;
 
@@ -51,15 +50,15 @@ public class MainFragment extends Fragment implements SensorEventListener {
     }
 
     /**
-     * Creates Logging control buttons within the view
+     * Creates Logging control button handlers within the view
      * @param logView View container for the buttons
      */
     private void registerLogViewClickHandlers(View logView) {
 
         mLogText = (EditText) logView.findViewById(R.id.log_message_text);
 
-        mLogButton = (Button) logView.findViewById(R.id.send_log_button);
-        mLogButton.setOnClickListener(new View.OnClickListener() {
+        Button sendLogButton = (Button) logView.findViewById(R.id.send_log_button);
+        sendLogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!"".equals(mLogText.getText().toString())) {
