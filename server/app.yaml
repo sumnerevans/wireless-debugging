@@ -1,0 +1,15 @@
+runtime: python
+env: flex
+api_version: 1
+threadsafe: true
+
+runtime_config:
+        python_versoin: 3
+
+# [START handlers]
+- url: /.*
+  script: widb_server.app
+# [END handlers]
+
+# [START libraries]
+# [END libraries]
