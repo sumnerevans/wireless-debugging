@@ -14,6 +14,7 @@ import controller
 import parsing_lib
 
 def main():
+
     server = WSGIServer(("0.0.0.0", 8080), bottle.default_app(),
                         handler_class=WebSocketHandler)
     server.serve_forever()
