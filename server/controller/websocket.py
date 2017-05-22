@@ -20,9 +20,12 @@ def handle_websocket():
     if not wsock:
         abort(400, 'Expected WebSocket request.')
 
-    while True:
+    while not wsock.closed:
         try:
             message = wsock.receive()
+            if message is None:
+                continue
+
             decoded_message = json.loads(message)
             messageType = decoded_message['messageType']
             if messageType is None:
@@ -32,6 +35,9 @@ def handle_websocket():
             _ws_routes[messageType](decoded_message, wsock)
         except WebSocketError:
             break
+
+    # Remove the websocket connection once it is closed
+    _web_interface_ws_connections.remove(wsock)
 
 
 def ws_router(messageType):
