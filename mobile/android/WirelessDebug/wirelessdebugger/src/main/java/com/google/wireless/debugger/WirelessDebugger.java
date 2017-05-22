@@ -73,7 +73,7 @@ public class WirelessDebugger extends Service{
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
         Log.d(TAG, "Service Stopped, Task Removed");
-        logReader.setDone();
+        logReader.setAppTerminated();
         while (logReader.isThreadRunning()){
             // Wait for logReader to finish sending logs
         }

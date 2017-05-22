@@ -66,7 +66,7 @@ class LogReader implements Runnable {
         Log.d(TAG, "END LOG OUTPUT");
     }
 
-    void setDone()  {
+    void setAppTerminated()  {
         hostAppTerminated = true;
     }
 
