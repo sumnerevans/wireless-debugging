@@ -16,6 +16,7 @@ class Widb {
 
       ws.send(JSON.stringify(payload));
 
+      // TEMP
       payload = {
         messageType: 'logDump',
       };
@@ -49,6 +50,7 @@ class Widb {
   }
 }
 
+// When the document has been loaded, start Widb.
 $(document).ready(() => {
   new Widb().start();
 });
