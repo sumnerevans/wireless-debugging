@@ -7,6 +7,7 @@ runtime_config:
         python_versoin: 3
 
 # [START handlers]
+handlers: 
 - url: /.*
   script: widb_server.app
 # [END handlers]
