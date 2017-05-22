@@ -4,7 +4,7 @@ WiDebug (widb)
 ## Development Environment Setup
 
 ### Web Server
-1. Ensure python 3 is installed
+1. Ensure python 3 and Cloud SDK with Bundled Python is installed
  
 2. Run the following commands to install the necessary SASS plugins:
 
@@ -14,7 +14,7 @@ WiDebug (widb)
 
 3. Install the following Python libraries. (`pip3 install` is probably the easiest way to
    do this.)
-
+   You can also run 'pip install -r requirements.txt' while in the main directory. Also run 'pip3 install -r requirements.txt' 
         kajiki
         bottle
         markupsafe
@@ -25,8 +25,17 @@ WiDebug (widb)
 
 4. Run `compass compile`  in the directory with the config.rb file (/server) 
 
-5. Run the app by running `widb_server.py` and navigating in your browser
-   to `localhost:8080`
+5. Local:
+pip3 install virtualenv
+in /server dir: virtualenv env
+.\env\Scripts\activate 
+pip3 install -r requirements.txt
+python `widb_server.py` and will see it on localhost:8080  
+for more information: https://cloud.google.com/appengine/docs/flexible/python/quickstart#before-you-begin
+Delete env folder when done 
+
+6. deploy: gcloud app deploy --project <project-id> --version <version-id> 
+will be shown on www.<project-id>.appspot.com
 
 ## Contributors
 - Jonathan Sumner Evans
