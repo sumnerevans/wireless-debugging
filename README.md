@@ -25,17 +25,16 @@ WiDebug (widb)
 
 4. Run `compass compile`  in the directory with the config.rb file (/server) 
 
-5. Local:
-pip3 install virtualenv
-in /server dir: virtualenv env
-.\env\Scripts\activate 
-pip3 install -r requirements.txt
-python `widb_server.py` and will see it on localhost:8080  
-for more information: https://cloud.google.com/appengine/docs/flexible/python/quickstart#before-you-begin
-Delete env folder when done 
+5. To setup local, run commands:
+`pip3 install virtualenv`
+in /server dir: `virtualenv env`
+`.\env\Scripts\activate`
+`pip3 install -r requirements.txt`
+run `python widb_server.py` and will see it on `localhost:8080`  
+for more information: `https://cloud.google.com/appengine/docs/flexible/python/quickstart#before-you-begin` 
 
-6. deploy: gcloud app deploy --project <project-id> --version <version-id> 
-will be shown on www.<project-id>.appspot.com
+6. deploy: `gcloud app deploy --project <project-id> --version <version-id>` 
+will be shown on `www.<project-id>.appspot.com`
 
 ## Contributors
 - Jonathan Sumner Evans

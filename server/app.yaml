@@ -7,8 +7,3 @@ entrypoint: python widb_server.py
 runtime_config:
         python_version: 3
 
-# [START handlers]
-# [END handlers]
-
-# [START libraries]
-# [END libraries]
