@@ -28,7 +28,11 @@ class LogReader implements Runnable {
 
                 if (line == null){
                     try {
-                        Thread.sleep(100);
+                        /* This is mostly a test.  With high accelerometer logging this value
+                           the difference between logs is about 20 ms, so hopefully a
+                           sleep time of 10ms is enough to not miss any logs.
+                         */
+                        Thread.sleep(10);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

@@ -1,7 +1,12 @@
 package com.google.wireless.debugger;
 
 
-public class WirelessDebugger {
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
+
+public class WirelessDebugger extends Service{
 
     private static WirelessDebugger theInstance;
 
@@ -26,5 +31,24 @@ public class WirelessDebugger {
     }
 
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        // Create and start threads
+
+
+
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 }
