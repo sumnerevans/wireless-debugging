@@ -19,7 +19,7 @@ import com.google.wireless.debugging.R;
 
 public class MainFragment extends Fragment implements SensorEventListener {
 
-    private static final String TAG = "Wireless Debugging";
+    private static final String TAG = "WiDB Example";
 
     // Buttons and Text
     private Button mLogButton;
@@ -45,58 +45,60 @@ public class MainFragment extends Fragment implements SensorEventListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.widb_fragment, container, false);
 
-        createButtons(view);
+        registerLogViewClickHandlers(view);
 
         return view;
     }
 
     /**
      * Creates Logging control buttons within the view
-     * @param v View container for buttons
+     * @param logView View container for the buttons
      */
-    private void createButtons(View v) {
+    private void registerLogViewClickHandlers(View logView) {
 
-        mLogText = (EditText) v.findViewById(R.id.log_message_text);
+        mLogText = (EditText) logView.findViewById(R.id.log_message_text);
 
-        mLogButton = (Button) v.findViewById(R.id.send_log_button);
+        mLogButton = (Button) logView.findViewById(R.id.send_log_button);
         mLogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mLogText.getText().toString().equals("")) {
+                if (!"".equals(mLogText.getText().toString())) {
                     Log.i(TAG, mLogText.getText().toString());
                 }
             }
         });
 
-        v.findViewById(R.id.crash_button).setOnClickListener(new View.OnClickListener() {
+        logView.findViewById(R.id.crash_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 throw new RuntimeException("Forced Crash");
             }
         });
 
-        v.findViewById(R.id.exception_button).setOnClickListener(new View.OnClickListener() {
+        logView.findViewById(R.id.exception_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Produces an exception without crashing the app
                 try {
                     throw new NullPointerException("Forced Null Pointer Exception");
-                } catch (NullPointerException nPE){
-                    Log.e(TAG, nPE.toString());
+                } catch (NullPointerException npe){
+                    Log.e(TAG, npe.toString());
                 }
             }
         });
 
-        mAccelerometerToggleButton = (Button) v.findViewById(R.id.accel_toggle_button);
+        mAccelerometerToggleButton = (Button) logView.findViewById(R.id.accel_toggle_button);
         mAccelerometerToggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mLogAccelerometerData = !mLogAccelerometerData;
+
                 if (mLogAccelerometerData){
                     mAccelerometerToggleButton.setText(R.string.stop_accel_data);
+                    mLogAccelerometerData = true;
                 } else {
                     mAccelerometerToggleButton.setText(R.string.start_accel_data);
+                    mLogAccelerometerData = false;
                 }
-
             }
         });
 
@@ -114,6 +116,11 @@ public class MainFragment extends Fragment implements SensorEventListener {
         }
     }
 
+    /**
+     * Not used, required by SensorEventListener interface
+     * @param sensor
+     * @param accuracy
+     */
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         // Not Used
