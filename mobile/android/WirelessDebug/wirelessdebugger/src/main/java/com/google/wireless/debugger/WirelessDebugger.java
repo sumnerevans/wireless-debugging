@@ -59,8 +59,8 @@ public class WirelessDebugger extends Service{
         mLogThread.start();
 
 
-        // TODO: Investigate the meaning of the return value vs the compatibility version
-        return START_STICKY;
+        // TODO: Investigate the meaning of the return value
+        return START_NOT_STICKY;
     }
 
     /**
@@ -71,10 +71,18 @@ public class WirelessDebugger extends Service{
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-        logReader.sendLogs();
         Log.d(TAG, "Service Stopped, Task Removed");
+        logReader.setDone();
+        while (logReader.isRunning()){
+            // Wait for logReader to finish sending logs
+        }
         stopSelf();
+    }
 
+    @Override
+    public void onDestroy() {
+
+        Log.d(TAG, "Service Destroyed");
     }
 
     /**
