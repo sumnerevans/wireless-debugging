@@ -27,6 +27,7 @@ class Widb {
       let messageData = JSON.parse(message.data);
       if (messageData.messageType === 'logData') {
         for (let l of messageData.logEntries) {
+          console.log(l);
           this.logTable_.append(this.renderLog(l));
         }
       }
@@ -34,7 +35,17 @@ class Widb {
   }
 
   renderLog(logEntry) {
-    return `<tr><td>${logEntry.time} ${logEntry.text}</td></tr>`;
+    let type = logEntry.logType;
+    let color = "";
+    if (type === `Warning`) {
+      color = "warning";
+    }
+    return `<tr class="${color}"> 
+          <td>${logEntry.time}</td>
+          <td>${logEntry.tag}</td>
+          <td>${logEntry.logType}</td>
+          <td>${logEntry.text}</td>
+          </tr>`;
   }
 }
 
