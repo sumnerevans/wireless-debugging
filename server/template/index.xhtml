@@ -1,4 +1,4 @@
-<html py:extends="master.xhtml" py:strip="True" xmlns="http://www.w3.org/1999/xhtml">
+<html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
   <title py:block="master_title">Home</title>
 </head>
@@ -7,10 +7,12 @@
   <div class="row">
     <div class="col-md-12">
       <table class="table table-hover table-condensed log-table">
-      <th>Time</th>
-      <th>Tag</th>
-      <th>Type</th>
-      <th>Log Text</th>
+        <tr>
+          <th>Time</th>
+          <th>Tag</th>
+          <th>Type</th>
+          <th>Log Text</th>
+        </tr>
       </table>
     </div>
   </div>
