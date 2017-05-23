@@ -13,6 +13,7 @@ class LogReader implements Runnable {
     private ArrayList<String> logs = new ArrayList<>();
     private Boolean hostAppRunning = true;
     private Boolean threadRunning = true;
+    private WebSocketMessenger webSocketMessenger;
 
     LogReader(String hostname, float timeInterval){
         // Create the Messenger Object
@@ -21,6 +22,7 @@ class LogReader implements Runnable {
 
     @Override
     public void run() {
+        webSocketMessenger = WebSocketMessenger.buildNewConnection("ws://10.0.2.2:8080/websocket");
         try {
             // Clear logcat buffer of any previous data and exit
             Runtime.getRuntime().exec("logcat -c");
@@ -50,6 +52,8 @@ class LogReader implements Runnable {
                 }
                 // TODO: Replace with send logs to web socket messenger
                 logs.add(logLine);
+
+                webSocketMessenger.enqueueLog(logLine);
 
             }
             // TODO: Read any remaining logs in buffer
