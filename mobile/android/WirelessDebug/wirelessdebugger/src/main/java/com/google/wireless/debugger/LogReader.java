@@ -37,7 +37,7 @@ class LogReader implements Runnable {
             String logLine = "";
 
             Log.d(TAG, "Begin Read line in buffer");
-            while (hostAppRunning) {
+            while (hostAppRunning && webSocketMessenger.isRunning()) {
                 logLine = bufferedReader.readLine();
 
                 if (logLine == null){

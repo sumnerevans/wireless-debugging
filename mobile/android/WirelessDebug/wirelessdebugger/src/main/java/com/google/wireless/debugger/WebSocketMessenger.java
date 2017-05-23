@@ -18,7 +18,8 @@ public class WebSocketMessenger extends WebSocketClient {
 
     private ArrayList<String> logsToSend;
     private int updateTimeInterval;
-    private int lastSendTime;
+    private long lastSendTime;
+    private boolean running = true;
 
 
     /**
@@ -83,7 +84,9 @@ public class WebSocketMessenger extends WebSocketClient {
 
     @Override
     public void onError(Exception e) {
-        Log.i("Websocket", "Error " + e.getMessage());
+        running = false;
+        Log.e("Websocket", "Error " + e.getMessage());
+
     }
 
 
@@ -112,7 +115,12 @@ public class WebSocketMessenger extends WebSocketClient {
 
     void enqueueLog(String logLine) {
         logsToSend.add(logLine);
+        long diff = System.currentTimeMillis() - lastSendTime;
+        if (diff > updateTimeInterval && isOpen()){
+            sendLogDump();
+        }
     }
 
+    boolean isRunning() { return running; }
 
 }
