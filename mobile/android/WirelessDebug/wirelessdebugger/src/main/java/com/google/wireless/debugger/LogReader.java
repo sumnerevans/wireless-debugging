@@ -15,14 +15,16 @@ class LogReader implements Runnable {
     private Boolean threadRunning = true;
     private WebSocketMessenger webSocketMessenger;
 
-    LogReader(String hostname, float timeInterval){
+    LogReader(String hostname, int timeInterval){
         // Create the Messenger Object
-
+        webSocketMessenger = WebSocketMessenger.buildNewConnection(hostname, timeInterval);
+        if (webSocketMessenger == null){
+           Log.e(TAG, "Failed to create WebSocketMessenger Object");
+        }
     }
 
     @Override
     public void run() {
-        webSocketMessenger = WebSocketMessenger.buildNewConnection("ws://10.0.2.2:8080/websocket");
         try {
             // Clear logcat buffer of any previous data and exit
             Runtime.getRuntime().exec("logcat -c");
@@ -50,9 +52,6 @@ class LogReader implements Runnable {
                     }
                     continue;
                 }
-                // TODO: Replace with send logs to web socket messenger
-                logs.add(logLine);
-
                 webSocketMessenger.enqueueLog(logLine);
 
             }

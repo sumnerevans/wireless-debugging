@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WirelessDebugger.start("NA", 0.0f, getApplicationContext());
+        WirelessDebugger.start("NA", 500, getApplicationContext());
 
         setContentView(R.layout.activity_fragment);
 

@@ -17,23 +17,18 @@ import java.util.ArrayList;
 public class WebSocketMessenger extends WebSocketClient {
 
     private ArrayList<String> logsToSend;
+    private int updateTimeInterval;
+    private int lastSendTime;
 
-    /**
-     * @param uri: Specifies address of the WebSocket connection
-     */
-    public WebSocketMessenger(URI uri) {
-        super(uri);
-        logsToSend = new ArrayList<>();
-        connect();
-    }
 
     /**
      *
      * @param socketAddress: The address of the WebSocket connection
      * @return A new WebSocket messenger object, or null if the URI is invalid
      */
-    public static WebSocketMessenger buildNewConnection(String socketAddress) {
+    static WebSocketMessenger buildNewConnection(String socketAddress, int updateTime) {
         URI uri;
+        Log.i("--Wide Bug WS -- ", "URI: " + socketAddress);
         try {
             uri = new URI(socketAddress);
         } catch (URISyntaxException e) {
@@ -41,7 +36,17 @@ public class WebSocketMessenger extends WebSocketClient {
             return null;
         }
 
-        return new WebSocketMessenger(uri);
+        return new WebSocketMessenger(uri, updateTime);
+    }
+
+    /**
+     * @param uri: Specifies address of the WebSocket connection
+     */
+    private WebSocketMessenger(URI uri, int updateTime) {
+        super(uri);
+        logsToSend = new ArrayList<>();
+        updateTimeInterval = updateTime;
+        connect();
     }
 
     /**
@@ -69,20 +74,24 @@ public class WebSocketMessenger extends WebSocketClient {
     @Override
     public void onMessage(String s) {}
 
+
     @Override
     public void onClose(int i, String s, boolean b) {
         Log.i("Websocket", "Closed " + s);
     }
+
 
     @Override
     public void onError(Exception e) {
         Log.i("Websocket", "Error " + e.getMessage());
     }
 
-    // TODO: Make this a proper doc
-    // Takes all of the queued logs, sends places them all in a JSON, clears the queue,
-    // and finally sends the log dump to the server
-    public void sendLogDump() {
+
+    /**
+     * Takes all the logs from the array list and places them all in a JSON object.
+     * Clears the list then sends the the JSON object to the server
+     */
+    private void sendLogDump() {
         JSONObject payload = new JSONObject();
         try {
             payload.put("messageType", "logDump");
@@ -100,7 +109,8 @@ public class WebSocketMessenger extends WebSocketClient {
         send(payload.toString());
     }
 
-    public void enqueueLog(String logLine) {
+
+    void enqueueLog(String logLine) {
         logsToSend.add(logLine);
     }
 

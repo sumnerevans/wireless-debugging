@@ -14,24 +14,23 @@ public class WirelessDebugger extends Service{
 
     private static final String TAG = "------ WDB ------";
 
-    private String mHostname;
-    private float mTimeInterval;
-    private Thread mLogThread;
+    private static final String HOSTNAME_EXTRA = "hostname";
+    private static final String TIME_INTERVAL_EXTRA = "time_interval";
+
     private LogReader logReader;
 
 
-    public static void start(String hostname, float timeInterval, Context appContext)  {
+    public static void start(String hostname, int timeInterval, Context appContext)  {
         if (theInstance == null){
             theInstance = new WirelessDebugger(hostname, timeInterval, appContext);
         }
     }
 
-    private WirelessDebugger(String hostname, float time, Context appContext)  {
-
-        mHostname = hostname;
-        mTimeInterval = time;
+    private WirelessDebugger(String hostname, int timeInterval, Context appContext)  {
 
         Intent startIntent = new Intent(appContext, this.getClass());
+        startIntent.putExtra(HOSTNAME_EXTRA, hostname);
+        startIntent.putExtra(TIME_INTERVAL_EXTRA, timeInterval);
         appContext.startService(startIntent);
 
     }
@@ -58,9 +57,11 @@ public class WirelessDebugger extends Service{
 
         Log.d(TAG, "Service Started");
         // Create and start threads
-        logReader = new LogReader(mHostname, mTimeInterval);
-        mLogThread = new Thread(logReader);
-        mLogThread.start();
+        String hostname = intent.getStringExtra(HOSTNAME_EXTRA);
+        int timeInterval = intent.getIntExtra(TIME_INTERVAL_EXTRA, 500);
+        logReader = new LogReader(hostname, timeInterval);
+        Thread logThread = new Thread(logReader);
+        logThread.start();
 
 
         // TODO: Investigate the meaning of the return value
