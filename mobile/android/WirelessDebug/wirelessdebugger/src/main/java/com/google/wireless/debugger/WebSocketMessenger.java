@@ -16,11 +16,14 @@ import java.util.ArrayList;
 
 public class WebSocketMessenger extends WebSocketClient {
 
+    private ArrayList<String> logsToSend;
+
     /**
      * @param uri: Specifies address of the WebSocket connection
      */
     public WebSocketMessenger(URI uri) {
         super(uri);
+        logsToSend = new ArrayList<>();
         connect();
     }
 
@@ -76,14 +79,29 @@ public class WebSocketMessenger extends WebSocketClient {
         Log.i("Websocket", "Error " + e.getMessage());
     }
 
-    public void sendMessage(String logContent) {
+    // TODO: Make this a proper doc
+    // Takes all of the queued logs, sends places them all in a JSON, clears the queue,
+    // and finally sends the log dump to the server
+    public void sendLogDump() {
         JSONObject payload = new JSONObject();
         try {
-            payload.put("Message", logContent);
+            payload.put("messageType", "logDump");
+            payload.put("osType", "Android");
+
+            String queuedLogs = "";
+            for(String logLine : logsToSend) {
+                queuedLogs += logLine + "\n";
+            }
+            payload.put("rawLogData", queuedLogs);
+            logsToSend.clear();
         } catch (Exception e) {
             Log.e("Websocket", e.toString());
         }
         send(payload.toString());
+    }
+
+    public void enqueueLog(String logLine) {
+        logsToSend.add(logLine);
     }
 
 
