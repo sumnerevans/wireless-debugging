@@ -57,7 +57,7 @@ class WirelessDebug {
       'Warning': 'warning',
       'Error': 'danger',
     };
-    
+
     return `<tr class="${color[logEntry.logType]}">
     <td>${logEntry.time}</td>
     <td>${logEntry.tag}</td>
