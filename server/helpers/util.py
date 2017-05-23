@@ -41,12 +41,12 @@ def from_config_yaml(key, force_reload=False):
     is the app.yaml file. 
 
     Args:
-    	key: Key value in the config file that will return the value 
-	force_reload: if a reloading of the config file should occur. Set to false. 
+    	key: Key value in the config file that will return the value
+	force_reload (:obj:`bool`, optional): Wheter or not to force the configs to be reloaded from disk. Defaults to False.
     
     """
     if helpers._config_yaml is None or force_reload:
-        with open('app.yaml') as config:
+        with open('config.yaml') as config:
             helpers._config_yaml = yaml.load(config)
 
     if key in helpers._config_yaml:
