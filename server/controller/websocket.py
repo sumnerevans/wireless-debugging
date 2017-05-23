@@ -92,10 +92,10 @@ def logDump(message, websocket):
         ]
     })
 
-    for c in _web_interface_ws_connections:
-        c.send(parsed_logs)
+    for connection in _web_interface_ws_connections:
+        connection.send(parsed_logs)
         time.sleep(1)
-        c.send(parsed_logs)
+        connection.send(parsed_logs)
 
 
 @ws_router('associateSession')

@@ -3,10 +3,10 @@
  */
 
 /**
- * Creates a table from log data received through websockets
+ * Creates a table from log data received through WebSockets
  * @class
  */
-class Widb {
+class WirelessDebug {
   /** Initialize the app */
   constructor() {
     /** @private @const {!jQuery} */
@@ -17,15 +17,15 @@ class Widb {
   }
 
   /**
-   * Opens a websockets connection to the server
+   * Opens a WebSocket connection to the server
    */
   start() {
-    this.ws_ = new WebSocket('ws://localhost:8080/ws');
+    this.ws_ = new WebSocket(`ws://${location.host}/ws`);
     this.ws_.onopen = () => this.websocketOnOpen();
     this.ws_.onmessage = (message) => this.websocketOnMessage(message);
   }
 
-  /** Handles websocket opening */
+  /** Handles WebSocket opening */
   websocketOnOpen() {
     let payload = {
       messageType: 'associateSession',
@@ -41,7 +41,7 @@ class Widb {
     this.ws_.send(JSON.stringify(payload));
   }
 
-  /** Decodes the websocket message and adds to table */
+  /** Decodes the WebSocket message and adds to table */
   websocketOnMessage(message) {
     let messageData = JSON.parse(message.data);
     if (messageData.messageType === 'logData') {
@@ -75,5 +75,5 @@ class Widb {
 
 /** When the document has been loaded, start Widb */
 $(document).ready(() => {
-  new Widb().start();
+  new WirelessDebug().start();
 });
