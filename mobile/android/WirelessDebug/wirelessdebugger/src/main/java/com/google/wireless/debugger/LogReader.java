@@ -17,13 +17,18 @@ class LogReader implements Runnable {
 
     private static final String TAG = "--- WDB Log Reader ---";
     private ArrayList<String> logs = new ArrayList<>();
+    private Boolean hostAppTerminated = false;
+    private Boolean threadRunning = true;
 
     private WebSocketClient mWebSocketClient;
 
     @Override
     public void run() {
         try {
-            Process process = Runtime.getRuntime().exec("logcat -d");
+            // Clear logcat buffer of any previous data and exit
+            Runtime.getRuntime().exec("logcat -c");
+
+            Process process = Runtime.getRuntime().exec("logcat -v threadtime");
             BufferedReader bufferedReader = new BufferedReader(
                     new InputStreamReader(process.getInputStream()));
 
@@ -32,7 +37,7 @@ class LogReader implements Runnable {
             mWebSocketClient.connect();
 
             Log.d(TAG, "Begin Read line in buffer");
-            while (true) {
+            while (!hostAppTerminated) {
                 line = bufferedReader.readLine();
 
                 if (line == null){
@@ -41,7 +46,7 @@ class LogReader implements Runnable {
                            the difference between logs is about 20 ms, so hopefully a
                            sleep time of 10ms is enough to not miss any logs.
                          */
-                        Thread.sleep(10);
+                        Thread.sleep(1);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -50,32 +55,23 @@ class LogReader implements Runnable {
                 logs.add(line);
                 //sendMessage(line);
 
-                /*
-                if (log.size() > 100){
-                    break;
-                }
-                */
             }
-            /*
-            Log.d(TAG, "End Read line in buffer");
-            Log.d(TAG, "BEGIN LOG OUTPUT");
-            for (String logLine : logs){
-                Log.i(TAG, logLine);
-            }
-            Log.d(TAG, "END LOG OUTPUT");
-            */
 
+            outputLogs();
         }
         catch (IOException ioe) {
             Log.e(TAG, "IO Exception Occurred in run() thread " + ioe.toString());
         }
+
+        // Signals to owning service that thread operations are complete
+        threadRunning = false;
     }
 
     /**
      * Temporary function.
      * Called if the app terminates
      */
-    void sendLogs(){
+    void outputLogs()  {
         Log.d(TAG, "BEGIN LOG OUTPUT");
         for (String logLine : logs){
             Log.i(TAG, logLine);
@@ -133,4 +129,12 @@ class LogReader implements Runnable {
         }
         mWebSocketClient.send(payload.toString());
     }
+    void setAppTerminated()  {
+        hostAppTerminated = true;
+    }
+
+    boolean isThreadRunning()  {
+        return threadRunning;
+    }
+
 }

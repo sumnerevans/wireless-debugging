@@ -55,12 +55,13 @@ public class WirelessDebugger extends Service{
 
         Log.d(TAG, "Service Started");
         // Create and start threads
-        mLogThread = new Thread(logReader = new LogReader());
+        logReader = new LogReader();
+        mLogThread = new Thread(logReader);
         mLogThread.start();
 
 
-        // TODO: Investigate the meaning of the return value vs the compatibility version
-        return START_STICKY;
+        // TODO: Investigate the meaning of the return value
+        return START_NOT_STICKY;
     }
 
     /**
@@ -71,10 +72,19 @@ public class WirelessDebugger extends Service{
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-        logReader.sendLogs();
         Log.d(TAG, "Service Stopped, Task Removed");
+        logReader.setAppTerminated();
+        while (logReader.isThreadRunning()){
+            // Wait for logReader to finish sending logs
+            // Probably should set timeouts for this
+        }
         stopSelf();
+    }
 
+    @Override
+    public void onDestroy() {
+
+        Log.d(TAG, "Service Destroyed");
     }
 
     /**
