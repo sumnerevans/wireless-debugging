@@ -2,8 +2,6 @@ runtime: python
 env: flex
 entrypoint: python widb_server.py 
 
-#db: mongodb://localhost:27017
-
 runtime_config:
         python_version: 3
 

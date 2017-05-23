@@ -34,12 +34,22 @@ def faicon(icon_name, *args, **kwargs):
     ))
 
 def from_config_yaml(key, force_reload=False):
-    """Spits out a specified entry from the config yaml file"""
-    if helpers.config_yaml is None or force_reload:
-        with open('app.yaml') as config:
-            helpers.config_yaml = yaml.load(config)
+    """Spits out a specified entry from the config yaml file
+    
+    This function takes the key value in the config value and gives 
+    the corresponding value from config.yaml file which, if none is given,
+    is the app.yaml file. 
 
-    if key in helpers.config_yaml:
-        return helpers.config_yaml[key]
+    Args:
+    	key: Key value in the config file that will return the value 
+	force_reload: if a reloading of the config file should occur. Set to false. 
+    
+    """
+    if helpers._config_yaml is None or force_reload:
+        with open('app.yaml') as config:
+            helpers._config_yaml = yaml.load(config)
+
+    if key in helpers._config_yaml:
+        return helpers._config_yaml[key]
 
     return None
