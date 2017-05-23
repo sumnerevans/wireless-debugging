@@ -29,7 +29,8 @@ class LogReader implements Runnable {
             BufferedReader bufferedReader = new BufferedReader(
                     new InputStreamReader(process.getInputStream()));
 
-            String logLine;
+
+            String logLine = "";
 
             Log.d(TAG, "Begin Read line in buffer");
             while (hostAppRunning) {
@@ -41,16 +42,24 @@ class LogReader implements Runnable {
                            the difference between logs is about 20 ms, so hopefully a
                            sleep time of 10ms is enough to not miss any logs.
                          */
-                        Thread.sleep(1);
+                        Thread.sleep(10);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     continue;
                 }
+                // TODO: Replace with send logs to web socket messenger
                 logs.add(logLine);
 
             }
+            // TODO: Read any remaining logs in buffer
+            /*
+            while (logLine != null){
+                logLine = bufferedReader.readLine();
+                // Send
+            }*/
 
+            // TODO: Replace with a send finished signal to the web socket messenger
             outputLogs();
         }
         catch (IOException ioe) {
