@@ -53,18 +53,12 @@ class WirelessDebug {
 
   /** Formats new table entries from log data */
   renderLog(logEntry) {
-    let color = '';
-
-    switch (logEntry.logType) {
-      case 'Warning':
-        color = 'warning';
-        break;
-      case 'Error':
-        color = 'danger';
-        break;
-    }
-
-    return `<tr class="${color}">
+    let color = {
+      'Warning': 'warning',
+      'Error': 'danger',
+    };
+    
+    return `<tr class="${color[logEntry.logType]}">
     <td>${logEntry.time}</td>
     <td>${logEntry.tag}</td>
     <td>${logEntry.logType}</td>
