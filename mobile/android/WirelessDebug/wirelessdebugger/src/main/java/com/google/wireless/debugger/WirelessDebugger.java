@@ -20,13 +20,16 @@ public class WirelessDebugger extends Service{
     private LogReader logReader;
 
 
-    public static void start(String hostname, float time, Context appContext)  {
+    public static void start(String hostname, float timeInterval, Context appContext)  {
         if (theInstance == null){
-            theInstance = new WirelessDebugger(appContext);
+            theInstance = new WirelessDebugger(hostname, timeInterval, appContext);
         }
     }
 
-    private WirelessDebugger(Context appContext)  {
+    private WirelessDebugger(String hostname, float time, Context appContext)  {
+
+        mHostname = hostname;
+        mTimeInterval = time;
 
         Intent startIntent = new Intent(appContext, this.getClass());
         appContext.startService(startIntent);
@@ -43,7 +46,7 @@ public class WirelessDebugger extends Service{
     }
 
     /**
-     * Called by startService(Intent) from the constructor to start the service.
+     * Called by the OS after startService(Intent) is called.
      * Creates and starts the log reading background thread
      * @param intent
      * @param flags
@@ -55,7 +58,7 @@ public class WirelessDebugger extends Service{
 
         Log.d(TAG, "Service Started");
         // Create and start threads
-        logReader = new LogReader();
+        logReader = new LogReader(mHostname, mTimeInterval);
         mLogThread = new Thread(logReader);
         mLogThread.start();
 
@@ -83,7 +86,7 @@ public class WirelessDebugger extends Service{
 
     @Override
     public void onDestroy() {
-
+        // Debugging Only
         Log.d(TAG, "Service Destroyed");
     }
 

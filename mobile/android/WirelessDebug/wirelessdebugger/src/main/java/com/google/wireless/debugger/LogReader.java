@@ -11,8 +11,13 @@ class LogReader implements Runnable {
 
     private static final String TAG = "--- WDB Log Reader ---";
     private ArrayList<String> logs = new ArrayList<>();
-    private Boolean hostAppTerminated = false;
+    private Boolean hostAppRunning = true;
     private Boolean threadRunning = true;
+
+    LogReader(String hostname, float timeInterval){
+        // Create the Messenger Object
+
+    }
 
     @Override
     public void run() {
@@ -24,13 +29,13 @@ class LogReader implements Runnable {
             BufferedReader bufferedReader = new BufferedReader(
                     new InputStreamReader(process.getInputStream()));
 
-            String line;
+            String logLine;
 
             Log.d(TAG, "Begin Read line in buffer");
-            while (!hostAppTerminated) {
-                line = bufferedReader.readLine();
+            while (hostAppRunning) {
+                logLine = bufferedReader.readLine();
 
-                if (line == null){
+                if (logLine == null){
                     try {
                         /* This is mostly a test.  With high accelerometer logging this value
                            the difference between logs is about 20 ms, so hopefully a
@@ -42,7 +47,7 @@ class LogReader implements Runnable {
                     }
                     continue;
                 }
-                logs.add(line);
+                logs.add(logLine);
 
             }
 
@@ -60,7 +65,7 @@ class LogReader implements Runnable {
      * Temporary function.
      * Called if the app terminates
      */
-    void outputLogs()  {
+    private void outputLogs()  {
         Log.d(TAG, "BEGIN LOG OUTPUT");
         for (String logLine : logs){
             Log.i(TAG, logLine);
@@ -69,7 +74,7 @@ class LogReader implements Runnable {
     }
 
     void setAppTerminated()  {
-        hostAppTerminated = true;
+        hostAppRunning = false;
     }
 
     boolean isThreadRunning()  {
