@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_weight="5"
+            android:layout_height="@dimen/mat_button_height"
+            android:paddingTop="16dp"
+            android:hint="@string/log_msg_hint"
+            android:id="@+id/log_message_text"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="@dimen/mat_button_height"
+            android:text="@string/send_log_Button"
+            android:id="@+id/send_log_button"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:padding="5dp">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mat_button_height"
+        android:text="@string/crash_button_text"
+        android:id="@+id/crash_button"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mat_button_height"
+        android:text="@string/exception_button_text"
+        android:id="@+id/exception_button" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mat_button_height"
+        android:text="@string/start_accel_data"
+        android:id="@+id/accel_toggle_button"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
