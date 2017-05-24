@@ -29,9 +29,9 @@ public class WebSocketMessenger extends WebSocketClient {
      */
     static WebSocketMessenger buildNewConnection(String socketAddress, int updateTime) {
         URI uri;
-        Log.i("--Wide Bug WS -- ", "URI: " + socketAddress);
+        Log.i("--Websocket -- ", "URI: " + socketAddress);
         try {
-            uri = new URI(socketAddress);
+            uri = new URI("ws://" + socketAddress + "/ws");
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return null;
@@ -64,7 +64,7 @@ public class WebSocketMessenger extends WebSocketClient {
         } catch (Exception e) {
             Log.e("Websocket", e.toString());
         }
-        send(payload.toString());
+        //send(payload.toString());
     }
 
     /**

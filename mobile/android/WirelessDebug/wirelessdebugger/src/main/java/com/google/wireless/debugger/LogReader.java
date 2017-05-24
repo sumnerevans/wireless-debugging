@@ -53,6 +53,7 @@ class LogReader implements Runnable {
                     continue;
                 }
                 webSocketMessenger.enqueueLog(logLine);
+                logs.add(logLine);
 
             }
             // TODO: Read any remaining logs in buffer
