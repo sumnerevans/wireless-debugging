@@ -14,7 +14,7 @@ class LogParser(object):
         logEntries = []
         current_log = None
         for line in message.rawLogData.splitlines():
-            if re.search('\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d{3}', line) is not None:
+            if re.search('\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3}', line) is not None:
                 if current_log is not None:
                     logEntries.append(LogParser.parse_raw_log(current_log))
                 current_log = ''
@@ -32,12 +32,13 @@ class LogParser(object):
     @staticmethod
     def parse_raw_log(log_data):
         parsed_log = re.search(
-            '(.*?) (\d*)-(\d*)\/(.*?) (.)\/(.*?): ((?:.*\\n*)*)', log_data)
+            '(.*?) (\\d*)-(\\d*)\\/(.*?) (.)\\/(.*?): ((?:.*\\n*)*)', log_data)
 
+        # Parse the Year, we have to add the year to the string so that it
+        # parses correctly.
         current_year = datetime.now().year
-        log_time = datetime.strptime(
-            '%s-%s' % (str(current_year), parsed_log.group(1)),
-            '%Y-%m-%d %H:%M:%S.%f')
+        date_with_year = '%s-%s' % (str(current_year), parsed_log.group(1))
+        log_time = datetime.strptime(date_with_year, '%Y-%m-%d %H:%M:%S.%f')
 
         # Determine the log type
         log_types = {

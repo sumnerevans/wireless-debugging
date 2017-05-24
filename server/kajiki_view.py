@@ -14,12 +14,21 @@ loader.extension_map['xhtml'] = XMLTemplate
 
 
 def kajiki_view(template_name):
-    """
-    Defines the kajiki_view decorator
+    """ Defines a kajiki_view decorator
 
-    Used code example from here:
+    When a function is annotated with this decorator, if the function returns a
+    dict, those values will be passed into the specified template and the
+    rendered template will become the output of the function.
+
+    Notes: Used code example from here:
     https://buxty.com/b/2013/12/jinja2-templates-and-bottle/ but customized for
-    kajiki instead
+    Kajiki instead
+
+    Args:
+        template_name: the name of the xhtml file to use as the template
+
+    Returns:
+        decorator: the decorated function
     """
     def decorator(view_func):
         @functools.wraps(view_func)
