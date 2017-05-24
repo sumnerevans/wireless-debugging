@@ -18,12 +18,8 @@ import android.widget.EditText;
 public class MainFragment extends Fragment implements SensorEventListener {
 
     private static final String TAG = "WiDB Example";
-
-    // Buttons and Text
     private EditText mLogText;
     private Button accelerometer_toggle_button;
-
-    // Accelerometer Logging
     private boolean mLogAccelerometerData = false;
     private SensorManager sensorManager;
     private Sensor accelerometer;
@@ -31,10 +27,8 @@ public class MainFragment extends Fragment implements SensorEventListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
     }
 
     @Nullable
@@ -48,11 +42,10 @@ public class MainFragment extends Fragment implements SensorEventListener {
     }
 
     /**
-     * Creates Logging control button handlers within the view
+     * Creates Logging control button handlers within the view.
      * @param logView View container for the buttons
      */
     private void registerLogViewClickHandlers(View logView) {
-
         mLogText = (EditText) logView.findViewById(R.id.log_message_text);
 
         Button sendLogButton = (Button) logView.findViewById(R.id.send_log_button);
@@ -88,7 +81,6 @@ public class MainFragment extends Fragment implements SensorEventListener {
         accelerometer_toggle_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (mLogAccelerometerData){
                     accelerometer_toggle_button.setText(R.string.start_accel_data);
                     mLogAccelerometerData = false;
@@ -99,18 +91,15 @@ public class MainFragment extends Fragment implements SensorEventListener {
                 }
             }
         });
-
     }
 
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (mLogAccelerometerData) {
-            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+        if (mLogAccelerometerData && event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                 float aX = event.values[0];
                 float aY = event.values[1];
                 Log.i(TAG, "aX: " + aX + " aY: " + aY);
-            }
         }
     }
 
