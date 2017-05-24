@@ -6,8 +6,10 @@ import json
 import time
 
 from bottle import route, request, abort
-
 from geventwebsocket import WebSocketError
+
+from parsing_lib import LogParser
+
 
 # Store a dictionary of string -> function
 _ws_routes = {}
@@ -66,36 +68,10 @@ def logDump(message, websocket):
         message: the decoded JSON message from the Mobile API
         websocket: the full websocket connection
     """
-    # TODO: This function is entirely a placeholder for testing purposes
-    parsed_logs = json.dumps({
-        'messageType': 'logData',
-        'osType': 'Android',
-        'logEntries': [
-            {
-                'time': '2017-11-06T16:34:41.000Z',
-                'text': 'This is not a real error',
-                'tag': 'TEST',
-                'logType': 'Warning',
-            },
-            {
-                'time': '2017-11-06T16:34:50.000Z',
-                'text': 'Cool Log',
-                'tag': 'TEST',
-                'logType': 'Info',
-            },
-            {
-                'time': '2017-11-06T16:34:55.000Z',
-                'text': 'Cool Log',
-                'tag': 'TEST',
-                'logType': 'Error',
-            },
-        ]
-    })
+    parsed_logs = LogParser.parse(message)
 
     for connection in _web_interface_ws_connections:
-        connection.send(parsed_logs)
-        time.sleep(1)
-        connection.send(parsed_logs)
+        connection.send(json.dumps(parsed_logs))
 
 
 @ws_router('associateSession')
