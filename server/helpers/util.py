@@ -4,9 +4,10 @@
 Utility Functions
 """
 
-from datetime import date
+from datetime import datetime
 
 import yaml
+import json
 from markupsafe import Markup
 
 import helpers
@@ -32,6 +33,14 @@ def faicon(icon_name, *args, **kwargs):
         ' '.join(args),
         ' '.join('%s="%s"' % (k, v) for k, v in kwargs.items())
     ))
+
+def serialize_json(obj):
+    def datetime_serializer(element):
+        if isinstance(element, datetime):
+            date = datetime.utcnow() # get time in UTC
+            return date.isoformat("T") + "Z"
+
+    return json.dumps(obj, default=datetime_serializer)
 
 
 def from_config_yaml(key, force_reload=False):
