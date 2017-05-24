@@ -54,15 +54,14 @@ def serialize_json(obj):
 
 def from_config_yaml(key, force_reload=False):
     """Spits out a specified entry from the config yaml file
-
-    This function takes the key value in the config value and gives
+    
+    This function takes the key value in the config value and gives 
     the corresponding value from config.yaml file which, if none is given,
-    is the app.yaml file.
+    is the app.yaml file. 
 
     Args:
-        key: Key value in the config file that will return the value
-        force_reload (:obj:`bool`, optional): Whether or not to force the
-            configs to be reloaded from disk. Defaults to False.
+    	key: Key value in the config file that will return the value
+	force_reload (:obj:`bool`, optional): Wheter or not to force the configs to be reloaded from disk. Defaults to False.
     """
     if helpers._config_yaml is None or force_reload:
         with open('config.yaml') as config:

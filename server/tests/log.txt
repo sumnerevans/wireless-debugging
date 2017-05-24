@@ -1,0 +1,62 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.6.1, pytest-3.1.1, py-1.4.33, pluggy-0.4.0 -- /usr/local/opt/python3/bin/python3.6
+cachedir: .cache
+rootdir: /Users/amandagiles/Documents/wiDebug/wireless-debugging/server/tests, inifile:
+collecting ... collected 3 items
+
+parser_tests.py::test_parse PASSED
+parser_tests.py::test_parse_raw_log PASSED
+parser_tests.py::test_convert_to_html FAILED
+
+=================================== FAILURES ===================================
+_____________________________ test_convert_to_html _____________________________
+
+    def test_convert_to_html():
+        current_year = datetime.now().year
+        tests = [
+                {
+                    'time': datetime(current_year, 5, 22, 11, 44, 31, 180000),
+                    'processId': '7080',
+                    'threadId': '7080',
+                    'logType': 'Info',
+                    'tag': 'WiDB Example',
+                    'text': 'aX: 3.0262709 aY: 2.0685902',
+                },
+                {
+                    'time': datetime(current_year, 5, 22, 11, 44, 32, 191000),
+                    'processId': '7080',
+                    'threadId': '7080',
+                    'logType': 'Warning',
+                    'tag': 'IInputConnectionWrapper',
+                    'text': 'getTextBeforeCursor on inactive InputConnection',
+                },
+        ]
+    
+        expected_results = [
+            {
+                '<tr class="undefined">' +
+                '<td>2017-06-01T16:55:35.141942Z</td>' +
+                '<td>WiDB Example</td>' +
+                '<td>Info</td>' +
+                '<td>aX: 3.0262709 aY: 2.0685902</td>' +
+                '</tr>'
+            },
+            {
+                '<tr class="warning">' +
+                '<td>2017-06-01T17:20:39.195497Z</td>'+
+                '<td>IInputConnectionWrapper</td>' +
+                '<td>Warning</td>' +
+                '<td>getTextBeforeCursor on inactive InputConnection</td>' +
+                '</tr>'
+            },
+        ]
+    
+        for test, expected_result in zip(tests, expected_results):
+>           assert parsing_lib.LogParser.convert_to_html(test) == expected_result
+E           assert '<tr class="undefined"><td>2017-05-22 11:44:31.180000</td><td>WiDB Example</td><td>Info</td><td>aX: 3.0262709 aY: 2.0685902</td></tr>' == {'<tr class="undefined"><td>2017-06-01T16:55:35.141942Z</td><td>WiDB Example</td><td>Info</td><td>aX: 3.0262709 aY: 2.0685902</td></tr>'}
+E            +  where '<tr class="undefined"><td>2017-05-22 11:44:31.180000</td><td>WiDB Example</td><td>Info</td><td>aX: 3.0262709 aY: 2.0685902</td></tr>' = <function LogParser.convert_to_html at 0x1026f9620>({'logType': 'Info', 'processId': '7080', 'tag': 'WiDB Example', 'text': 'aX: 3.0262709 aY: 2.0685902', ...})
+E            +    where <function LogParser.convert_to_html at 0x1026f9620> = <class 'parsing_lib.log_parser.LogParser'>.convert_to_html
+E            +      where <class 'parsing_lib.log_parser.LogParser'> = parsing_lib.LogParser
+
+parser_tests.py:241: AssertionError
+====================== 1 failed, 2 passed in 0.16 seconds ======================
