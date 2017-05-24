@@ -1,0 +1,7 @@
+kajiki
+bottle
+markupsafe
+requests
+gevent
+gevent-websocket
+PyYaml
