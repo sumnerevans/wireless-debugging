@@ -13,21 +13,22 @@ class LogParser(object):
     def parse(message):
         logEntries = []
         current_log = None
-        for line in message.rawLogData.splitlines():
-            if re.search('\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3}', line) is not None:
+        for line in message['rawLogData'].splitlines():
+            line = line.strip()
+            if re.search('^\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3}', line) is not None:
                 if current_log is not None:
                     logEntries.append(LogParser.parse_raw_log(current_log))
                 current_log = ''
 
-            current_log += line
+            current_log += '\n%s' % line
 
         logEntries.append(LogParser.parse_raw_log(current_log))
 
-        return json.dumps({
+        return {
             'messageType': 'logData',
             'osType': 'Android',
             'logEntries': logEntries,
-        })
+        }
 
     @staticmethod
     def parse_raw_log(log_data):

@@ -71,7 +71,7 @@ def logDump(message, websocket):
     parsed_logs = LogParser.parse(message)
 
     for connection in _web_interface_ws_connections:
-        connection.send(parsed_logs)
+        connection.send(json.dumps(parsed_logs))
 
 
 @ws_router('associateSession')
