@@ -1,4 +1,9 @@
 .vim-template:*
+.tern-project
+.jsbeautifyrc
+*/resources/css/*
+.jshintrc
+
 # Created by https://www.gitignore.io/api/python,android,androidstudio,appengine,vim,linux,windows,macos,sublimetext,gradle,java,jetbrains,pycharm,pydev,sass,xcode
 
 ### Android ###

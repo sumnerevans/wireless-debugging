@@ -1,0 +1,32 @@
+// Correct the weird issues with the navbar styling
+.navbar-default {
+  .navbar-right {
+    margin-right: 0;
+  }
+
+  .dropdown-menu > li > a:hover {
+    color: white;
+  }
+}
+
+/* Because of the floating nav bar */
+body {
+  padding-top: 70px;
+}
+
+/* Footer styling */
+.footer {
+  margin-top: 45px;
+  padding: 35px 30px 36px;
+  border-top: 1px solid #e5e5e5;
+
+  p {
+    margin-bottom: 0;
+    color: $gray;
+  }
+}
+
+/* Dot separator */
+span.dot-sep {
+  padding: 0 5px;
+}
