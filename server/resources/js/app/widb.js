@@ -32,7 +32,7 @@ class WirelessDebug {
     };
 
     this.ws_.send(JSON.stringify(payload));
-  }
+ }
 
   /** Decodes the WebSocket message and adds to table */
   websocketOnMessage(message) {
