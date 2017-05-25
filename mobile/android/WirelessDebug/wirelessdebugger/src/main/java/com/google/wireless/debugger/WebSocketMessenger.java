@@ -14,7 +14,9 @@ import java.util.ArrayList;
  * Creates a WebSocket connection with a specified server.
  */
 
-public class WebSocketMessenger extends WebSocketClient {
+class WebSocketMessenger extends WebSocketClient {
+
+    private static final String TAG = "-- Websocket --";
 
     private ArrayList<String> logsToSend;
     private int updateTimeInterval;
@@ -24,12 +26,12 @@ public class WebSocketMessenger extends WebSocketClient {
 
     /**
      *
-     * @param socketAddress: The address of the WebSocket connection
+     * @param socketAddress: The address (hostname or IP) of the WebSocket connection
      * @return A new WebSocket messenger object, or null if the URI is invalid
      */
     static WebSocketMessenger buildNewConnection(String socketAddress, int updateTime) {
         URI uri;
-        Log.i("--Websocket -- ", "URI: " + socketAddress);
+        Log.i(TAG, "URI: " + socketAddress);
         try {
             uri = new URI("ws://" + socketAddress + "/ws");
         } catch (URISyntaxException e) {
@@ -41,7 +43,7 @@ public class WebSocketMessenger extends WebSocketClient {
     }
 
     /**
-     * @param uri: Specifies address of the WebSocket connection
+     * @param uri: Specifies address of the WebSocket connection.
      */
     private WebSocketMessenger(URI uri, int updateTime) {
         super(uri);
@@ -51,20 +53,14 @@ public class WebSocketMessenger extends WebSocketClient {
     }
 
     /**
-     *
+     * Callback function for when a connection is opened.
      * @param serverHandshake
      */
     @Override
     public void onOpen(ServerHandshake serverHandshake) {
-        Log.i("Websocket", "Connection opened!");
+        Log.i(TAG, "Connection opened!");
 
-        JSONObject payload = new JSONObject();
-        try {
-            payload.put("Message", "Hello from Anrdoid: " + R.string.app_name);
-        } catch (Exception e) {
-            Log.e("Websocket", e.toString());
-        }
-        //send(payload.toString());
+        // TODO: send a start session message
     }
 
     /**
@@ -78,14 +74,14 @@ public class WebSocketMessenger extends WebSocketClient {
 
     @Override
     public void onClose(int i, String s, boolean b) {
-        Log.i("Websocket", "Closed " + s);
+        Log.i(TAG, "Closed " + s);
     }
 
 
     @Override
     public void onError(Exception e) {
         running = false;
-        Log.e("Websocket", "Error " + e.getMessage());
+        Log.e(TAG, "Error " + e.getMessage());
 
     }
 
@@ -96,18 +92,19 @@ public class WebSocketMessenger extends WebSocketClient {
      */
     private void sendLogDump() {
         JSONObject payload = new JSONObject();
+        // TODO: Check if logsToSend is empty, and don't send empty messages
         try {
             payload.put("messageType", "logDump");
             payload.put("osType", "Android");
 
             String queuedLogs = "";
-            for(String logLine : logsToSend) {
+            for( String logLine : logsToSend ) {
                 queuedLogs += logLine + "\n";
             }
             payload.put("rawLogData", queuedLogs);
             logsToSend.clear();
         } catch (Exception e) {
-            Log.e("Websocket", e.toString());
+            Log.e(TAG, e.toString());
         }
         send(payload.toString());
     }
@@ -115,8 +112,9 @@ public class WebSocketMessenger extends WebSocketClient {
 
     void enqueueLog(String logLine) {
         logsToSend.add(logLine);
+        // TODO: Move this to another function
         long diff = System.currentTimeMillis() - lastSendTime;
-        if (diff > updateTimeInterval && isOpen()){
+        if (diff > updateTimeInterval && isOpen()) {
             sendLogDump();
         }
     }
