@@ -15,10 +15,10 @@ class LogReader implements Runnable {
     private Boolean threadRunning = true;
     private WebSocketMessenger webSocketMessenger;
 
-    LogReader(String hostname, int timeInterval){
+    LogReader(String hostname, int timeInterval) {
         // Create the Messenger Object
         webSocketMessenger = WebSocketMessenger.buildNewConnection(hostname, timeInterval);
-        if (webSocketMessenger == null){
+        if (webSocketMessenger == null) {
            Log.e(TAG, "Failed to create WebSocketMessenger Object");
         }
     }
@@ -29,9 +29,10 @@ class LogReader implements Runnable {
             // Clear logcat buffer of any previous data and exit
             Runtime.getRuntime().exec("logcat -c");
 
-            Process process = Runtime.getRuntime().exec("logcat -v threadtime");
+            // Start the logcat process
+            Process logcatProcess = Runtime.getRuntime().exec("logcat -v threadtime");
             BufferedReader bufferedReader = new BufferedReader(
-                    new InputStreamReader(process.getInputStream()));
+                    new InputStreamReader(logcatProcess.getInputStream()));
 
 
             String logLine = "";
@@ -40,7 +41,7 @@ class LogReader implements Runnable {
             while (hostAppRunning && webSocketMessenger.isRunning()) {
                 logLine = bufferedReader.readLine();
 
-                if (logLine == null){
+                if (logLine == null) {
                     try {
                         /* This is mostly a test.  With high accelerometer logging this value
                            the difference between logs is about 20 ms, so hopefully a
@@ -78,19 +79,19 @@ class LogReader implements Runnable {
      * Temporary function.
      * Called if the app terminates
      */
-    private void outputLogs()  {
+    private void outputLogs() {
         Log.d(TAG, "BEGIN LOG OUTPUT");
-        for (String logLine : logs){
+        for (String logLine : logs) {
             Log.i(TAG, logLine);
         }
         Log.d(TAG, "END LOG OUTPUT");
     }
 
-    void setAppTerminated()  {
+    void setAppTerminated() {
         hostAppRunning = false;
     }
 
-    boolean isThreadRunning()  {
+    boolean isThreadRunning() {
         return threadRunning;
     }
 

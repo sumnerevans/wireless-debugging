@@ -8,41 +8,35 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-public class WirelessDebugger extends Service{
+public class WirelessDebugger extends Service {
 
     private static WirelessDebugger theInstance;
 
     private static final String TAG = "------ WDB ------";
 
+    // Extras to pass arguments to the intent that starts the service
     private static final String HOSTNAME_EXTRA = "hostname";
     private static final String TIME_INTERVAL_EXTRA = "time_interval";
 
     private LogReader logReader;
 
 
-    public static void start(String hostname, int timeInterval, Context appContext)  {
-        if (theInstance == null){
+    public static void start(String hostname, int timeInterval, Context appContext) {
+        if (theInstance == null) {
             theInstance = new WirelessDebugger(hostname, timeInterval, appContext);
         }
     }
 
-    private WirelessDebugger(String hostname, int timeInterval, Context appContext)  {
-
+    private WirelessDebugger(String hostname, int timeInterval, Context appContext) {
         Intent startIntent = new Intent(appContext, this.getClass());
         startIntent.putExtra(HOSTNAME_EXTRA, hostname);
         startIntent.putExtra(TIME_INTERVAL_EXTRA, timeInterval);
         appContext.startService(startIntent);
-
     }
 
     // TODO: This is needed by the Manifest to declare as a Service, WHY?
-    public WirelessDebugger(){}
+    public WirelessDebugger() {}
 
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
 
     /**
      * Called by the OS after startService(Intent) is called.
@@ -64,7 +58,7 @@ public class WirelessDebugger extends Service{
         logThread.start();
 
 
-        // TODO: Investigate the meaning of the return value
+        // Prevents OS from attempting to restart the service if it is killed
         return START_NOT_STICKY;
     }
 
