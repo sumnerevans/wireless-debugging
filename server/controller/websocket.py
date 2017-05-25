@@ -9,6 +9,7 @@ from bottle import route, request, abort
 from geventwebsocket import WebSocketError
 
 from parsing_lib import LogParser
+from helpers import util
 
 
 # Store a dictionary of string -> function
@@ -29,6 +30,7 @@ def handle_websocket():
     if not websocket:
         abort(400, 'Expected WebSocket request.')
 
+    print('connection received')
     while not websocket.closed:
         try:
             message = websocket.receive()
@@ -71,7 +73,7 @@ def logDump(message, websocket):
     parsed_logs = LogParser.parse(message)
 
     for connection in _web_interface_ws_connections:
-        connection.send(json.dumps(parsed_logs))
+        connection.send(util.serialize_json(parsed_logs))
 
 
 @ws_router('associateSession')

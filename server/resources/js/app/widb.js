@@ -32,13 +32,6 @@ class WirelessDebug {
     };
 
     this.ws_.send(JSON.stringify(payload));
-
-    // TODO: get rid of this, only for testing purposes
-    payload = {
-      messageType: 'logDump',
-    };
-
-    this.ws_.send(JSON.stringify(payload));
   }
 
   /** Decodes the WebSocket message and adds to table */
@@ -57,7 +50,7 @@ class WirelessDebug {
       'Warning': 'warning',
       'Error': 'danger',
     };
-    
+
     return `<tr class="${color[logEntry.logType]}">
     <td>${logEntry.time}</td>
     <td>${logEntry.tag}</td>
