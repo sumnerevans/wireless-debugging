@@ -15,7 +15,7 @@ def test_parse():
         05-22 11:44:32.191 7080 7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection'''
         },
         {
-            'rawLogData':'''05-24 12:12:49.247 23930 23930 E AndroidRuntime: FATAL EXCEPTION: main
+            'rawLogData': '''05-24 12:12:49.247 23930 23930 E AndroidRuntime: FATAL EXCEPTION: main
         05-24 12:12:49.247 23930 23930 E AndroidRuntime: Process: com.google.wireless.debugging, PID: 23930
         05-24 12:12:49.247 23930 23930 E AndroidRuntime: java.lang.RuntimeException: Forced Crash
         05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at com.google.wireless.debugging.example.MainFragment$2.onClick(MainFragment.java:73)
@@ -52,7 +52,12 @@ def test_parse():
         05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:612)
         05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at dalvik.system.NativeStart.main(Native Method)'''
         },
-	
+        {
+            'rawLogData': '''05-22 11:44:32.191 7080 7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection
+        --------- beginning of /dev/log/system
+        05-24 12:12:49.247 23930 23930 E AndroidRuntime: FATAL EXCEPTION: main'''
+        },
+
     ]
     expected_results = [
         {
@@ -137,9 +142,29 @@ def test_parse():
  	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:612)
  	at dalvik.system.NativeStart.main(Native Method)'''
                 },
-                
+
             ],
         },
+        {
+            'messageType': 'logData',
+            'osType': 'Android',
+            'logEntries': [                {
+                    'time': datetime(current_year, 5, 22, 11, 44, 32, 191000),
+                    'logType': 'Warning',
+                    'tag': 'IInputConnectionWrapper',
+                    'text': 'getTextBeforeCursor on inactive InputConnection',
+                },
+                {
+                    'time': datetime(current_year, 5, 24, 12, 12, 49, 247000),
+                    'logType': 'Error',
+                    'tag': 'AndroidRuntime',
+                    'text':
+                    '''FATAL EXCEPTION: main'''
+                },
+
+            ],
+        },
+
     ]
 
     for test, expected_result in zip(tests, expected_results):

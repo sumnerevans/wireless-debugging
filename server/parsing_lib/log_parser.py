@@ -22,25 +22,23 @@ class LogParser(object):
         log_entries = []
         raw_data = message['rawLogData'].splitlines()
 
-        #get first log to start checking for if an event was split across different logs
-        old_log = LogParser.parse_raw_log(raw_data[1])
-        #first log is not the beginning log message 
-        if re.search('--------- beginning of /dev/log/', raw_data[0]) is None:
-            old_log = LogParser.parse_raw_log(raw_data[0])            
+        # first log is not the beginning log message
+        while re.search('beginning of /dev/log/', raw_data[0]) is not None:
+            raw_data = raw_data[1:]
+
+        # get first log to start checking for if an event was split across
+        # different logs
+        old_log = LogParser.parse_raw_log(raw_data[0])
         log_entries.append(LogParser.parse_entries(old_log))
-        current_log = ''
-        log_entry_index = 1
-        first_line = True
+        current_log = None
 
-        for line in raw_data:
-            #skip the beginning line and the first line stored in the old_log variable
-            if re.search('--------- beginning of /dev/log/', line) is not None:
-                continue
-            elif first_line:
-                first_line = False
+        for line in raw_data[1:]:
+            # skip the beginning line and the first line stored in the old_log
+            # variable
+            if re.search('beginning of /dev/log/', line) is not None:
                 continue
 
-            #check if current log is like the previous log parsed 
+            # check if current log is like the previous log parsed
             current_log = LogParser.parse_raw_log(line)
             if (current_log['time'] != old_log['time'] or
                 current_log['processId'] != old_log['processId'] or
@@ -48,12 +46,12 @@ class LogParser(object):
                 current_log['logType'] != old_log['logType'] or
                 current_log['tag'] != old_log['tag']):
                 log_entries.append(LogParser.parse_entries(current_log))
-                log_entry_index += 1
             else:
-                #if part of the same event, add the log's text to the previous parsed log
-                log_entries[log_entry_index - 1]['text'] += ('\n %s' % current_log['text'])
+                # if part of the same event, add the log's text to the previous
+                # parsed log
+                log_entries[-1]['text'] += ('\n %s' % current_log['text'])
             old_log = current_log
-            
+
         return {
             'messageType': 'logData',
             'osType': 'Android',
@@ -76,7 +74,8 @@ class LogParser(object):
             'tag': log_entry['tag'],
             'text': log_entry['text'],
         }
-        
+
+
     @staticmethod
     def parse_raw_log(log_data):
         """ Parse a raw log line

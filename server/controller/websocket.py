@@ -60,7 +60,7 @@ def ws_router(messageType):
 
 
 @ws_router('logDump')
-def logDump(message, websocket):
+def log_dump(message, websocket):
     """ Handles Log Dumps from the Mobile API
 
     When a log dump comes in from the Mobile API, this function takes the raw
@@ -77,7 +77,7 @@ def logDump(message, websocket):
 
 
 @ws_router('associateSession')
-def associateSession(message, websocket):
+def associate_session(message, websocket):
     """ Associates a WebSocket connection with a session
 
     When a browser requests to be associated with a session, add the associated
