@@ -31,6 +31,7 @@ def handle_websocket():
         abort(400, 'Expected WebSocket request.')
 
     print('connection received')
+
     while not websocket.closed:
         try:
             message = websocket.receive()
@@ -74,7 +75,6 @@ def log_dump(message, websocket):
 
     for connection in _web_interface_ws_connections:
         connection.send(util.serialize_json(parsed_logs))
-
 
 @ws_router('associateSession')
 def associate_session(message, websocket):
