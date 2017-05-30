@@ -1,12 +1,10 @@
-#! /usr/bin/env python3
-
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 """
 Defines the Kajiki View Decorator
 """
 
 import functools
 
-from helpers import util
 from kajiki import FileLoader, XMLTemplate
 
 loader = FileLoader('template')
@@ -30,7 +28,9 @@ def kajiki_view(template_name):
     Returns:
         decorator: the decorated function
     """
+
     def decorator(view_func):
+
         @functools.wraps(view_func)
         def wrapper(*args, **kwargs):
             response = view_func(*args, **kwargs)
@@ -40,10 +40,7 @@ def kajiki_view(template_name):
                 # the template
                 Template = loader.load('%s.xhtml' % template_name)
 
-                t = Template({
-                    **response,
-                    **util.extra_template_context()
-                })
+                t = Template(response)
                 return t.render()
             else:
                 return response

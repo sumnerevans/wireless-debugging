@@ -1,0 +1,21 @@
+[{
+  "input": "05-22 11:44:31.180 7080 7080 I WiDB Example: aX: 3.0262709 aY: 2.0685902",
+  "expectedResult": {
+    "time": "05-22 11:44:31.180000",
+    "processId": "7080",
+    "threadId": "7080",
+    "logType": "Info",
+    "tag": "WiDB Example",
+    "text": "aX: 3.0262709 aY: 2.0685902"
+  }
+}, {
+  "input": "05-22 11:44:32.191 7080 7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection",
+  "expectedResult": {
+    "time": "05-22 11:44:32.191000",
+    "processId": "7080",
+    "threadId": "7080",
+    "logType": "Warning",
+    "tag": "IInputConnectionWrapper",
+    "text": "getTextBeforeCursor on inactive InputConnection"
+  }
+}]

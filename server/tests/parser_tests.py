@@ -1,198 +1,69 @@
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 """
 Tests for the Parsing Library
 """
 
+import json
 from datetime import datetime
 import parsing_lib
 
 
-def test_parse():
+def _test_case_parser(test_case):
+    """ Parses test case JSON.
+
+    Corrects some of the default parsing functionality to work better with the
+    given test cases
+
+    Args:
+        test_case: the test case to parse
+
+    Returns:
+        the corrected, parsed test case
+    """
+
     current_year = datetime.now().year
-    tests = [
-        {
-            'rawLogData': '''--------- beginning of /dev/log/system
-        05-22 11:44:31.180 7080 7080 I WiDB Example: aX: 3.0262709 aY: 2.0685902
-        05-22 11:44:32.191 7080 7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection'''
-        },
-        {
-            'rawLogData': '''05-24 12:12:49.247 23930 23930 E AndroidRuntime: FATAL EXCEPTION: main
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: Process: com.google.wireless.debugging, PID: 23930
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: java.lang.RuntimeException: Forced Crash
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at com.google.wireless.debugging.example.MainFragment$2.onClick(MainFragment.java:73)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at android.view.View.performClick(View.java:4445)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at android.view.View$PerformClick.run(View.java:18446)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:733)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:95)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:136)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:5146)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at java.lang.reflect.Method.invokeNative(Native Method)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Method.java:515)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:796)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:612)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at dalvik.system.NativeStart.main(Native Method)'''
-        },
-        {
-            'rawLogData': '''--------- beginning of /dev/log/system
-        05-22 11:44:31.180 7080 7080 I WiDB Example: aX: 3.0262709 aY: 2.0685902
-        05-22 11:44:32.191 7080 7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection
-        --------- beginning of /dev/log/system
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: FATAL EXCEPTION: main
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: Process: com.google.wireless.debugging, PID: 23930
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: java.lang.RuntimeException: Forced Crash
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at com.google.wireless.debugging.example.MainFragment$2.onClick(MainFragment.java:73)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at android.view.View.performClick(View.java:4445)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at android.view.View$PerformClick.run(View.java:18446)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:733)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:95)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:136)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:5146)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at java.lang.reflect.Method.invokeNative(Native Method)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Method.java:515)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:796)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:612)
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: 	at dalvik.system.NativeStart.main(Native Method)'''
-        },
-        {
-            'rawLogData': '''05-22 11:44:32.191 7080 7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection
-        --------- beginning of /dev/log/system
-        05-24 12:12:49.247 23930 23930 E AndroidRuntime: FATAL EXCEPTION: main'''
-        },
 
-    ]
-    expected_results = [
-        {
-            'messageType': 'logData',
-            'osType': 'Android',
-            'logEntries': [
-                {
-                    'time': datetime(current_year, 5, 22, 11, 44, 31, 180000),
-                    'logType': 'Info',
-                    'tag': 'WiDB Example',
-                    'text': 'aX: 3.0262709 aY: 2.0685902',
-                },
-                {
-                    'time': datetime(current_year, 5, 22, 11, 44, 32, 191000),
-                    'logType': 'Warning',
-                    'tag': 'IInputConnectionWrapper',
-                    'text': 'getTextBeforeCursor on inactive InputConnection',
-                },
-            ],
-        },
-        {
-            'messageType': 'logData',
-            'osType': 'Android',
-            'logEntries': [
-                {
-                    'time': datetime(current_year, 5, 24, 12, 12, 49, 247000),
-                    'logType': 'Error',
-                    'tag': 'AndroidRuntime',
-                    'text':
-                    '''FATAL EXCEPTION: main
- Process: com.google.wireless.debugging, PID: 23930
- java.lang.RuntimeException: Forced Crash
- 	at com.google.wireless.debugging.example.MainFragment$2.onClick(MainFragment.java:73)
- 	at android.view.View.performClick(View.java:4445)
- 	at android.view.View$PerformClick.run(View.java:18446)
- 	at android.os.Handler.handleCallback(Handler.java:733)
- 	at android.os.Handler.dispatchMessage(Handler.java:95)
- 	at android.os.Looper.loop(Looper.java:136)
- 	at android.app.ActivityThread.main(ActivityThread.java:5146)
- 	at java.lang.reflect.Method.invokeNative(Native Method)
- 	at java.lang.reflect.Method.invoke(Method.java:515)
- 	at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:796)
- 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:612)
- 	at dalvik.system.NativeStart.main(Native Method)'''
-                },
-            ],
-        },
-        {
-            'messageType': 'logData',
-            'osType': 'Android',
-            'logEntries': [
-                {
-                    'time': datetime(current_year, 5, 22, 11, 44, 31, 180000),
-                    'logType': 'Info',
-                    'tag': 'WiDB Example',
-                    'text': 'aX: 3.0262709 aY: 2.0685902',
-                },
-                {
-                    'time': datetime(current_year, 5, 22, 11, 44, 32, 191000),
-                    'logType': 'Warning',
-                    'tag': 'IInputConnectionWrapper',
-                    'text': 'getTextBeforeCursor on inactive InputConnection',
-                },
-                {
-                    'time': datetime(current_year, 5, 24, 12, 12, 49, 247000),
-                    'logType': 'Error',
-                    'tag': 'AndroidRuntime',
-                    'text':
-                    '''FATAL EXCEPTION: main
- Process: com.google.wireless.debugging, PID: 23930
- java.lang.RuntimeException: Forced Crash
- 	at com.google.wireless.debugging.example.MainFragment$2.onClick(MainFragment.java:73)
- 	at android.view.View.performClick(View.java:4445)
- 	at android.view.View$PerformClick.run(View.java:18446)
- 	at android.os.Handler.handleCallback(Handler.java:733)
- 	at android.os.Handler.dispatchMessage(Handler.java:95)
- 	at android.os.Looper.loop(Looper.java:136)
- 	at android.app.ActivityThread.main(ActivityThread.java:5146)
- 	at java.lang.reflect.Method.invokeNative(Native Method)
- 	at java.lang.reflect.Method.invoke(Method.java:515)
- 	at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:796)
- 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:612)
- 	at dalvik.system.NativeStart.main(Native Method)'''
-                },
+    # Parse test case time
+    if 'time' in test_case:
+        date_with_year = '%s-%s' % (str(current_year), test_case['time'])
+        test_case['time'] = datetime.strptime(date_with_year,
+                                              '%Y-%m-%d %H:%M:%S.%f')
 
-            ],
-        },
-        {
-            'messageType': 'logData',
-            'osType': 'Android',
-            'logEntries': [                {
-                    'time': datetime(current_year, 5, 22, 11, 44, 32, 191000),
-                    'logType': 'Warning',
-                    'tag': 'IInputConnectionWrapper',
-                    'text': 'getTextBeforeCursor on inactive InputConnection',
-                },
-                {
-                    'time': datetime(current_year, 5, 24, 12, 12, 49, 247000),
-                    'logType': 'Error',
-                    'tag': 'AndroidRuntime',
-                    'text':
-                    '''FATAL EXCEPTION: main'''
-                },
+    # Parse multiline input into one string
+    if 'inputLines' in test_case:
+        if isinstance(test_case['inputLines'], list):
+            test_case['inputLines'] = '\n'.join(test_case['inputLines'])
 
-            ],
-        },
+    # Parse log entry text into one string
+    if 'logEntries' in test_case:
+        for log_entry in test_case['logEntries']:
+            if 'text' in log_entry and isinstance(log_entry['text'], list):
+                log_entry['text'] = '\n'.join(log_entry['text'])
 
-    ]
+    return test_case
 
-    for test, expected_result in zip(tests, expected_results):
-        assert parsing_lib.LogParser.parse(test) == expected_result
+
+def test_parse():
+    """ Tests that the LogParser.parse method works properly. """
+
+    with open('test_parse.json') as test_case_file:
+        test_cases = json.load(test_case_file, object_hook=_test_case_parser)
+
+        for test_case in test_cases:
+            test_input = {
+                'rawLogData': test_case['inputLines'],
+            }
+            expected_result = test_case['expectedResult']
+            assert parsing_lib.LogParser.parse(test_input) == expected_result
 
 
 def test_parse_raw_log():
-    current_year = datetime.now().year
-    tests = {
-        '05-22 11:44:31.180 7080 7080 I WiDB Example: aX: 3.0262709 aY: 2.0685902':
-        {
-            'time': datetime(current_year, 5, 22, 11, 44, 31, 180000),
-            'processId': '7080',
-            'threadId': '7080',
-            'logType': 'Info',
-            'tag': 'WiDB Example',
-            'text': 'aX: 3.0262709 aY: 2.0685902',
-        },
-        '05-22 11:44:32.191 7080 7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection':
-        {
-            'time': datetime(current_year, 5, 22, 11, 44, 32, 191000),
-            'processId': '7080',
-            'threadId': '7080',
-            'logType': 'Warning',
-            'tag': 'IInputConnectionWrapper',
-            'text': 'getTextBeforeCursor on inactive InputConnection',
-        },
-    }
+    """ Tests that the LogParser.parse_raw_log method works properly. """
 
-    for test, expected_result in tests.items():
-        assert parsing_lib.LogParser.parse_raw_log(test) == expected_result
+    with open('test_parse_raw.json') as test_case_file:
+        test_cases = json.load(test_case_file, object_hook=_test_case_parser)
+
+        for test_case in test_cases:
+            test = test_case['input']
+            expected_result = test_case['expectedResult']
+            assert parsing_lib.LogParser.parse_raw_log(test) == expected_result
