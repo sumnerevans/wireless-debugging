@@ -27,7 +27,7 @@ class WebSocketMessenger extends WebSocketClient {
      * @return A new WebSocket messenger object, or null if the URI is invalid.
      */
     @CheckForNull
-    static WebSocketMessenger buildNewConnection(String socketAddress, int updateTime) {
+    public static WebSocketMessenger buildNewConnection(String socketAddress, int updateTime) {
         URI uri;
         Log.i(TAG, "URI: " + socketAddress);
         try {
@@ -59,7 +59,7 @@ class WebSocketMessenger extends WebSocketClient {
     public void onOpen(ServerHandshake serverHandshake) {
         Log.i(TAG, "Connection opened!");
 
-        // TODO: send a start session message
+        // TODO (Reece): send a start session message
     }
 
     /**
@@ -98,7 +98,7 @@ class WebSocketMessenger extends WebSocketClient {
      */
     private void sendLogDump() {
         JSONObject payload = new JSONObject();
-        // TODO: Check if logsToSend is empty, and don't send empty messages
+        // TODO (Reece): Check if logsToSend is empty, and don't send empty messages
         try {
             payload.put("messageType", "logDump");
             payload.put("osType", "Android");
@@ -121,7 +121,7 @@ class WebSocketMessenger extends WebSocketClient {
      */
     public void enqueueLog(String logLine) {
         logsToSend.add(logLine);
-        // TODO: Move this to another function
+        // TODO (Reece): Move this to another function
         long diff = System.currentTimeMillis() - lastSendTime;
         if (diff > updateTimeInterval && isOpen()) {
             sendLogDump();

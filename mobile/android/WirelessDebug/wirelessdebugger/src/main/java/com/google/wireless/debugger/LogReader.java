@@ -76,7 +76,7 @@ class LogReader implements Runnable {
             }
 
 
-            // TODO: Replace with a send finished signal to the web socket messenger
+            // TODO (Reece): Replace with a send finished signal to the web socket messenger
             outputLogs();
         }
         catch (IOException ioe) {
