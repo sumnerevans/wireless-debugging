@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import javax.annotation.CheckForNull;
 
 /**
  * Creates a WebSocket connection with a specified server and sends packaged logs.
@@ -25,6 +26,7 @@ class WebSocketMessenger extends WebSocketClient {
      * @param socketAddress: The address (hostname or IP) of the WebSocket connection
      * @return A new WebSocket messenger object, or null if the URI is invalid
      */
+    @CheckForNull
     static WebSocketMessenger buildNewConnection(String socketAddress, int updateTime) {
         URI uri;
         Log.i(TAG, "URI: " + socketAddress);
@@ -39,6 +41,7 @@ class WebSocketMessenger extends WebSocketClient {
     }
 
     /**
+     * Constructs a new WebSocketMessenger object and attempts to establish a connection.
      * @param uri: Specifies address of the WebSocket connection.
      */
     private WebSocketMessenger(URI uri, int updateTime) {
@@ -67,12 +70,10 @@ class WebSocketMessenger extends WebSocketClient {
     @Override
     public void onMessage(String s) {}
 
-
     @Override
     public void onClose(int i, String s, boolean b) {
         Log.i(TAG, "Closed " + s);
     }
-
 
     @Override
     public void onError(Exception e) {
@@ -80,7 +81,6 @@ class WebSocketMessenger extends WebSocketClient {
         Log.e(TAG, "Error " + e.getMessage());
 
     }
-
 
     /**
      * Takes all the logs from the array list and places them all in a JSON object.
@@ -104,7 +104,6 @@ class WebSocketMessenger extends WebSocketClient {
         }
         send(payload.toString());
     }
-
 
     public void enqueueLog(String logLine) {
         logsToSend.add(logLine);

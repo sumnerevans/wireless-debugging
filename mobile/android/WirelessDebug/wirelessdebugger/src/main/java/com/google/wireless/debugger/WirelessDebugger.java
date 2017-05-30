@@ -10,16 +10,14 @@ import android.util.Log;
 
 public class WirelessDebugger extends Service {
 
-    private static WirelessDebugger theInstance;
+    private static WirelessDebugger wirelessDebuggerInstance;
 
     private static final String TAG = "------ WDB ------";
-
     // Extras to pass arguments to the intent that starts the service
     private static final String HOSTNAME_EXTRA = "hostname";
     private static final String TIME_INTERVAL_EXTRA = "time_interval";
 
     private LogReader logReader;
-
 
     /**
      * Starts wireless debugging for the calling application
@@ -28,8 +26,8 @@ public class WirelessDebugger extends Service {
      * @param appContext Context of the calling application (use getApplicationContext())
      */
     public static void start(String hostname, int timeInterval, Context appContext) {
-        if (theInstance == null) {
-            theInstance = new WirelessDebugger(hostname, timeInterval, appContext);
+        if (wirelessDebuggerInstance == null) {
+            wirelessDebuggerInstance = new WirelessDebugger(hostname, timeInterval, appContext);
         }
     }
 
@@ -42,7 +40,6 @@ public class WirelessDebugger extends Service {
 
     // TODO: This is needed by the Manifest to declare as a Service, WHY?
     public WirelessDebugger() {}
-
 
     /**
      * Called by the OS after startService(Intent) is called.
@@ -62,7 +59,6 @@ public class WirelessDebugger extends Service {
         logReader = new LogReader(hostname, timeInterval);
         Thread logThread = new Thread(logReader);
         logThread.start();
-
 
         // Prevents OS from attempting to restart the service if it is killed
         return START_NOT_STICKY;

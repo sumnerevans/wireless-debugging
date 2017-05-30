@@ -27,6 +27,13 @@ class LogReader implements Runnable {
 
     @Override
     public void run() {
+
+        if (webSocketMessenger == null){
+            Log.e(TAG, "No WebSocketMessengerObject, exiting.");
+            threadRunning = false;
+            return;
+        }
+
         try {
             // Clear logcat buffer of any previous data and exit
             Runtime.getRuntime().exec("logcat -c");
@@ -57,12 +64,7 @@ class LogReader implements Runnable {
                 webSocketMessenger.enqueueLog(logLine);
                 logs.add(logLine);
             }
-            // TODO: Read any remaining logs in buffer
-            /*
-            while (logLine != null){
-                logLine = bufferedReader.readLine();
-                // Send
-            }*/
+
 
             // TODO: Replace with a send finished signal to the web socket messenger
             outputLogs();
