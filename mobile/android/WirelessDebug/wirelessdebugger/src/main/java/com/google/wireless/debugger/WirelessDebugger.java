@@ -8,11 +8,16 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+/**
+ * Wireless Debugger is a background service that run for the lifetime of the app it is attached to.
+ * During this time it will send device logs to a server.
+ * To start this service use the WirelessDebugger start method.
+ */
 public class WirelessDebugger extends Service {
 
     private static WirelessDebugger wirelessDebuggerInstance;
 
-    private static final String TAG = "------ WDB ------";
+    private static final String TAG = "Wireless Debugger";
     // Extras to pass arguments to the intent that starts the service
     private static final String HOSTNAME_EXTRA = "hostname";
     private static final String TIME_INTERVAL_EXTRA = "time_interval";
@@ -20,7 +25,7 @@ public class WirelessDebugger extends Service {
     private LogReader logReader;
 
     /**
-     * Starts wireless debugging for the calling application
+     * Starts wireless debugging for the calling application.
      * @param hostname IP/domain of the server to send logs to
      * @param timeInterval Time interval (in ms) between sending logs
      * @param appContext Context of the calling application (use getApplicationContext())
@@ -31,6 +36,12 @@ public class WirelessDebugger extends Service {
         }
     }
 
+    /**
+     * Private Constructor that starts the WirelessDebugger service.
+     * @param hostname Server IP/Hostname
+     * @param timeInterval Time Interval between sending logs
+     * @param appContext Hosting application's context
+     */
     private WirelessDebugger(String hostname, int timeInterval, Context appContext) {
         Intent startIntent = new Intent(appContext, this.getClass());
         startIntent.putExtra(HOSTNAME_EXTRA, hostname);
@@ -38,16 +49,19 @@ public class WirelessDebugger extends Service {
         appContext.startService(startIntent);
     }
 
-    // TODO: This is needed by the Manifest to declare as a Service, WHY?
+    /**
+     * Required by Android
+     * DO NOT CALL
+     */
     public WirelessDebugger() {}
 
     /**
      * Called by the OS after startService(Intent) is called.
      * Creates and starts the log reading background thread
-     * @param intent
-     * @param flags
-     * @param startId
-     * @return
+     * @param intent Intent used to start the service (must contain host and time interval extras)
+     * @param flags Used by OS
+     * @param startId Used by OS
+     * @return Integer telling the OS how to handle the service if it exits.
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

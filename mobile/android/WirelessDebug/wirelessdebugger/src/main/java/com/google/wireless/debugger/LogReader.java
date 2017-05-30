@@ -18,6 +18,12 @@ class LogReader implements Runnable {
     private Boolean threadRunning = true;
     private WebSocketMessenger webSocketMessenger;
 
+    /**
+     * Creates LogReader instance if none exists.
+     * Creates a new WebSocketMessenger also.
+     * @param hostname Server's IP/Host address
+     * @param timeInterval Time interval between log sends
+     */
     LogReader(String hostname, int timeInterval) {
         webSocketMessenger = WebSocketMessenger.buildNewConnection(hostname, timeInterval);
         if (webSocketMessenger == null) {
@@ -25,6 +31,10 @@ class LogReader implements Runnable {
         }
     }
 
+    /**
+     * Inherited from Runnable. Run on a separate thread.
+     * Performs the logging and sending of logs.
+     */
     @Override
     public void run() {
 
@@ -89,10 +99,17 @@ class LogReader implements Runnable {
         Log.d(TAG, "END LOG OUTPUT");
     }
 
+    /**
+     * Notifies LogReader that the application is no longer running, logging is not longer required.
+     */
     void setAppTerminated() {
         hostAppRunning = false;
     }
 
+    /**
+     * Tells the caller if LogReader is still working (reading logs or sending them).
+     * @return True if it is still running.  False otherwise.
+     */
     boolean isThreadRunning() {
         return threadRunning;
     }

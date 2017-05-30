@@ -23,8 +23,8 @@ class WebSocketMessenger extends WebSocketClient {
     /**
      * Creates a new WebSocketMessenger using the specified address.
      * If the address is invalid this function will return null.
-     * @param socketAddress: The address (hostname or IP) of the WebSocket connection
-     * @return A new WebSocket messenger object, or null if the URI is invalid
+     * @param socketAddress: The address (hostname or IP) of the WebSocket connection.
+     * @return A new WebSocket messenger object, or null if the URI is invalid.
      */
     @CheckForNull
     static WebSocketMessenger buildNewConnection(String socketAddress, int updateTime) {
@@ -63,18 +63,28 @@ class WebSocketMessenger extends WebSocketClient {
     }
 
     /**
-     * Needs to be implmented for WebSocketClient
-     * However, we will never receive messages, so this is unused
-     * @param s, The received message
+     * Needs to be implemented for WebSocketClient.
+     * However, we will never receive messages, so this is unused.
+     * @param s, The received message.
      */
     @Override
     public void onMessage(String s) {}
 
+    /**
+     * Called by the parent when the web socket connection is closed.
+     * @param i
+     * @param s
+     * @param b
+     */
     @Override
     public void onClose(int i, String s, boolean b) {
         Log.i(TAG, "Closed " + s);
     }
 
+    /**
+     * Called by the parent if a web socket error occurs.
+     * @param e
+     */
     @Override
     public void onError(Exception e) {
         running = false;
@@ -84,7 +94,7 @@ class WebSocketMessenger extends WebSocketClient {
 
     /**
      * Takes all the logs from the array list and places them all in a JSON object.
-     * Clears the list then sends the the JSON object to the server
+     * Clears the list then sends the the JSON object to the server.
      */
     private void sendLogDump() {
         JSONObject payload = new JSONObject();
@@ -105,6 +115,10 @@ class WebSocketMessenger extends WebSocketClient {
         send(payload.toString());
     }
 
+    /**
+     * Places logLine in a queue to be sent to the server.
+     * @param logLine Raw log to be sent.
+     */
     public void enqueueLog(String logLine) {
         logsToSend.add(logLine);
         // TODO: Move this to another function
@@ -114,6 +128,10 @@ class WebSocketMessenger extends WebSocketClient {
         }
     }
 
+    /**
+     * Returns weather or not the connection is running.
+     * @return True if there is a connection, false otherwise.
+     */
     public boolean isRunning() { return running; }
 
 }
