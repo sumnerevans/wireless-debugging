@@ -1,31 +1,27 @@
 package com.google.wireless.debugger;
 
 import android.util.Log;
-
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONObject;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 /**
- * Creates a WebSocket connection with a specified server.
+ * Creates a WebSocket connection with a specified server and sends packaged logs.
  */
-
 class WebSocketMessenger extends WebSocketClient {
 
-    private static final String TAG = "-- Websocket --";
-
+    private static final String TAG = "Web Socket Messenger";
     private ArrayList<String> logsToSend;
     private int updateTimeInterval;
-    private long lastSendTime;
+    private long lastSendTime = 0;
     private boolean running = true;
 
-
     /**
-     *
+     * Creates a new WebSocketMessenger using the specified address.
+     * If the address is invalid this function will return null.
      * @param socketAddress: The address (hostname or IP) of the WebSocket connection
      * @return A new WebSocket messenger object, or null if the URI is invalid
      */
@@ -110,7 +106,7 @@ class WebSocketMessenger extends WebSocketClient {
     }
 
 
-    void enqueueLog(String logLine) {
+    public void enqueueLog(String logLine) {
         logsToSend.add(logLine);
         // TODO: Move this to another function
         long diff = System.currentTimeMillis() - lastSendTime;
@@ -119,6 +115,6 @@ class WebSocketMessenger extends WebSocketClient {
         }
     }
 
-    boolean isRunning() { return running; }
+    public boolean isRunning() { return running; }
 
 }

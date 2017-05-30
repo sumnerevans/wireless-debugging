@@ -1,22 +1,24 @@
 package com.google.wireless.debugger;
 
 import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+/**
+ * Reads Logcat Logs from the buffer and sends them to a server using a WebSocketMessenger.
+ * Implements Runnable so it can be run its own thread.
+ */
 class LogReader implements Runnable {
 
-    private static final String TAG = "--- WDB Log Reader ---";
+    private static final String TAG = "Log Reader";
     private ArrayList<String> logs = new ArrayList<>();
     private Boolean hostAppRunning = true;
     private Boolean threadRunning = true;
     private WebSocketMessenger webSocketMessenger;
 
     LogReader(String hostname, int timeInterval) {
-        // Create the Messenger Object
         webSocketMessenger = WebSocketMessenger.buildNewConnection(hostname, timeInterval);
         if (webSocketMessenger == null) {
            Log.e(TAG, "Failed to create WebSocketMessenger Object");
@@ -33,7 +35,6 @@ class LogReader implements Runnable {
             Process logcatProcess = Runtime.getRuntime().exec("logcat -v threadtime");
             BufferedReader bufferedReader = new BufferedReader(
                     new InputStreamReader(logcatProcess.getInputStream()));
-
 
             String logLine = "";
 
@@ -55,7 +56,6 @@ class LogReader implements Runnable {
                 }
                 webSocketMessenger.enqueueLog(logLine);
                 logs.add(logLine);
-
             }
             // TODO: Read any remaining logs in buffer
             /*

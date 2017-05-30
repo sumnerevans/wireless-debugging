@@ -21,6 +21,12 @@ public class WirelessDebugger extends Service {
     private LogReader logReader;
 
 
+    /**
+     * Starts wireless debugging for the calling application
+     * @param hostname IP/domain of the server to send logs to
+     * @param timeInterval Time interval (in ms) between sending logs
+     * @param appContext Context of the calling application (use getApplicationContext())
+     */
     public static void start(String hostname, int timeInterval, Context appContext) {
         if (theInstance == null) {
             theInstance = new WirelessDebugger(hostname, timeInterval, appContext);

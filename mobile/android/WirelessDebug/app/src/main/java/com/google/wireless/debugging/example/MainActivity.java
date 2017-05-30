@@ -14,8 +14,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /*
+         * Call to start wireless debugging
+         * Params:
+         * String - Hostname/IP of the server to send logs to
+         * int - time (in ms) between sending logs to the server
+         * Context - context for the application (used to start the service)
+         */
         WirelessDebugger.start("NONE", 500, getApplicationContext());
-
         setContentView(R.layout.activity_fragment);
 
         FragmentManager fm = getSupportFragmentManager();
@@ -25,6 +31,5 @@ public class MainActivity extends AppCompatActivity {
             fragment = new MainFragment();
             fm.beginTransaction().add(R.id.fragment_container, fragment).commit();
         }
-
     }
 }

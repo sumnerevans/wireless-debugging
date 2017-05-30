@@ -21,11 +21,9 @@ public class MainFragment extends Fragment implements SensorEventListener {
 
     private static final String TAG = "WiDB Example";
 
-    // Buttons and Text
     private EditText mLogText;
     private Button mAccelerometerToggleButton;
 
-    // Accelerometer Logging
     private boolean mLogAccelerometerData = false;
     private SensorManager sensorManager;
     private Sensor accelerometer;
@@ -33,10 +31,8 @@ public class MainFragment extends Fragment implements SensorEventListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
     }
 
     @Nullable
@@ -54,7 +50,6 @@ public class MainFragment extends Fragment implements SensorEventListener {
      * @param logView View container for the buttons
      */
     private void registerLogViewClickHandlers(View logView) {
-
         mLogText = (EditText) logView.findViewById(R.id.log_message_text);
 
         Button sendLogButton = (Button) logView.findViewById(R.id.send_log_button);
@@ -90,11 +85,9 @@ public class MainFragment extends Fragment implements SensorEventListener {
         mAccelerometerToggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (mLogAccelerometerData){
                     mAccelerometerToggleButton.setText(R.string.start_accel_data);
                     mLogAccelerometerData = false;
-
                 } else {
                     mAccelerometerToggleButton.setText(R.string.stop_accel_data);
                     mLogAccelerometerData = true;
