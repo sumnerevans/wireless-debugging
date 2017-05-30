@@ -1,3 +1,4 @@
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 """
 LogParser class
 """
@@ -7,7 +8,7 @@ from datetime import datetime
 
 
 class LogParser(object):
-    """ Handles parsing of all logs from the Mobile API """
+    """ Handles parsing of all logs from the Mobile API. """
 
     @staticmethod
     def parse(message):
@@ -41,15 +42,15 @@ class LogParser(object):
             # check if current log is like the previous log parsed
             current_log = LogParser.parse_raw_log(line)
             if (current_log['time'] != old_log['time'] or
-                current_log['processId'] != old_log['processId'] or
-                current_log['threadId'] != old_log['threadId'] or
-                current_log['logType'] != old_log['logType'] or
-                current_log['tag'] != old_log['tag']):
+                    current_log['processId'] != old_log['processId'] or
+                    current_log['threadId'] != old_log['threadId'] or
+                    current_log['logType'] != old_log['logType'] or
+                    current_log['tag'] != old_log['tag']):
                 log_entries.append(LogParser.parse_entries(current_log))
             else:
                 # if part of the same event, add the log's text to the previous
                 # parsed log
-                log_entries[-1]['text'] += ('\n %s' % current_log['text'])
+                log_entries[-1]['text'] += ('\n%s' % current_log['text'])
             old_log = current_log
 
         return {
@@ -66,7 +67,8 @@ class LogParser(object):
             log_entry: the logEntry to return including processId and threadId
 
         Returns:
-            dict: the message data to be sent to the web browser (no processId nor threadId)
+            dict: the message data to be sent to the web browser (no processId
+            nor threadId)
         """
         return {
             'time': log_entry['time'],
@@ -74,7 +76,6 @@ class LogParser(object):
             'tag': log_entry['tag'],
             'text': log_entry['text'],
         }
-
 
     @staticmethod
     def parse_raw_log(log_data):
@@ -86,13 +87,14 @@ class LogParser(object):
         Returns:
             dict: the log entry from the log line
         """
-        parsed_log = re.search(
-            '(.*) (\\d*) (\\d*) (.) (.*?): ((?:.*\\n*)*)', log_data)
+        parsed_log = re.search('(.*) (\\d*) (\\d*) (.) (.*?): ((?:.*\\n*)*)',
+                               log_data)
 
         # Parse the Year, we have to add the year to the string so that it
         # parses correctly.
         current_year = datetime.now().year
-        date_with_year = '%s-%s' % (str(current_year), parsed_log.group(1).strip())
+        date_with_year = '%s-%s' % (str(current_year),
+                                    parsed_log.group(1).strip())
         log_time = datetime.strptime(date_with_year, '%Y-%m-%d %H:%M:%S.%f')
 
         # Determine the log type

@@ -1,3 +1,4 @@
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 """
 WebSocket Controller
 """
@@ -10,7 +11,6 @@ from geventwebsocket import WebSocketError
 
 from parsing_lib import LogParser
 from helpers import util
-
 
 # Store a dictionary of string -> function
 _ws_routes = {}
@@ -54,6 +54,7 @@ def handle_websocket():
 
 def ws_router(messageType):
     """ Provide a decorator for adding functions to the _ws_route dictionary """
+
     def decorator(function):
         _ws_routes[messageType] = function
 
@@ -74,7 +75,8 @@ def log_dump(message, websocket):
     parsed_logs = LogParser.parse(message)
 
     for connection in _web_interface_ws_connections:
-        connection.send(util.serialize_json(parsed_logs))
+        connection.send(util.serialize_to_json(parsed_logs))
+
 
 @ws_router('associateSession')
 def associate_session(message, websocket):

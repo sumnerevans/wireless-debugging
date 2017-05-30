@@ -1,5 +1,4 @@
-#! /usr/bin/env python3
-
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 """
 Utility Functions
 """
@@ -13,28 +12,7 @@ from markupsafe import Markup
 import helpers
 
 
-def extra_template_context():
-    context = {
-    }
-    return context
-
-
-def glyphicon(icon_name, *args, **kwargs):
-    return Markup('<i class="glyphicon glyphicon-%s %s" %s></i>' % (
-        icon_name,
-        ' '.join(args),
-        ' '.join('%s="%s"' % (k, v) for k, v in kwargs.items())
-    ))
-
-
-def faicon(icon_name, *args, **kwargs):
-    return Markup('<i class="fa fa-%s %s" %s></i>' % (
-        icon_name,
-        ' '.join(args),
-        ' '.join('%s="%s"' % (k, v) for k, v in kwargs.items())
-    ))
-
-def serialize_json(obj):
+def serialize_to_json(data):
     """ Serialize an object to JSON, ensuring that the datetimes are formatted
     according to RFC 3339
 
@@ -46,10 +24,10 @@ def serialize_json(obj):
     # See: https://stackoverflow.com/questions/8556398/generate-rfc-3339-timestamp-in-python#8556555
     def datetime_serializer(element):
         if isinstance(element, datetime):
-            date = datetime.utcnow() # get time in UTC
+            date = datetime.utcnow()  # get time in UTC
             return date.isoformat("T") + "Z"
 
-    return json.dumps(obj, default=datetime_serializer)
+    return json.dumps(data, default=datetime_serializer)
 
 
 def from_config_yaml(key, force_reload=False):
@@ -64,6 +42,7 @@ def from_config_yaml(key, force_reload=False):
         force_reload (:obj:`bool`, optional): Whether or not to force the
             configs to be reloaded from disk. Defaults to False.
     """
+
     if helpers._config_yaml is None or force_reload:
         with open('config.yaml') as config:
             helpers._config_yaml = yaml.load(config)
