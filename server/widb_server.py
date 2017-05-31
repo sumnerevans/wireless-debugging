@@ -13,6 +13,7 @@ import bottle
 
 import controller
 import parsing_lib
+import datastore_interfaces
 
 def main():
     hostname = from_config_yaml("hostname")

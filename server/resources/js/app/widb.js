@@ -11,6 +11,7 @@ class WirelessDebug {
   constructor() {
     /** @private @const {!jQuery} */
     this.logTable_ = $('.log-table');
+    this.guid_ = $('.guid');
 
     /** @private @const {?WebSocket} */
     this.ws_ = null;
@@ -27,8 +28,15 @@ class WirelessDebug {
 
   /** Handles WebSocket opening */
   websocketOnOpen() {
+    //TO DO: UMI
     let payload = {
+      messageType: 'db',
+    };
+
+    this.ws_.send(JSON.stringify(payload));
+    payload = {
       messageType: 'associateSession',
+      webIdToken: 'tikalin'
     };
 
     this.ws_.send(JSON.stringify(payload));
@@ -41,6 +49,9 @@ class WirelessDebug {
       for (let entry of messageData.logEntries) {
         this.logTable_.append(this.renderLog(entry));
       }
+    }
+    if (messageData.messageType === 'guid') {
+	this.guid_.append(messageData.user);
     }
   }
 

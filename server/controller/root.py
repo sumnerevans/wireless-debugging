@@ -5,6 +5,7 @@ Root Controller
 from bottle import abort, post, redirect, request, response, route, static_file
 from helpers.util import from_config_yaml
 from kajiki_view import kajiki_view
+
 import controller
 
 @route('/')
@@ -34,6 +35,20 @@ def index():
     return {'page': 'index', 
             'api_key': api_key}
 
+@route('/current')
+@kajiki_view('current')
+def current():
+    return {'page': 'current'}
+
+@route('/historical')
+@kajiki_view('historical')
+def historical():
+    return {'page': 'historical'}
+
+@route('/new_login')
+@kajiki_view('new_login')
+def new_login():
+    return {'page': 'new_login'}
 
 @route('/resources/<filepath:path>')
 def static(filepath):

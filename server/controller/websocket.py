@@ -12,12 +12,14 @@ from geventwebsocket import WebSocketError
 
 from parsing_lib import LogParser
 from helpers import util
+from datastore_interfaces.mongo_datastore_interface import MongoDatastoreInterface
+
+import controller
 
 
 # Store a dictionary of string -> function
 _ws_routes = {} # pylint: disable=invalid-name
 _web_interface_ws_connections = {} # pylint: disable=invalid-name
-
 
 @route('/ws')
 def handle_websocket():
@@ -73,6 +75,7 @@ def start_session(message, websocket, metadata):
     for attribute, value in message.items():
         metadata[attribute] = value
 
+
 @ws_router('logDump')
 def log_dump(message, websocket, metadata):
     """ Handles Log Dumps from the Mobile API
@@ -119,7 +122,20 @@ def associate_user(message, websocket, metadata):
         message: the decoded JSON message from the Mobile API
         websocket: the full websocket connection
     """
-
+    print ('session received')
     # TODO: Currently we only have one session, when we implement multiple
     #       connections, modify this to handle it
     _web_interface_ws_connections[websocket] = message['apiKey']
+    
+    #add to database
+    controller._di.add_user(message['webIdToken'])
+        
+    #give out API key as user
+    controller._current_guid = controller._di.get_user(message['webIdToken'])
+    guid = {
+        'messageType': 'guid',
+        'user': controller._current_guid,
+        }
+    
+    for connection in _web_interface_ws_connections:
+        connection.send(util.serialize_json(guid))
