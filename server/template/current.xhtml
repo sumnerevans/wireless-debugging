@@ -1,0 +1,23 @@
+<html py:extends="master.xhtml" py:strip="True">
+<head py:block="head" py:strip="True">
+  <title py:block="master_title">Current Session</title>
+</head>
+
+<body py:block="body" py:strip="True">
+  <div class="row">
+    <div class="col-md-12">
+      <p>Your guid is : guid of current session</p>
+      <p>Device: name</p>
+      <p>App: app name</p>
+      <table class="table table-hover table-condensed table-bordered log-table">
+        <tr>
+          <th>Time</th>
+          <th>Tag</th>
+          <th>Type</th>
+          <th>Log Text</th>
+        </tr>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
