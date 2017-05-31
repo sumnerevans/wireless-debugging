@@ -4,6 +4,7 @@
 */resources/css/*
 .jshintrc
 .pylintrc
+mobile/android/WirelessDebug/.idea/*
 
 # Created by https://www.gitignore.io/api/python,android,androidstudio,appengine,vim,linux,windows,macos,sublimetext,gradle,java,jetbrains,pycharm,pydev,sass,xcode
 
@@ -44,11 +45,6 @@ captures/
 
 # Intellij
 *.iml
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/gradle.xml
-.idea/dictionaries
-.idea/libraries
 
 # Keystore files
 *.jks
@@ -111,23 +107,6 @@ obj/
 *.iws
 /out/
 
-# User-specific configurations
-.idea/libraries/
-.idea/.name
-.idea/compiler.xml
-.idea/copyright/profiles_settings.xml
-.idea/encodings.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/scopes/scope_settings.xml
-.idea/vcs.xml
-.idea/jsLibraryMappings.xml
-.idea/datasources.xml
-.idea/dataSources.ids
-.idea/sqlDataSources.xml
-.idea/dynamic.xml
-.idea/uiDesigner.xml
-
 # Keystore files
 
 # OS-specific files
@@ -161,9 +140,6 @@ hs_err_pid*
 
 # JIRA plugin
 atlassian-ide-plugin.xml
-
-# Mongo Explorer plugin
-.idea/mongoSettings.xml
 
 # Crashlytics plugin (for Android Studio and IntelliJ)
 com_crashlytics_export_strings.xml
@@ -202,30 +178,9 @@ appengine-generated/
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
-# User-specific stuff:
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-
-# Sensitive or high-churn files:
-.idea/**/dataSources/
-.idea/**/dataSources.ids
-.idea/**/dataSources.xml
-.idea/**/dataSources.local.xml
-.idea/**/sqlDataSources.xml
-.idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
-
-# Gradle:
-.idea/**/gradle.xml
-.idea/**/libraries
-
 # CMake
 cmake-build-debug/
 
-# Mongo Explorer plugin:
-.idea/**/mongoSettings.xml
-
-## File-based project format:
 
 ## Plugin-specific files:
 
@@ -235,9 +190,6 @@ cmake-build-debug/
 
 # JIRA plugin
 
-# Cursive Clojure plugin
-.idea/replstate.xml
-
 # Crashlytics plugin (for Android Studio and IntelliJ)
 
 ### JetBrains Patch ###
@@ -245,11 +197,7 @@ cmake-build-debug/
 
 # *.iml
 # modules.xml
-# .idea/misc.xml
 # *.ipr
-
-# Sonarlint plugin
-.idea/sonarlint
 
 ### Linux ###
 
@@ -322,7 +270,6 @@ Temporary Items
 
 # *.iml
 # modules.xml
-# .idea/misc.xml
 # *.ipr
 
 # Sonarlint plugin
