@@ -13,10 +13,10 @@ import java.util.ArrayList;
 class LogReader implements Runnable {
 
     private static final String TAG = "Log Reader";
-    private ArrayList<String> mLogs = new ArrayList<>();
+    private final ArrayList<String> mLogs = new ArrayList<>();
     private Boolean mHostAppRunning = true;
     private Boolean mThreadRunning = true;
-    private WebSocketMessenger mWebSocketMessenger;
+    private final WebSocketMessenger mWebSocketMessenger;
 
     /**
      * Creates LogReader instance if none exists.

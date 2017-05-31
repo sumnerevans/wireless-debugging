@@ -15,8 +15,8 @@ import javax.annotation.CheckForNull;
 class WebSocketMessenger extends WebSocketClient {
 
     private static final String TAG = "Web Socket Messenger";
-    private ArrayList<String> mLogsToSend;
-    private int mUpdateTimeInterval;
+    private final ArrayList<String> mLogsToSend;
+    private final int mUpdateTimeInterval;
     private long mLastSendTime = 0;
     private boolean mRunning;
 
@@ -123,6 +123,7 @@ class WebSocketMessenger extends WebSocketClient {
         long diff = System.currentTimeMillis() - mLastSendTime;
         if (diff > mUpdateTimeInterval && isOpen()) {
             sendLogDump();
+            mLastSendTime = System.currentTimeMillis();
         }
     }
 

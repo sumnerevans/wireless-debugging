@@ -1,10 +1,9 @@
 package com.google.wireless.debugging.example;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
 import com.google.wireless.debugger.WirelessDebugger;
 import com.google.wireless.debugging.R;
 

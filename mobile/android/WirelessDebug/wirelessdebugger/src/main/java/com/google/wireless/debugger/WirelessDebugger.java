@@ -1,6 +1,5 @@
 package com.google.wireless.debugger;
 
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -103,8 +102,6 @@ public class WirelessDebugger extends Service {
 
     /**
      * Wireless Debugger runs as an unbound service, thus this method is not needed
-     * @param intent
-     * @return
      */
     @Nullable
     @Override
