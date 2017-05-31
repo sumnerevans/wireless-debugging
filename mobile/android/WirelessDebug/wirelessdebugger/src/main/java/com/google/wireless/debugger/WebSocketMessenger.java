@@ -104,7 +104,7 @@ class WebSocketMessenger extends WebSocketClient {
             payload.put("osType", "Android");
 
             String queuedLogs = "";
-            ArrayList<String> logsToSendCopy = mLogsToSend;
+            ArrayList<String> logsToSendCopy = new ArrayList<>(mLogsToSend);
             mLogsToSend.clear();
             for( String logLine : logsToSendCopy) {
                 queuedLogs += logLine + "\n";
@@ -113,6 +113,7 @@ class WebSocketMessenger extends WebSocketClient {
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
+
         send(payload.toString());
     }
 
