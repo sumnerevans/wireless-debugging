@@ -25,7 +25,7 @@ class LogReader implements Runnable {
      * @param timeInterval Time interval between log sends
      */
     LogReader(String hostname, String apiKey, int timeInterval) {
-        mWebSocketMessenger = WebSocketMessenger.buildNewConnection(hostname, timeInterval);
+        mWebSocketMessenger = WebSocketMessenger.buildNewConnection(hostname, apiKey, timeInterval);
         if (mWebSocketMessenger == null) {
            Log.e(TAG, "Failed to create WebSocketMessenger Object");
         }
