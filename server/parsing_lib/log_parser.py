@@ -20,10 +20,13 @@ class LogParser(object):
             dict: the message data to be sent to the web browser
         """
         log_entries = []
+        if 'rawLogData' not in message:
+            return {}
+
         raw_data = message['rawLogData'].splitlines()
 
-        # first log is not the beginning log message
-        while re.search('beginning of /dev/log/', raw_data[0]) is not None:
+        # Ensure that the first log is not a "beginning of /dev/log" line
+        while re.search('beginning of', raw_data[0]) is not None:
             raw_data = raw_data[1:]
 
         # get first log to start checking for if an event was split across
@@ -33,9 +36,9 @@ class LogParser(object):
         current_log = None
 
         for line in raw_data[1:]:
-            # skip the beginning line and the first line stored in the old_log
-            # variable
-            if re.search('beginning of /dev/log/', line) is not None:
+            # Skip "beginning of /dev/log" lines. There may be cases when these
+            # appear in a log line that is not at the beginning of the raw data
+            if re.search('beginning of', line) is not None:
                 continue
 
             # check if current log is like the previous log parsed
@@ -88,6 +91,7 @@ class LogParser(object):
         """
         parsed_log = re.search(
             '(.*) (\\d*) (\\d*) (.) (.*?): ((?:.*\\n*)*)', log_data)
+            '(.*)\\s+(\\d*)\\s+(\\d*) ([IWVEDAF]) (.*?): ((?:.*\\n*)*)', log_data)
 
         # Parse the Year, we have to add the year to the string so that it
         # parses correctly.
@@ -103,6 +107,7 @@ class LogParser(object):
             'E': 'Error',
             'D': 'Debug',
             'A': 'WTF',
+            'F': 'Fatal',
         }
 
         return {
