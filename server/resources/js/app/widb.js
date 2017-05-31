@@ -1,4 +1,6 @@
-/*
+/**
+ * Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+ *
  * @fileoverview This contains the main app logic
  */
 
@@ -29,15 +31,13 @@ class WirelessDebug {
   /** Handles WebSocket opening */
   websocketOnOpen() {
     //TO DO: UMI
-    //TO DO: webIDToken comes from login 
     let payload = {
       messageType: 'associateUser',
       webIdToken: 'tikalin'
     };
 
     this.ws_.send(JSON.stringify(payload));
-
-payload = {
+    payload = {
     "messageType": "startSession",
     "apiKey": "tikalin",
     "osType": "Android",
@@ -56,17 +56,37 @@ payload = {
 }
 
 this.ws_.send(JSON.stringify(payload));
-    
+
+payload = {
+    "messageType": "startSession",
+    "apiKey": "tikalin",
+    "osType": "Android",
+    "deviceName": "Google Pixel2",
+    "appName": "Google Hangouts"
+}
+
+this.ws_.send(JSON.stringify(payload))
+    $.ajax({
+      type: "GET",
+      url: '/deviceList',
+      cache: false,
+      success: function(data){
+        var device = document.getElementById('device');
+        for (var i in data.devices[0]){
+          $(device).append('<option value=' + data.devices[0][i] + '>' + data.devices[0][i] + '</option>');
+        }
+      }
+    });
+
     // TODO: get rid of this, only for testing purposes
     payload = {
       messageType: 'logDump',
       rawLogData: '05-22 11:44:31.180 7080 7080 I WiDB Example: aX: 3.0262709 aY: 2.0685902',
-      
     };
 
 this.ws_.send(JSON.stringify(payload));
 
-    //TO DO: end session 
+
 
   }
 

@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from pprint import pprint 
+from pprint import pprint
 
 from datastore_interfaces.base_datastore_interface import DatastoreInterface
 
@@ -10,7 +10,7 @@ class MongoDatastoreInterface(DatastoreInterface):
         self._logs = self._db.logs
         self._dev = self._db.dev
         self._sessions = self._db.sessions
-           
+
     def store_logs(self, api_key, device_name, app_name, start_time, os_type, log_entries):
         '''Add in log to logs tables
 
@@ -49,34 +49,29 @@ class MongoDatastoreInterface(DatastoreInterface):
             start_time: the time that the session started
 
         Returns:
-        
+
 
         """
     def retrieve_devices_and_apps(self, api_key):
         """retrieves devices and apps
 
         """
-        cursor = self._sessions.find({})
-        for document in cursor:
-            pprint(document)
+        print(self._dev.distinct("devName"))
+        return {"devices":[self._dev.distinct("devName")]}
 
     def retrieve_sessions(self, api_key, device, app):
         """
-        sessions 
+        sessions
         """
 
     def add_device_app(self, device, app):
         '''
         add devices and apps
         '''
-        self._sessions.insert( { "devName": device, "apps": app } )
-
-        self.retrieve_devices_and_apps('tikalin')
+        self._dev.insert( { "devName": device, "apps": app } )
 
     def get_user(self, webIdToken):
         '''
         get the current user
         '''
         return 'tikalin'
-    
-    
