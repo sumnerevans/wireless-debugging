@@ -16,6 +16,7 @@ class WebSocketMessenger extends WebSocketClient {
 
     private static final String TAG = "Web Socket Messenger";
     private final ArrayList<String> mLogsToSend;
+    private final String mApiKey;
     private final int mUpdateTimeInterval;
     private long mLastSendTime = 0;
     private boolean mRunning;
@@ -27,7 +28,8 @@ class WebSocketMessenger extends WebSocketClient {
      * @return A new WebSocket messenger object, or null if the URI is invalid.
      */
     @CheckForNull
-    public static WebSocketMessenger buildNewConnection(String socketAddress, int updateTime) {
+    public static WebSocketMessenger buildNewConnection(String socketAddress, String apiKey, int
+            updateTime) {
         URI uri;
         Log.i(TAG, "URI: " + socketAddress);
         try {
@@ -37,17 +39,18 @@ class WebSocketMessenger extends WebSocketClient {
             return null;
         }
 
-        return new WebSocketMessenger(uri, updateTime);
+        return new WebSocketMessenger(uri, apiKey, updateTime);
     }
 
     /**
      * Constructs a new WebSocketMessenger object and attempts to establish a connection.
      * @param uri: Specifies address of the WebSocket connection.
      */
-    private WebSocketMessenger(URI uri, int updateTime) {
+    private WebSocketMessenger(URI uri, String apiKey, int updateTime) {
         super(uri);
         mLogsToSend = new ArrayList<>();
         mUpdateTimeInterval = updateTime;
+        mApiKey = apiKey;
         connect();
         mRunning = true;
     }
