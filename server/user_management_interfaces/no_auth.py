@@ -1,7 +1,7 @@
 """
 The default User Management Interface where there is no login, and all logs are
 broadcasted to all Web UI WebSockets.
- """
+"""
 from user_management_interfaces import user_management_interface_base
 
 class NoAuth(user_management_interface_base.UserManagementInterfaceBase):

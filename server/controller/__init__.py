@@ -3,6 +3,7 @@
 Controller Module
 """
 
+import user_management_interfaces
 import controller.root
 import controller.sessions
 import controller.websocket

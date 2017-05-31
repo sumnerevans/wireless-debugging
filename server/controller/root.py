@@ -29,7 +29,6 @@ def index():
         api_key: The Web UI user's API key. 
 
     """
-
     if not controller.user_management_interface.is_user_logged_in(request):
         redirect('/login_page')
 
@@ -55,7 +54,6 @@ def static(filepath):
 def login():
     """ Retrieves the login page from the user management interface and serves
         it to the user.
-
     Args:
         None
     Returns:

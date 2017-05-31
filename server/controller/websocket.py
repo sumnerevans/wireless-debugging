@@ -18,7 +18,6 @@ _ws_routes = {}
 # TODO: Reverse map to go API key -> websocket, rather than websocket -> API key
 _web_interface_ws_connections = {}
 
-
 @route('/ws')
 def handle_websocket():
     """ Handle an incomming WebSocket connection.
@@ -65,6 +64,12 @@ def ws_router(message_type):
 
     return decorator
 
+@ws_router('startSession')
+def start_session(message, websocket):
+    # TODO: Maybe replace api_key with all of message,
+    # so all of the metadata is retained?
+    _mobile_interface_ws_connections[websocket] = message['apiKey']
+    print(_mobile_interface_ws_connections)
 
 @ws_router('startSession')
 def start_session(message, websocket, metadata):
@@ -93,16 +98,14 @@ def log_dump(message, websocket, metadata):
 
     api_key = metadata.get('apiKey', '')
 
-    # At first glance this looks like a copy, but this is actually grabbing the
-    # keys from a dict.
+    # At first glance this looks like a copy, 
+    # but this is actually grabbing the keys from a dict
     web_ws_connections = [ws for ws in _web_interface_ws_connections]
-    associated_websockets = ( 
+    associated_websockets = ( #
         controller.user_management_interface.find_associated_websockets(api_key,
             web_ws_connections))
-
     for connection in associated_websockets:
-        connection.send(util.serialize_to_json(parsed_logs))
-
+        connection.send(util.serialize_json(parsed_logs))
 
 @ws_router('endSession')
 def end_session(message, websocket, metadata):
