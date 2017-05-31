@@ -12,7 +12,7 @@ class LogParser(object):
 
     @staticmethod
     def parse(message):
-        """ Parses a log message from the Mobile API
+        """ Parses a log message from the Mobile API.
 
         Args:
             message: the actual decoded message
@@ -23,29 +23,26 @@ class LogParser(object):
         log_entries = []
         raw_data = message['rawLogData'].splitlines()
 
-        # first log is not the beginning log message
+        # Ensure that the first log is not a "beginning of /dev/log" line
         while re.search('beginning of /dev/log/', raw_data[0]) is not None:
             raw_data = raw_data[1:]
 
-        # get first log to start checking for if an event was split across
-        # different logs
+        # Parse the first log line to have context for futher log lines if an
+        # event was split across multiple lines
         old_log = LogParser.parse_raw_log(raw_data[0])
         log_entries.append(LogParser.parse_entries(old_log))
         current_log = None
 
+        # Since we've already parsed the first line, start at index 1
         for line in raw_data[1:]:
-            # skip the beginning line and the first line stored in the old_log
-            # variable
+            # Skip "beginning of /dev/log" lines. There may be cases when these
+            # appear in a log line that is not at the beginning of the raw data
             if re.search('beginning of /dev/log/', line) is not None:
                 continue
 
             # check if current log is like the previous log parsed
             current_log = LogParser.parse_raw_log(line)
-            if (current_log['time'] != old_log['time'] or
-                    current_log['processId'] != old_log['processId'] or
-                    current_log['threadId'] != old_log['threadId'] or
-                    current_log['logType'] != old_log['logType'] or
-                    current_log['tag'] != old_log['tag']):
+            if (current_log['time'] != old_log['time']):
                 log_entries.append(LogParser.parse_entries(current_log))
             else:
                 # if part of the same event, add the log's text to the previous
@@ -61,7 +58,7 @@ class LogParser(object):
 
     @staticmethod
     def parse_entries(log_entry):
-        """ Returns the elements that the web interface shows of a log
+        """ Returns the elements that the web interface shows of a log.
 
         Args:
             log_entry: the logEntry to return including processId and threadId
@@ -79,7 +76,7 @@ class LogParser(object):
 
     @staticmethod
     def parse_raw_log(log_data):
-        """ Parse a raw log line
+        """ Parse a raw log line.
 
         Args:
             log_data: the raw log line

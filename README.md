@@ -18,20 +18,21 @@ This is a summer class sponsored by the university for CSCI-370 course.
         gem install font-awesome-sass
         gem install bootstrap-sass
 
-4. Install the following Python libraries. (`pip install` is probably the easiest way to
-   do this.)
-   You can also run `pip install -r requirements.txt`
+4. Install the following Python libraries. (`pip install` is probably the
+   easiest way to do this.) You can also run `pip install -r requirements.txt`
+
         kajiki
         bottle
         markupsafe
         requests
         gevent
         gevent-websocket
-        PyYaml  
+        PyYaml
 
 5. Run `compass compile`
 
-6. Run the web application by running `widb_server.py` and navigating in your browser to `localhost:8080`
+6. Run the web application by running `widb_server.py` and navigating in your
+   browser to `localhost:8080`
 
 ## Web Server Setup with Development Environment
 1. Ensure python 3 and Cloud SDK with Bundled Python is installed
@@ -44,10 +45,10 @@ This is a summer class sponsored by the university for CSCI-370 course.
         gem install font-awesome-sass
         gem install bootstrap-sass
 
-3. Install the following Python libraries. (`pip3 install` is probably the easiest way to
-   do this.)
-   You can also run 'pip install -r requirements.txt'
+3. Install the following Python libraries. (`pip3 install` is probably the
+   easiest way to do this.) You can also run 'pip install -r requirements.txt'.
    Also run 'pip3 install -r requirements.txt'
+
         kajiki
         bottle
         markupsafe
@@ -56,18 +57,23 @@ This is a summer class sponsored by the university for CSCI-370 course.
         gevent-websocket
         PyYaml
 
-4. Run `compass compile`   
+4. Run `compass compile`
 
-5. To setup local web server app engine instance, run commands:
-`pip3 install virtualenv`
-in /server dir: `virtualenv env`
-`.\env\Scripts\activate`
-`pip3 install -r requirements.txt`
-run `python widb_server.py` and will see it on `localhost:8080`  
-for more information: `https://cloud.google.com/appengine/docs/flexible/python/quickstart#before-you-begin`
+5. To setup local web server app engine instance, run the following commands
+   from the `server` directory:
 
-6. deploy: `gcloud app deploy --project <project-id> --version <version-id>`
-will be shown on `www.<project-id>.appspot.com`
+        pip3 install virtualenv
+        virtualenv env
+        .\env\Scripts\activate
+        pip3 install -r requirements.txt
+
+    run `python widb_server.py` and will see the app on `localhost:8080`.
+
+    For more information, see [Before you Begin](https://cloud.google.com/appengine/docs/flexible/python/quickstart#before-you-begin)
+
+6. deploy: `gcloud app deploy --project <project-id> --version <version-id>`.
+
+   The app will be shown on `www.<project-id>.appspot.com`
 
 ## Contributors
 - Jonathan Sumner Evans

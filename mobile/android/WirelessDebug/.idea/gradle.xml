@@ -7,9 +7,9 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/wirelessdebugger" />
+            <option value="$USER_HOME$/Dropbox/projects/wireless-debugging/mobile/android/WirelessDebug" />
+            <option value="$USER_HOME$/Dropbox/projects/wireless-debugging/mobile/android/WirelessDebug/app" />
+            <option value="$USER_HOME$/Dropbox/projects/wireless-debugging/mobile/android/WirelessDebug/wirelessdebugger" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
