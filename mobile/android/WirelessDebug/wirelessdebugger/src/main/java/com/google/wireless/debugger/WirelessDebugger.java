@@ -15,14 +15,14 @@ import android.util.Log;
  */
 public class WirelessDebugger extends Service {
 
-    private static WirelessDebugger wirelessDebuggerInstance;
+    private static WirelessDebugger mWirelessDebuggerInstance;
 
     private static final String TAG = "Wireless Debugger";
     // Extras to pass arguments to the intent that starts the service
     private static final String HOSTNAME_EXTRA = "hostname";
     private static final String TIME_INTERVAL_EXTRA = "time_interval";
 
-    private LogReader logReader;
+    private LogReader mLogReader;
 
     /**
      * Starts wireless debugging for the calling application.
@@ -31,8 +31,8 @@ public class WirelessDebugger extends Service {
      * @param appContext Context of the calling application (use getApplicationContext())
      */
     public static void start(String hostname, int timeInterval, Context appContext) {
-        if (wirelessDebuggerInstance == null) {
-            wirelessDebuggerInstance = new WirelessDebugger(hostname, timeInterval, appContext);
+        if (mWirelessDebuggerInstance == null) {
+            mWirelessDebuggerInstance = new WirelessDebugger(hostname, timeInterval, appContext);
         }
     }
 
@@ -70,8 +70,8 @@ public class WirelessDebugger extends Service {
         // Create and start threads
         String hostname = intent.getStringExtra(HOSTNAME_EXTRA);
         int timeInterval = intent.getIntExtra(TIME_INTERVAL_EXTRA, 500);
-        logReader = new LogReader(hostname, timeInterval);
-        Thread logThread = new Thread(logReader);
+        mLogReader = new LogReader(hostname, timeInterval);
+        Thread logThread = new Thread(mLogReader);
         logThread.start();
 
         // Prevents OS from attempting to restart the service if it is killed
@@ -87,9 +87,9 @@ public class WirelessDebugger extends Service {
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
         Log.d(TAG, "Service Stopped, Task Removed");
-        logReader.setAppTerminated();
-        while (logReader.isThreadRunning()){
-            // Wait for logReader to finish sending logs
+        mLogReader.setAppTerminated();
+        while (mLogReader.isThreadRunning()){
+            // Wait for mLogReader to finish sending logs
             // Probably should set timeouts for this
         }
         stopSelf();

@@ -13,10 +13,10 @@ import java.util.ArrayList;
 class LogReader implements Runnable {
 
     private static final String TAG = "Log Reader";
-    private ArrayList<String> logs = new ArrayList<>();
-    private Boolean hostAppRunning = true;
-    private Boolean threadRunning = true;
-    private WebSocketMessenger webSocketMessenger;
+    private ArrayList<String> mLogs = new ArrayList<>();
+    private Boolean mHostAppRunning = true;
+    private Boolean mThreadRunning = true;
+    private WebSocketMessenger mWebSocketMessenger;
 
     /**
      * Creates LogReader instance if none exists.
@@ -25,22 +25,21 @@ class LogReader implements Runnable {
      * @param timeInterval Time interval between log sends
      */
     LogReader(String hostname, int timeInterval) {
-        webSocketMessenger = WebSocketMessenger.buildNewConnection(hostname, timeInterval);
-        if (webSocketMessenger == null) {
+        mWebSocketMessenger = WebSocketMessenger.buildNewConnection(hostname, timeInterval);
+        if (mWebSocketMessenger == null) {
            Log.e(TAG, "Failed to create WebSocketMessenger Object");
         }
     }
 
     /**
      * Inherited from Runnable. Run on a separate thread.
-     * Performs the logging and sending of logs.
+     * Performs the logging and sending of mLogs.
      */
     @Override
     public void run() {
-
-        if (webSocketMessenger == null){
+        if (mWebSocketMessenger == null){
             Log.e(TAG, "No WebSocketMessengerObject, exiting.");
-            threadRunning = false;
+            mThreadRunning = false;
             return;
         }
 
@@ -56,14 +55,14 @@ class LogReader implements Runnable {
             String logLine = "";
 
             Log.d(TAG, "Begin Read line in buffer");
-            while (hostAppRunning && webSocketMessenger.isRunning()) {
+            while (mHostAppRunning && mWebSocketMessenger.isRunning()) {
                 logLine = bufferedReader.readLine();
 
                 if (logLine == null) {
                     try {
                         /* This is mostly a test.  With high accelerometer logging this value
-                           the difference between logs is about 20 ms, so hopefully a
-                           sleep time of 10ms is enough to not miss any logs.
+                           the difference between mLogs is about 20 ms, so hopefully a
+                           sleep time of 10ms is enough to not miss any mLogs.
                          */
                         Thread.sleep(10);
                     } catch (InterruptedException e) {
@@ -71,10 +70,9 @@ class LogReader implements Runnable {
                     }
                     continue;
                 }
-                webSocketMessenger.enqueueLog(logLine);
-                logs.add(logLine);
+                mWebSocketMessenger.enqueueLog(logLine);
+                mLogs.add(logLine);
             }
-
 
             // TODO (Reece): Replace with a send finished signal to the web socket messenger
             outputLogs();
@@ -84,7 +82,7 @@ class LogReader implements Runnable {
         }
 
         // Signals to owning service that thread operations are complete
-        threadRunning = false;
+        mThreadRunning = false;
     }
 
     /**
@@ -93,7 +91,7 @@ class LogReader implements Runnable {
      */
     private void outputLogs() {
         Log.d(TAG, "BEGIN LOG OUTPUT");
-        for (String logLine : logs) {
+        for (String logLine : mLogs) {
             Log.i(TAG, logLine);
         }
         Log.d(TAG, "END LOG OUTPUT");
@@ -103,15 +101,15 @@ class LogReader implements Runnable {
      * Notifies LogReader that the application is no longer running, logging is not longer required.
      */
     void setAppTerminated() {
-        hostAppRunning = false;
+        mHostAppRunning = false;
     }
 
     /**
-     * Tells the caller if LogReader is still working (reading logs or sending them).
+     * Tells the caller if LogReader is still working (reading mLogs or sending them).
      * @return True if it is still running.  False otherwise.
      */
     boolean isThreadRunning() {
-        return threadRunning;
+        return mThreadRunning;
     }
 
 }

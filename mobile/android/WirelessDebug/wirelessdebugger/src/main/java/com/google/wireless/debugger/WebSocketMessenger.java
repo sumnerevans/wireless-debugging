@@ -15,10 +15,10 @@ import javax.annotation.CheckForNull;
 class WebSocketMessenger extends WebSocketClient {
 
     private static final String TAG = "Web Socket Messenger";
-    private ArrayList<String> logsToSend;
-    private int updateTimeInterval;
-    private long lastSendTime = 0;
-    private boolean running = true;
+    private ArrayList<String> mLogsToSend;
+    private int mUpdateTimeInterval;
+    private long mLastSendTime = 0;
+    private boolean mRunning;
 
     /**
      * Creates a new WebSocketMessenger using the specified address.
@@ -46,9 +46,10 @@ class WebSocketMessenger extends WebSocketClient {
      */
     private WebSocketMessenger(URI uri, int updateTime) {
         super(uri);
-        logsToSend = new ArrayList<>();
-        updateTimeInterval = updateTime;
+        mLogsToSend = new ArrayList<>();
+        mUpdateTimeInterval = updateTime;
         connect();
+        mRunning = true;
     }
 
     /**
@@ -72,24 +73,20 @@ class WebSocketMessenger extends WebSocketClient {
 
     /**
      * Called by the parent when the web socket connection is closed.
-     * @param i
-     * @param s
-     * @param b
      */
     @Override
     public void onClose(int i, String s, boolean b) {
+        mRunning = false;
         Log.i(TAG, "Closed " + s);
     }
 
     /**
      * Called by the parent if a web socket error occurs.
-     * @param e
      */
     @Override
     public void onError(Exception e) {
-        running = false;
+        mRunning = false;
         Log.e(TAG, "Error " + e.getMessage());
-
     }
 
     /**
@@ -98,17 +95,18 @@ class WebSocketMessenger extends WebSocketClient {
      */
     private void sendLogDump() {
         JSONObject payload = new JSONObject();
-        // TODO (Reece): Check if logsToSend is empty, and don't send empty messages
+        // TODO (Reece): Check if mLogsToSend is empty, and don't send empty messages
         try {
             payload.put("messageType", "logDump");
             payload.put("osType", "Android");
 
             String queuedLogs = "";
-            for( String logLine : logsToSend ) {
+            ArrayList<String> logsToSendCopy = mLogsToSend;
+            mLogsToSend.clear();
+            for( String logLine : logsToSendCopy) {
                 queuedLogs += logLine + "\n";
             }
             payload.put("rawLogData", queuedLogs);
-            logsToSend.clear();
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
@@ -120,18 +118,18 @@ class WebSocketMessenger extends WebSocketClient {
      * @param logLine Raw log to be sent.
      */
     public void enqueueLog(String logLine) {
-        logsToSend.add(logLine);
+        mLogsToSend.add(logLine);
         // TODO (Reece): Move this to another function
-        long diff = System.currentTimeMillis() - lastSendTime;
-        if (diff > updateTimeInterval && isOpen()) {
+        long diff = System.currentTimeMillis() - mLastSendTime;
+        if (diff > mUpdateTimeInterval && isOpen()) {
             sendLogDump();
         }
     }
 
     /**
-     * Returns weather or not the connection is running.
+     * Returns weather or not the connection is mRunning.
      * @return True if there is a connection, false otherwise.
      */
-    public boolean isRunning() { return running; }
+    public boolean isRunning() { return mRunning; }
 
 }
