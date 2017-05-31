@@ -13,7 +13,10 @@ import bottle
 
 import controller
 import parsing_lib
-import datastore_interfaces
+from datastore_interfaces import *
+
+#global variable
+datastore_interface = mongo_datastore_interface.MongoDatastoreInterface()
 
 def main():
     hostname = from_config_yaml("hostname")

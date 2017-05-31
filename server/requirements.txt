@@ -5,3 +5,4 @@ requests
 gevent
 gevent-websocket
 PyYaml
+pymongo

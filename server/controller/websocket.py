@@ -87,9 +87,9 @@ def log_dump(message, websocket, metadata):
         message: the decoded JSON message from the Mobile API
         websocket: the full websocket connection
     """
-
+    print ('logs sent')
+    
     parsed_logs = LogParser.parse(message)
-
     if metadata:
         api_key = metadata["apiKey"]
     # This if/else is just to fit with legacy code
@@ -126,12 +126,14 @@ def associate_user(message, websocket, metadata):
     # TODO: Currently we only have one session, when we implement multiple
     #       connections, modify this to handle it
     _web_interface_ws_connections[websocket] = message['apiKey']
+
+    print ('database')
     
     #add to database
-    controller._di.add_user(message['webIdToken'])
+    #controller._di.add_user(message['webIdToken'])
         
     #give out API key as user
-    controller._current_guid = controller._di.get_user(message['webIdToken'])
+    controller._current_guid = controller._datastore_interface.get_user(message['webIdToken'])
     guid = {
         'messageType': 'guid',
         'user': controller._current_guid,

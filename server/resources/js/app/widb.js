@@ -29,18 +29,46 @@ class WirelessDebug {
   /** Handles WebSocket opening */
   websocketOnOpen() {
     //TO DO: UMI
+    //TO DO: webIDToken comes from login 
     let payload = {
-      messageType: 'db',
-    };
-
-    this.ws_.send(JSON.stringify(payload));
-    payload = {
-      messageType: 'associateSession',
+      messageType: 'associateUser',
       webIdToken: 'tikalin'
     };
 
     this.ws_.send(JSON.stringify(payload));
- }
+
+payload = {
+    "messageType": "startSession",
+    "apiKey": "tikalin",
+    "osType": "Android",
+    "deviceName": "Google Pixel",
+    "appName": "Not Google Hangouts"
+}
+
+this.ws_.send(JSON.stringify(payload));
+
+payload = {
+    "messageType": "startSession",
+    "apiKey": "tikalin",
+    "osType": "Android",
+    "deviceName": "Google Pixel",
+    "appName": "Google Hangouts"
+}
+
+this.ws_.send(JSON.stringify(payload));
+    
+    // TODO: get rid of this, only for testing purposes
+    payload = {
+      messageType: 'logDump',
+      rawLogData: '05-22 11:44:31.180 7080 7080 I WiDB Example: aX: 3.0262709 aY: 2.0685902',
+      
+    };
+
+this.ws_.send(JSON.stringify(payload));
+
+    //TO DO: end session 
+
+  }
 
   /** Decodes the WebSocket message and adds to table */
   websocketOnMessage(message) {
