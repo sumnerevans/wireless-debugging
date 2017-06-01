@@ -64,7 +64,9 @@ class LogReader implements Runnable {
                 } else {
                     logLine = null;
                 }
+
                 sendLogsIfReady();
+
                 if (logLine == null) {
                     try {
                         /* This is mostly a test.  With high accelerometer logging this value

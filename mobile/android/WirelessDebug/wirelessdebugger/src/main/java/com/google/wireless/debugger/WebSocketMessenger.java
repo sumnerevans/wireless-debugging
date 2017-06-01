@@ -73,7 +73,7 @@ class WebSocketMessenger extends WebSocketClient {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        //send(payload.toString());
+        send(payload.toString());
     }
 
     /**

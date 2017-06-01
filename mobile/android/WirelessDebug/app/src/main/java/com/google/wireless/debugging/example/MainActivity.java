@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
          * int - time (in ms) between sending logs to the server
          * Context - context for the application (used to start the service)
          */
-        WirelessDebugger.start("138.67.232.18", "KEY", getApplicationContext());
+        WirelessDebugger.start("YourIP", "KEY", getApplicationContext());
         setContentView(R.layout.activity_fragment);
 
         FragmentManager fm = getSupportFragmentManager();
