@@ -18,6 +18,7 @@ class LogReader implements Runnable {
     private Boolean mThreadRunning = true;
     private final WebSocketMessenger mWebSocketMessenger;
     private SystemMonitor systemMonitor;
+    private int totalSystemMemory;
 
     /**
      * Creates LogReader instance if none exists.
@@ -31,6 +32,7 @@ class LogReader implements Runnable {
            Log.e(TAG, "Failed to create WebSocketMessenger Object");
         }
         systemMonitor = new SystemMonitor();
+        totalSystemMemory = systemMonitor.getTotalMemory();
     }
 
     /**
@@ -64,17 +66,10 @@ class LogReader implements Runnable {
                 logLine = bufferedReader.readLine();
 
                 if (i % 100 == 0){
-                    //Log.i(TAG, Double.toString(systemMonitor.getCpuUsage()));
-                    Process topProcess = Runtime.getRuntime().exec("top -n 1 -d 0");
-                    BufferedReader topBufferReader = new BufferedReader(
-                            new InputStreamReader(topProcess.getInputStream()));
-
-                    String topLine = "";
-                    while (topLine == null || topLine.contentEquals("")){
-                        topLine = topBufferReader.readLine();
-                    }
-                    Log.d(TAG, topLine);
-
+                    int currentMemUsage = systemMonitor.getMemoryUsage();
+                    Log.i(TAG, Integer.toString(currentMemUsage));
+                    Log.i(TAG, "Mem Usage: "  +
+                            Double.toString((double) currentMemUsage / (double) totalSystemMemory));
                 }
                 i++;
 

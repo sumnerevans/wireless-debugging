@@ -10,13 +10,19 @@ import java.util.ArrayList;
 class SystemMonitor {
 
     private static final String TAG = "System Monitor";
+    private static final String PROC_ROOT = "/proc/";
+    private static final String PROC_STAT = PROC_ROOT + "stat";
+    private static final String PROC_MEMINFO = PROC_ROOT + "meminfo";
+    private static final String PROC_NET_DEV = PROC_ROOT + "net/dev";
 
     private int[] mPreviousCpuStats = new int[2];
+    private long mLastBytesSentTime;
+    private long mLastBytesRecievedTime;
 
     public SystemMonitor() {
-        ArrayList<String> cpuStatLines = getFileLines("/proc/stat");
+        ArrayList<String> cpuStatLines = getFileLines(PROC_STAT);
         if (!cpuStatLines.isEmpty()) {
-            String firstLine = getFileLines("/proc/stat").get(0);
+            String firstLine = cpuStatLines.get(0);
             mPreviousCpuStats = parseCpuLine(firstLine);
         }
     }
@@ -41,7 +47,7 @@ class SystemMonitor {
 
     public double getCpuUsage() {
 
-        ArrayList<String> cpuStatLines = getFileLines("/proc/stat");
+        ArrayList<String> cpuStatLines = getFileLines(PROC_STAT);
 
         if (cpuStatLines.isEmpty()) {
             Log.d(TAG, "cpuStatLines is Empty");
@@ -62,6 +68,30 @@ class SystemMonitor {
         mPreviousCpuStats = currentCpuStats;
 
         return cpuUsagePercent;
+    }
+
+    public int getMemoryUsage() {
+        return getMemoryUsageStatFromLine(5);
+    }
+
+    public int getTotalMemory() {
+        return getMemoryUsageStatFromLine(0);
+    }
+
+    public double getSentBytesPerSecond() {
+
+    }
+
+    private double getRecievedBytesPerSecond() {
+
+    }
+
+    private int getSentBytes() {
+
+    }
+
+    private int getRecievedBytes() {
+
     }
 
     private int[] parseCpuLine(String line) {
@@ -90,9 +120,19 @@ class SystemMonitor {
         return times;
     }
 
+    private int getMemoryUsageStatFromLine(int line) {
+        ArrayList<String> memInfoLines = getFileLines(PROC_MEMINFO);
+
+        if (memInfoLines.isEmpty()){
+            return 0;
+        }
+
+        String[] firstLineParts = memInfoLines.get(line).split("\\s+");
+        return Integer.parseInt(firstLineParts[1]);
+    }
+
     /* proc/stat
     proc/net/dev
-    proc/meminfoq
- */
+     */
 
 }
