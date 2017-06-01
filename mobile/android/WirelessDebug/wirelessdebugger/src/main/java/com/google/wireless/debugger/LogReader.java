@@ -17,18 +17,21 @@ class LogReader implements Runnable {
     private Boolean mHostAppRunning = true;
     private Boolean mThreadRunning = true;
     private final WebSocketMessenger mWebSocketMessenger;
+    private final int mUpdateTimeInterval;
+    private long mLastSendTime = 0;
 
     /**
      * Creates LogReader instance if none exists.
      * Creates a new WebSocketMessenger also.
-     * @param hostname Server's IP/Host address
+     * @param hostname     Server's IP/Host address
      * @param timeInterval Time interval between log sends
      */
     LogReader(String hostname, String apiKey, int timeInterval) {
-        mWebSocketMessenger = WebSocketMessenger.buildNewConnection(hostname, apiKey, timeInterval);
+        mWebSocketMessenger = WebSocketMessenger.buildNewConnection(hostname, apiKey);
         if (mWebSocketMessenger == null) {
-           Log.e(TAG, "Failed to create WebSocketMessenger Object");
+            Log.e(TAG, "Failed to create WebSocketMessenger Object");
         }
+        mUpdateTimeInterval = timeInterval;
     }
 
     /**
@@ -37,7 +40,7 @@ class LogReader implements Runnable {
      */
     @Override
     public void run() {
-        if (mWebSocketMessenger == null){
+        if (mWebSocketMessenger == null) {
             Log.e(TAG, "No WebSocketMessengerObject, exiting.");
             mThreadRunning = false;
             return;
@@ -56,8 +59,12 @@ class LogReader implements Runnable {
 
             Log.d(TAG, "Begin Read line in buffer");
             while (mHostAppRunning && mWebSocketMessenger.isRunning()) {
-                logLine = bufferedReader.readLine();
-
+                if (bufferedReader.ready()) {
+                    logLine = bufferedReader.readLine();
+                } else {
+                    logLine = null;
+                }
+                sendLogsIfReady();
                 if (logLine == null) {
                     try {
                         /* This is mostly a test.  With high accelerometer logging this value
@@ -76,13 +83,23 @@ class LogReader implements Runnable {
 
             // TODO (Reece): Replace with a send finished signal to the web socket messenger
             outputLogs();
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             Log.e(TAG, "IO Exception Occurred in run() thread " + ioe.toString());
         }
 
         // Signals to owning service that thread operations are complete
         mThreadRunning = false;
+    }
+
+    /**
+     * Checks if enough time has passed to send logs through the WebSocketManager.
+     */
+    private void sendLogsIfReady() {
+        long diff = System.currentTimeMillis() - mLastSendTime;
+        if (diff > mUpdateTimeInterval && mWebSocketMessenger.isOpen()) {
+            mWebSocketMessenger.sendLogDump();
+            mLastSendTime = System.currentTimeMillis();
+        }
     }
 
     /**
@@ -111,5 +128,4 @@ class LogReader implements Runnable {
     boolean isThreadRunning() {
         return mThreadRunning;
     }
-
 }

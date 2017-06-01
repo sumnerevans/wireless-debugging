@@ -1,12 +1,15 @@
 package com.google.wireless.debugger;
 
+import android.os.Build;
 import android.util.Log;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONException;
 import org.json.JSONObject;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+
 import javax.annotation.CheckForNull;
 
 /**
@@ -17,8 +20,6 @@ class WebSocketMessenger extends WebSocketClient {
     private static final String TAG = "Web Socket Messenger";
     private final ArrayList<String> mLogsToSend;
     private final String mApiKey;
-    private final int mUpdateTimeInterval;
-    private long mLastSendTime = 0;
     private boolean mRunning;
 
     /**
@@ -28,8 +29,7 @@ class WebSocketMessenger extends WebSocketClient {
      * @return A new WebSocket messenger object, or null if the URI is invalid.
      */
     @CheckForNull
-    public static WebSocketMessenger buildNewConnection(String socketAddress, String apiKey, int
-            updateTime) {
+    public static WebSocketMessenger buildNewConnection(String socketAddress, String apiKey) {
         URI uri;
         Log.i(TAG, "URI: " + socketAddress);
         try {
@@ -39,17 +39,16 @@ class WebSocketMessenger extends WebSocketClient {
             return null;
         }
 
-        return new WebSocketMessenger(uri, apiKey, updateTime);
+        return new WebSocketMessenger(uri, apiKey);
     }
 
     /**
      * Constructs a new WebSocketMessenger object and attempts to establish a connection.
      * @param uri: Specifies address of the WebSocket connection.
      */
-    private WebSocketMessenger(URI uri, String apiKey, int updateTime) {
+    private WebSocketMessenger(URI uri, String apiKey) {
         super(uri);
         mLogsToSend = new ArrayList<>();
-        mUpdateTimeInterval = updateTime;
         mApiKey = apiKey;
         connect();
         mRunning = true;
@@ -63,7 +62,18 @@ class WebSocketMessenger extends WebSocketClient {
     public void onOpen(ServerHandshake serverHandshake) {
         Log.i(TAG, "Connection opened!");
 
-        // TODO (Reece): send a start session message
+        JSONObject payload = new JSONObject();
+        try {
+            payload.put("messageType", "startSession");
+            payload.put("osType", "Android");
+            payload.put("apiKey", mApiKey);
+            payload.put("deviceName", Build.MANUFACTURER + " " + Build.MODEL + " " + Build.DEVICE);
+            payload.put("appName", R.string.app_name);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        //send(payload.toString());
     }
 
     /**
@@ -72,7 +82,8 @@ class WebSocketMessenger extends WebSocketClient {
      * @param s, The received message.
      */
     @Override
-    public void onMessage(String s) {}
+    public void onMessage(String s) {
+    }
 
     /**
      * Called by the parent when the web socket connection is closed.
@@ -96,9 +107,12 @@ class WebSocketMessenger extends WebSocketClient {
      * Takes all the logs from the array list and places them all in a JSON object.
      * Clears the list then sends the the JSON object to the server.
      */
-    private void sendLogDump() {
+    public void sendLogDump() {
+        if (mLogsToSend.isEmpty()) {
+            return;
+        }
+
         JSONObject payload = new JSONObject();
-        // TODO (Reece): Check if mLogsToSend is empty, and don't send empty messages
         try {
             payload.put("messageType", "logDump");
             payload.put("osType", "Android");
@@ -106,11 +120,11 @@ class WebSocketMessenger extends WebSocketClient {
             String queuedLogs = "";
             ArrayList<String> logsToSendCopy = new ArrayList<>(mLogsToSend);
             mLogsToSend.clear();
-            for( String logLine : logsToSendCopy) {
+            for (String logLine : logsToSendCopy) {
                 queuedLogs += logLine + "\n";
             }
             payload.put("rawLogData", queuedLogs);
-        } catch (Exception e) {
+        } catch (JSONException e) {
             Log.e(TAG, e.toString());
         }
 
@@ -123,18 +137,13 @@ class WebSocketMessenger extends WebSocketClient {
      */
     public void enqueueLog(String logLine) {
         mLogsToSend.add(logLine);
-        // TODO (Reece): Move this to another function
-        long diff = System.currentTimeMillis() - mLastSendTime;
-        if (diff > mUpdateTimeInterval && isOpen()) {
-            sendLogDump();
-            mLastSendTime = System.currentTimeMillis();
-        }
     }
 
     /**
      * Returns weather or not the connection is mRunning.
      * @return True if there is a connection, false otherwise.
      */
-    public boolean isRunning() { return mRunning; }
-
+    public boolean isRunning() {
+        return mRunning;
+    }
 }
