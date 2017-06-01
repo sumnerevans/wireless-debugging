@@ -5,6 +5,7 @@ WebSocket Controller
 
 import json
 import time
+import controller
 
 from bottle import route, request, abort
 from geventwebsocket import WebSocketError
@@ -30,6 +31,8 @@ def handle_websocket():
     if not websocket:
         abort(400, 'Expected WebSocket request.')
 
+    websocket_metadata = {}
+
     print('connection received')
 
     while not websocket.closed:
@@ -44,21 +47,41 @@ def handle_websocket():
                 # TODO: blow up
                 pass
 
-            _ws_routes[messageType](decoded_message, websocket)
+            new_metadata = _ws_routes[message_type](decoded_message, websocket,
+                                                    websocket_metadata)
+
+            if new_metadata is not None:
+                websocket_metadata = {**websocket_metadata, **new_metadata}
+
         except WebSocketError:
             break
 
-    # Remove the WebSocket connection from the list once it is closed
-    _web_interface_ws_connections.remove(websocket)
+    if websocket in _web_interface_ws_connections:
+        del _web_interface_ws_connections[websocket]
 
 
-def ws_router(messageType):
+def ws_router(message_type):
     """ Provide a decorator for adding functions to the _ws_route dictionary """
 
     def decorator(function):
         _ws_routes[messageType] = function
 
     return decorator
+
+
+@ws_router('startSession')
+def start_session(message, websocket, metadata):
+    """ Marks the start of a logging session,
+        and attaches metadata to the websocket receiving the raw logs
+    """
+
+    metadata = {**metadata, **message}
+
+    for key in ('apiKey', 'osType', 'deviceName', 'appName'):
+        if key not in metadata:
+            raise KeyError('startSession message requires %s parameter.' % key)
+
+    return metadata
 
 
 @ws_router('logDump')
@@ -74,12 +97,26 @@ def log_dump(message, websocket):
     """
     parsed_logs = LogParser.parse(message)
 
-    for connection in _web_interface_ws_connections:
-        connection.send(util.serialize_to_json(parsed_logs))
+    api_key = metadata["apiKey"]
+
+    # At first glance this looks like a copy,
+    # but this is actually grabbing the keys from a dict
+    web_ws_connections = [ws for ws in _web_interface_ws_connections]
+    associated_websockets = (
+        controller.user_management_interface.find_associated_websockets(
+            api_key, web_ws_connections))
+
+    for connection in associated_websockets:
+        connection.send(util.serialize_json(parsed_logs))
 
 
-@ws_router('associateSession')
-def associate_session(message, websocket):
+@ws_router('endSession')
+def end_session(message, websocket, metadata):
+    print("currently defunct")
+
+
+@ws_router('associateUser')
+def associate_user(message, websocket, metadata):
     """ Associates a WebSocket connection with a session
 
     When a browser requests to be associated with a session, add the associated
