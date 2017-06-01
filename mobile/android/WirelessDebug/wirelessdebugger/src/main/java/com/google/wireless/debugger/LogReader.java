@@ -17,6 +17,7 @@ class LogReader implements Runnable {
     private Boolean mHostAppRunning = true;
     private Boolean mThreadRunning = true;
     private final WebSocketMessenger mWebSocketMessenger;
+    private SystemMonitor systemMonitor;
 
     /**
      * Creates LogReader instance if none exists.
@@ -29,6 +30,7 @@ class LogReader implements Runnable {
         if (mWebSocketMessenger == null) {
            Log.e(TAG, "Failed to create WebSocketMessenger Object");
         }
+        systemMonitor = new SystemMonitor();
     }
 
     /**
@@ -53,10 +55,28 @@ class LogReader implements Runnable {
                     new InputStreamReader(logcatProcess.getInputStream()));
 
             String logLine = "";
+            int i = 0;
 
             Log.d(TAG, "Begin Read line in buffer");
-            while (mHostAppRunning && mWebSocketMessenger.isRunning()) {
+            while (mHostAppRunning) {
+                //while (mHostAppRunning && mWebSocketMessenger.isRunning()) {
+
                 logLine = bufferedReader.readLine();
+
+                if (i % 100 == 0){
+                    //Log.i(TAG, Double.toString(systemMonitor.getCpuUsage()));
+                    Process topProcess = Runtime.getRuntime().exec("top -n 1 -d 0");
+                    BufferedReader topBufferReader = new BufferedReader(
+                            new InputStreamReader(topProcess.getInputStream()));
+
+                    String topLine = "";
+                    while (topLine == null || topLine.contentEquals("")){
+                        topLine = topBufferReader.readLine();
+                    }
+                    Log.d(TAG, topLine);
+
+                }
+                i++;
 
                 if (logLine == null) {
                     try {

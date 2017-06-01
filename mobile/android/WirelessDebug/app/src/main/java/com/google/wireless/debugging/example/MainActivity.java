@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
          * Call to start wireless debugging
          * Params:
          * String - Hostname/IP of the server to send logs to
-         * int - time (in ms) between sending logs to the server
+         * String - API Key
          * Context - context for the application (used to start the service)
          */
         WirelessDebugger.start("138.67.232.18", "KEY", getApplicationContext());
