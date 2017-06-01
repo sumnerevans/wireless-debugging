@@ -1,3 +1,4 @@
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 """
 WebSocket Controller
 """
@@ -6,8 +7,10 @@ import json
 import time
 
 from bottle import route, request, abort
-
 from geventwebsocket import WebSocketError
+
+from parsing_lib import LogParser
+from helpers import util
 
 # Store a dictionary of string -> function
 _ws_routes = {}
@@ -26,6 +29,8 @@ def handle_websocket():
     websocket = request.environ.get('wsgi.websocket')
     if not websocket:
         abort(400, 'Expected WebSocket request.')
+
+    print('connection received')
 
     while not websocket.closed:
         try:
@@ -49,6 +54,7 @@ def handle_websocket():
 
 def ws_router(messageType):
     """ Provide a decorator for adding functions to the _ws_route dictionary """
+
     def decorator(function):
         _ws_routes[messageType] = function
 
@@ -66,36 +72,10 @@ def log_dump(message, websocket):
         message: the decoded JSON message from the Mobile API
         websocket: the full websocket connection
     """
-    # TODO: This function is entirely a placeholder for testing purposes
-    parsed_logs = json.dumps({
-        'messageType': 'logData',
-        'osType': 'Android',
-        'logEntries': [
-            {
-                'time': '2017-11-06T16:34:41.000Z',
-                'text': 'This is not a real error',
-                'tag': 'TEST',
-                'logType': 'Warning',
-            },
-            {
-                'time': '2017-11-06T16:34:50.000Z',
-                'text': 'Cool Log',
-                'tag': 'TEST',
-                'logType': 'Info',
-            },
-            {
-                'time': '2017-11-06T16:34:55.000Z',
-                'text': 'Cool Log',
-                'tag': 'TEST',
-                'logType': 'Error',
-            },
-        ]
-    })
+    parsed_logs = LogParser.parse(message)
 
     for connection in _web_interface_ws_connections:
-        connection.send(parsed_logs)
-        time.sleep(1)
-        connection.send(parsed_logs)
+        connection.send(util.serialize_to_json(parsed_logs))
 
 
 @ws_router('associateSession')

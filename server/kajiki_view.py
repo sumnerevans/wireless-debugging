@@ -1,12 +1,10 @@
-#! /usr/bin/env python3
-
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 """
 Defines the Kajiki View Decorator
 """
 
 import functools
 
-from helpers import util
 from kajiki import FileLoader, XMLTemplate
 
 loader = FileLoader('template')
@@ -14,14 +12,25 @@ loader.extension_map['xhtml'] = XMLTemplate
 
 
 def kajiki_view(template_name):
-    """
-    Defines the kajiki_view decorator
+    """ Defines a kajiki_view decorator
 
-    Used code example from here:
+    When a function is annotated with this decorator, if the function returns a
+    dict, those values will be passed into the specified template and the
+    rendered template will become the output of the function.
+
+    Notes: Used code example from here:
     https://buxty.com/b/2013/12/jinja2-templates-and-bottle/ but customized for
-    kajiki instead
+    Kajiki instead
+
+    Args:
+        template_name: the name of the xhtml file to use as the template
+
+    Returns:
+        decorator: the decorated function
     """
+
     def decorator(view_func):
+
         @functools.wraps(view_func)
         def wrapper(*args, **kwargs):
             response = view_func(*args, **kwargs)
@@ -31,10 +40,7 @@ def kajiki_view(template_name):
                 # the template
                 Template = loader.load('%s.xhtml' % template_name)
 
-                t = Template({
-                    **response,
-                    **util.extra_template_context()
-                })
+                t = Template(response)
                 return t.render()
             else:
                 return response

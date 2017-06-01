@@ -19,9 +19,7 @@ This is a summer class sponsored by the university for CSCI-370 course.
         gem install bootstrap-sass
 
 4. Install the following Python libraries. (`pip install` is probably the
-   easiest way to do this.)
-
-   You can also run `pip install -r requirements.txt`
+   easiest way to do this.) You can also run `pip install -r requirements.txt`
 
         kajiki
         bottle
@@ -36,11 +34,11 @@ This is a summer class sponsored by the university for CSCI-370 course.
 6. Run the web application by running `widb_server.py` and navigating in your
    browser to `localhost:8080`
 
-## Web Server Setup with Development Environment 
+## Web Server Setup with Development Environment
 1. Ensure python 3 and Cloud SDK with Bundled Python is installed
 
 2. cd to the `server` directory
- 
+
 2. Run the following commands to install the necessary SASS plugins:
 
         gem install compass
@@ -48,37 +46,32 @@ This is a summer class sponsored by the university for CSCI-370 course.
         gem install bootstrap-sass
 
 3. Install the following Python libraries. (`pip3 install` is probably the
-   easiest way to do this.)
+   easiest way to do this.) You can also run 'pip install -r requirements.txt'.
+   Also run 'pip3 install -r requirements.txt'
 
-   You can also run 'pip install -r requirements.txt'. Also run 'pip3 install -r
-   requirements.txt'.
-
-       kajiki
-       bottle
-       markupsafe
-       requests
-       gevent
-       gevent-websocket
-       PyYaml
+        kajiki
+        bottle
+        markupsafe
+        requests
+        gevent
+        gevent-websocket
+        PyYaml
 
 4. Run `compass compile`
 
 5. To setup local web server app engine instance, run the following commands
-   from the `/server` directory:
+   from the `server` directory:
 
         pip3 install virtualenv
         virtualenv env
         .\env\Scripts\activate
         pip3 install -r requirements.txt
 
-    Then run `python widb_server.py` and will see it on `localhost:8080`.
+    run `python widb_server.py` and will see the app on `localhost:8080`.
 
-    For more information, see [Before You
-    Begin](https://cloud.google.com/appengine/docs/flexible/python/quickstart#before-you-begin)
+    For more information, see [Before you Begin](https://cloud.google.com/appengine/docs/flexible/python/quickstart#before-you-begin)
 
-6. Deploy using the command:
-
-        gcloud app deploy --project <project-id> --version <version-id>
+6. deploy: `gcloud app deploy --project <project-id> --version <version-id>`.
 
    The app will be shown on `www.<project-id>.appspot.com`
 
@@ -88,4 +81,3 @@ This is a summer class sponsored by the university for CSCI-370 course.
 - Reece Hughes
 - Daichi Jameson
 - Tiffany Kalin
-

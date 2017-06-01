@@ -1,9 +1,11 @@
-package com.google.wireless.debugging;
+package com.google.wireless.debugging.example;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import com.google.wireless.debugger.WirelessDebugger;
+import com.google.wireless.debugging.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -11,6 +13,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /*
+         * Call to start wireless debugging
+         * Params:
+         * String - Hostname/IP of the server to send logs to
+         * int - time (in ms) between sending logs to the server
+         * Context - context for the application (used to start the service)
+         */
+        WirelessDebugger.start("NONE", 500, getApplicationContext());
         setContentView(R.layout.activity_fragment);
 
         FragmentManager fm = getSupportFragmentManager();

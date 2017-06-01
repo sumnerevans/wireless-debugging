@@ -1,4 +1,5 @@
-/*
+/**
+ * Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
  * @fileoverview This contains the main app logic
  */
 
@@ -29,13 +30,6 @@ class WirelessDebug {
   websocketOnOpen() {
     let payload = {
       messageType: 'associateSession',
-    };
-
-    this.ws_.send(JSON.stringify(payload));
-
-    // TODO: get rid of this, only for testing purposes
-    payload = {
-      messageType: 'logDump',
     };
 
     this.ws_.send(JSON.stringify(payload));

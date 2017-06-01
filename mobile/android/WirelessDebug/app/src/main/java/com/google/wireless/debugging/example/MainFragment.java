@@ -1,4 +1,4 @@
-package com.google.wireless.debugging;
+package com.google.wireless.debugging.example;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -15,11 +15,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.wireless.debugging.R;
+
 public class MainFragment extends Fragment implements SensorEventListener {
 
     private static final String TAG = "WiDB Example";
+
     private EditText mLogText;
-    private Button accelerometer_toggle_button;
+    private Button mAccelerometerToggleButton;
+
     private boolean mLogAccelerometerData = false;
     private SensorManager sensorManager;
     private Sensor accelerometer;
@@ -42,7 +46,7 @@ public class MainFragment extends Fragment implements SensorEventListener {
     }
 
     /**
-     * Creates Logging control button handlers within the view.
+     * Creates Logging control button handlers within the view
      * @param logView View container for the buttons
      */
     private void registerLogViewClickHandlers(View logView) {
@@ -77,29 +81,31 @@ public class MainFragment extends Fragment implements SensorEventListener {
             }
         });
 
-        accelerometer_toggle_button = (Button) logView.findViewById(R.id.accel_toggle_button);
-        accelerometer_toggle_button.setOnClickListener(new View.OnClickListener() {
+        mAccelerometerToggleButton = (Button) logView.findViewById(R.id.accel_toggle_button);
+        mAccelerometerToggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLogAccelerometerData){
-                    accelerometer_toggle_button.setText(R.string.start_accel_data);
+                    mAccelerometerToggleButton.setText(R.string.start_accel_data);
                     mLogAccelerometerData = false;
-
                 } else {
-                    accelerometer_toggle_button.setText(R.string.stop_accel_data);
+                    mAccelerometerToggleButton.setText(R.string.stop_accel_data);
                     mLogAccelerometerData = true;
                 }
             }
         });
+
     }
 
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (mLogAccelerometerData && event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+        if (mLogAccelerometerData) {
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                 float aX = event.values[0];
                 float aY = event.values[1];
                 Log.i(TAG, "aX: " + aX + " aY: " + aY);
+            }
         }
     }
 
