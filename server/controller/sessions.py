@@ -2,7 +2,7 @@
 Session Controller
 """
 
-from bottle import get, post
+from bottle import get, post, request
 import controller
 
 @get('/sessionList')
@@ -11,8 +11,8 @@ def getSessionList():
 
 @get('/deviceList')
 def getDeviceList():
-    return controller._datastore_interface.retrieve_devices_and_apps(controller._current_guid)
+    return {"devices": controller._datastore_interface.retrieve_devices(controller._current_guid)}
 
 @post('/appList')
 def postAppList():
-    return{}
+    return {"apps":controller._datastore_interface.retrieve_apps(controller._current_guid, request.json['device'])}

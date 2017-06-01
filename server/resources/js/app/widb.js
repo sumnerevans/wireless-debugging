@@ -51,17 +51,17 @@ payload = {
     "messageType": "startSession",
     "apiKey": "tikalin",
     "osType": "Android",
-    "deviceName": "Google Pixel",
-    "appName": "Google Hangouts"
+    "deviceName": "Google Pixel2",
+    "appName": "Google Stuff2"
 }
 
 this.ws_.send(JSON.stringify(payload));
 
 payload = {
     "messageType": "startSession",
-    "apiKey": "tikalin",
+    "apiKey": "tikalin2",
     "osType": "Android",
-    "deviceName": "Google Pixel2",
+    "deviceName": "Google Pixel3",
     "appName": "Google Hangouts"
 }
 
@@ -72,8 +72,9 @@ this.ws_.send(JSON.stringify(payload))
       cache: false,
       success: function(data){
         var device = document.getElementById('device');
-        for (var i in data.devices[0]){
-          $(device).append('<option value=' + data.devices[0][i] + '>' + data.devices[0][i] + '</option>');
+	$(device).append('<option value="None"></option>');
+        for (var i in data.devices){
+          $(device).append('<option value=\"' + data.devices[i] + '\">' + data.devices[i] + '</option>');
         }
       }
     });
@@ -122,4 +123,32 @@ this.ws_.send(JSON.stringify(payload));
 /** When the document has been loaded, start Widb */
 $(document).ready(() => {
   new WirelessDebug().start();
+  (function() {
+  let A = document.getElementById('device');
+  A.onchange = function () {
+      let device = document.getElementById('device');
+      let data = {'device': device.options[device.selectedIndex].text};
+      $.ajax({
+      type: "POST",
+      url: '/appList',
+      data: JSON.stringify(data, null, '\t'),
+      contentType: 'application/json;charset=UTF-8', 
+      cache: false,
+      success: function(data){
+        let app = document.getElementById('app');	
+	app.length = 0; 
+	$(app).append('<option value="None"></option>');
+        for (var i in data.apps){
+          $(app).append('<option value=' + data.apps[i] + '>' + data.apps[i] + '</option>');
+        }
+      }, 
+      fail: function (data) {
+	console.log("failure");
+      }
+    });
+  };
+  A.onchange();
+  })();
 });
+
+
