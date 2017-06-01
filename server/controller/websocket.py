@@ -103,9 +103,18 @@ def log_dump(message, websocket, metadata):
     associated_websockets = ( 
         controller.user_management_interface.find_associated_websockets(api_key,
             web_ws_connections))
+    
+    #send to database
+    html_logs = LogParser.convert_to_html(parsed_logs['logEntries'])
+
+    send_logs = {
+            'messageType': 'logData',
+            'osType': 'Android',
+            'logEntries': html_logs,
+        }
 
     for connection in associated_websockets:
-        connection.send(util.serialize_json(parsed_logs))
+        connection.send(util.serialize_to_json(send_logs))
 
 @ws_router('endSession')
 def end_session(message, websocket, metadata):

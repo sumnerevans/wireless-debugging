@@ -96,9 +96,10 @@ this.ws_.send(JSON.stringify(payload));
   websocketOnMessage(message) {
     let messageData = JSON.parse(message.data);
     if (messageData.messageType === 'logData') {
-      for (let entry of messageData.logEntries) {
+      /*for (let entry of messageData.logEntries) {
         this.logTable_.append(this.renderLog(entry));
-      }
+      }*/
+	this.logTable_.append(messageData.logEntries);
     }
     if (messageData.messageType === 'guid') {
 	this.guid_.append(messageData.user);
