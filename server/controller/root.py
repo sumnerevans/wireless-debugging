@@ -6,6 +6,7 @@ Root Controller
 from bottle import abort, post, redirect, request, response, route, static_file
 from helpers.util import from_config_yaml
 from kajiki_view import kajiki_view
+from markupsafe import Markup
 
 import controller
 
@@ -52,6 +53,7 @@ def static(filepath):
 
 
 @route('/login_page')
+@kajiki_view('login')
 def login():
     """ Retrieves the login page from the user management interface and serves
         it to the user.
@@ -74,9 +76,9 @@ def login():
     url = "http://%s:%s" % (hostname, str(port))
 
     return {
-        'login_fields': controller.user_management_interface.get_login_ui(url),
+        "login_fields": Markup(
+            controller.user_management_interface.get_login_ui(url))
     }
-
 
 @post('/login')
 def handle_login():
