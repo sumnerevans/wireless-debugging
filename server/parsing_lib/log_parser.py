@@ -90,7 +90,6 @@ class LogParser(object):
             dict: the log entry from the log line
         """
         parsed_log = re.search(
-            '(.*) (\\d*) (\\d*) (.) (.*?): ((?:.*\\n*)*)', log_data)
             '(.*)\\s+(\\d*)\\s+(\\d*) ([IWVEDAF]) (.*?): ((?:.*\\n*)*)', log_data)
 
         # Parse the Year, we have to add the year to the string so that it
@@ -121,6 +120,14 @@ class LogParser(object):
 
     @staticmethod
     def convert_line_to_html(parsed_line):
+        """ Takes a parsed_line and converts it to HTML
+
+        Args:
+            parsed_line: parsed line of log
+
+        Returns:
+            string: formatted HTML
+        """
         color = ''
         color_dict = {
             'Warning': 'warning',
@@ -137,6 +144,14 @@ class LogParser(object):
 
     @staticmethod
     def convert_to_html(parsed_log_dict):
+        """ Takes a parsed block and converts it to HTML
+
+        Args:
+            parsed_log_dict: parsed block of logs
+
+        Returns:
+            string: formatted HTML
+        """
         html = ""
         for line in parsed_log_dict:
             html += LogParser.convert_line_to_html(line)

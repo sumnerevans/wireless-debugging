@@ -31,6 +31,7 @@ class MongoDatastoreInterface(DatastoreInterface):
             os_type: the OS type (iOS or Android)
             log_entries: the log entries to store
         """
+        self._logs.insert( { "api_key": api_key, "devName": device_name, "apps": app_name, "start_time": start_time, "os_type": os_type, "log_entries": log_entries } )
 
     def set_session_over(self, api_key, device_name, app_name, start_time):
         """Called to indicate to the datastore that the session is over. This can set a flag on the session in the datastore indicating that it should not be modified, for example.
@@ -74,7 +75,7 @@ class MongoDatastoreInterface(DatastoreInterface):
 
         Args:
             api_key: the API Key to retrieve logs for
-            device: the device name to retrieve logs for
+            device_name: the device name to retrieve logs for
 
         Returns:
             array: array of the names of the apps on the given device
@@ -82,7 +83,7 @@ class MongoDatastoreInterface(DatastoreInterface):
         """
         return self._logs.distinct("apps", {"api_key": api_key, "devName": device_name})
 
-    def retrieve_sessions(self, api_key, device, app):
+    def retrieve_sessions(self, api_key, device_name, app_name):
         """Retrieve a list of sessions for a given API Key, device, and app.
 
         Args:
@@ -94,7 +95,7 @@ class MongoDatastoreInterface(DatastoreInterface):
             array: list of datetime objects, one for each of the session start times associated with the given API Key, device, and app
         """
 
-    def add_device_app(self, api_key, device, app):
+    def add_device_app(self, api_key, device_name, app_name):
         """Add a device/app combination to the device/app collection
 
         Args:
@@ -104,11 +105,3 @@ class MongoDatastoreInterface(DatastoreInterface):
 
         """
         self._logs.insert( { "api_key": api_key, "devName": device, "apps": app } )
-
-    def get_user(self, webIdToken):
-        """
-        placeholder for tests (working without UMI): remove when done
-
-        gets api key for user (simply returns a simple string)
-        """
-        return 'tikalin'

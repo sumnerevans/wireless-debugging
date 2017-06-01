@@ -34,7 +34,7 @@ def faicon(icon_name, *args, **kwargs):
         ' '.join('%s="%s"' % (k, v) for k, v in kwargs.items())
     ))
 
-def serialize_json(obj):
+def serialize_to_json(obj):
     """ Serialize an object to JSON, ensuring that the datetimes are formatted
     according to RFC 3339
 
@@ -54,10 +54,10 @@ def serialize_json(obj):
 
 def from_config_yaml(key, force_reload=False):
     """Spits out a specified entry from the config yaml file
-    
-    This function takes the key value in the config value and gives 
+
+    This function takes the key value in the config value and gives
     the corresponding value from config.yaml file which, if none is given,
-    is the app.yaml file. 
+    is the app.yaml file.
 
     Args:
     	key: Key value in the config file that will return the value

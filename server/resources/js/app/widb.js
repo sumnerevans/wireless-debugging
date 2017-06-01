@@ -33,46 +33,37 @@ class WirelessDebug {
     //TO DO: UMI
     let payload = {
       messageType: 'associateUser',
-      webIdToken: 'tikalin'
+      apiKey: 'tikalin'
     };
+    this.ws_.send(JSON.stringify(payload));
+    //TO DO: remove, for testing purposes only
+    payload = {
+        "messageType": "startSession",
+        "apiKey": "tikalin",
+        "osType": "Android",
+        "deviceName": "Google Pixel5",
+        "appName": "Not Google Hangouts"
+      }
 
     this.ws_.send(JSON.stringify(payload));
+    //TO DO: remove, for testing purposes only
     payload = {
-    "messageType": "startSession",
-    "apiKey": "tikalin",
-    "osType": "Android",
-    "deviceName": "Google Pixel",
-    "appName": "Not Google Hangouts"
-}
+        "messageType": "startSession",
+        "apiKey": "tikalin",
+        "osType": "Android",
+        "deviceName": "Google Pixel6",
+        "appName": "Google Stuff6"
+    }
 
-this.ws_.send(JSON.stringify(payload));
+    this.ws_.send(JSON.stringify(payload));
 
-payload = {
-    "messageType": "startSession",
-    "apiKey": "tikalin",
-    "osType": "Android",
-    "deviceName": "Google Pixel2",
-    "appName": "Google Stuff2"
-}
-
-this.ws_.send(JSON.stringify(payload));
-
-payload = {
-    "messageType": "startSession",
-    "apiKey": "tikalin2",
-    "osType": "Android",
-    "deviceName": "Google Pixel3",
-    "appName": "Google Hangouts"
-}
-
-this.ws_.send(JSON.stringify(payload))
     $.ajax({
       type: "GET",
       url: '/deviceList',
       cache: false,
       success: function(data){
         var device = document.getElementById('device');
-	$(device).append('<option value="None"></option>');
+	      $(device).append('<option value="None"></option>');
         for (var i in data.devices){
           $(device).append('<option value=\"' + data.devices[i] + '\">' + data.devices[i] + '</option>');
         }
@@ -138,15 +129,12 @@ $(document).ready(() => {
       cache: false,
       success: function(data){
         let app = document.getElementById('app');
-	app.length = 0;
-	$(app).append('<option value="None"></option>');
+	      app.length = 0;
+	      $(app).append('<option value="None"></option>');
         for (var i in data.apps){
           $(app).append('<option value=' + data.apps[i] + '>' + data.apps[i] + '</option>');
         }
       },
-      fail: function (data) {
-	console.log("failure");
-      }
     });
   };
   A.onchange();

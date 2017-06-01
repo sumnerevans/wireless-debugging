@@ -4,6 +4,7 @@ WebSocket Controller
 
 import json
 import time
+import datetime
 
 import controller
 
@@ -97,16 +98,16 @@ def log_dump(message, websocket, metadata):
     else:
         api_key = ""
 
-    # At first glance this looks like a copy, 
+    # At first glance this looks like a copy,
     # but this is actually grabbing the keys from a dict
     web_ws_connections = [ws for ws in _web_interface_ws_connections]
-    associated_websockets = ( 
+    associated_websockets = (
         controller.user_management_interface.find_associated_websockets(api_key,
             web_ws_connections))
-    
-    #send to database
-    html_logs = LogParser.convert_to_html(parsed_logs['logEntries'])
 
+    #Send to database and convert to html.
+    html_logs = LogParser.convert_to_html(parsed_logs['logEntries'])
+    controller._datastore_interface.store_logs(metadata["apiKey"],metadata["deviceName"],metadata["appName"],metadata["osType"],datetime.datetime.now(),parsed_logs)
     send_logs = {
             'messageType': 'logData',
             'osType': 'Android',
@@ -138,11 +139,8 @@ def associate_user(message, websocket, metadata):
 
     print ('database')
 
-    #add to database
-    #controller._di.add_user(message['webIdToken'])
-
     #give out API key as user
-    controller._current_guid = controller._datastore_interface.get_user(message['webIdToken'])
+    controller._current_guid = message['apiKey']
     guid = {
         'messageType': 'guid',
         'user': controller._current_guid,
