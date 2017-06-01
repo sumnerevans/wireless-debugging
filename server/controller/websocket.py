@@ -149,4 +149,4 @@ def associate_user(message, websocket, metadata):
         }
 
     for connection in _web_interface_ws_connections:
-        connection.send(util.serialize_json(guid))
+        connection.send(util.serialize_to_json(guid))
