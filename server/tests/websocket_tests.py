@@ -62,3 +62,4 @@ def test_associate_user():
 
     assert socket in websocket._web_interface_ws_connections
     assert websocket._web_interface_ws_connections[socket] == message['apiKey']
+    
