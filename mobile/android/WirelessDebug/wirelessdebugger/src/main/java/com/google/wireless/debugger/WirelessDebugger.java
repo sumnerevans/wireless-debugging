@@ -64,7 +64,6 @@ public class WirelessDebugger extends Service {
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         Log.d(TAG, "Service Started");
         // Create and start threads
         String hostname = intent.getStringExtra(HOSTNAME_EXTRA);
