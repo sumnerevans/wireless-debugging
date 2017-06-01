@@ -70,6 +70,8 @@ class LogReader implements Runnable {
                     Log.i(TAG, Integer.toString(currentMemUsage));
                     Log.i(TAG, "Mem Usage: "  +
                             Double.toString((double) currentMemUsage / (double) totalSystemMemory));
+                    Log.i(TAG, "Sent b/s: " + systemMonitor.getSentBytesPerSecond() + " Received " +
+                            "b/s: " + systemMonitor.getReceivedBytesPerSecond());
                 }
                 i++;
 

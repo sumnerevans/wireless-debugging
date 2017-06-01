@@ -14,10 +14,14 @@ class SystemMonitor {
     private static final String PROC_STAT = PROC_ROOT + "stat";
     private static final String PROC_MEMINFO = PROC_ROOT + "meminfo";
     private static final String PROC_NET_DEV = PROC_ROOT + "net/dev";
+    private static final String REGEX_WHITESPACE = "\\s+";
+    private static final int TIME_INTERVAL = 500;
 
     private int[] mPreviousCpuStats = new int[2];
     private long mLastBytesSentTime;
-    private long mLastBytesRecievedTime;
+    private long mLastBytesReceivedTime;
+    private int mPreviousBytesSent;
+    private int mPreviousBytesReceived;
 
     public SystemMonitor() {
         ArrayList<String> cpuStatLines = getFileLines(PROC_STAT);
@@ -25,6 +29,10 @@ class SystemMonitor {
             String firstLine = cpuStatLines.get(0);
             mPreviousCpuStats = parseCpuLine(firstLine);
         }
+        mPreviousBytesSent = getSentBytes();
+        mLastBytesSentTime = System.currentTimeMillis();
+        mPreviousBytesReceived = getReceivedBytes();
+        mLastBytesReceivedTime = System.currentTimeMillis();
     }
 
     private ArrayList<String> getFileLines(String path) {
@@ -79,23 +87,39 @@ class SystemMonitor {
     }
 
     public double getSentBytesPerSecond() {
+        int currentBytesSent = getSentBytes();
+        long elapsedMilliseconds = System.currentTimeMillis() - mLastBytesSentTime;
+        double bytesPerMillisecond  = (currentBytesSent - mPreviousBytesSent) /
+                (double) elapsedMilliseconds;
 
+        mPreviousBytesSent = currentBytesSent;
+
+        return bytesPerMillisecond * (1000 / elapsedMilliseconds );
     }
 
-    private double getRecievedBytesPerSecond() {
+    public double getReceivedBytesPerSecond() {
+        int currentBytesReceived = getReceivedBytes();
+        long elapsedMilliseconds = System.currentTimeMillis() - mLastBytesReceivedTime;
+        double bytesPerMillisecond  = (currentBytesReceived - mPreviousBytesReceived) /
+                (double) elapsedMilliseconds;
 
+        mPreviousBytesReceived = currentBytesReceived;
+
+        return bytesPerMillisecond * (1000 / elapsedMilliseconds );
     }
 
     private int getSentBytes() {
-
+        mLastBytesSentTime = System.currentTimeMillis();
+        return sumNetworkUsageColumn(9);
     }
 
-    private int getRecievedBytes() {
-
+    private int getReceivedBytes() {
+        mLastBytesReceivedTime = System.currentTimeMillis();
+        return sumNetworkUsageColumn(1);
     }
 
     private int[] parseCpuLine(String line) {
-        String[] lineParts = line.split("\\s+");
+        String[] lineParts = line.split(REGEX_WHITESPACE);
         Log.d(TAG, line);
         int[] times = new int[2];
 
@@ -127,12 +151,24 @@ class SystemMonitor {
             return 0;
         }
 
-        String[] firstLineParts = memInfoLines.get(line).split("\\s+");
+        String[] firstLineParts = memInfoLines.get(line).split(REGEX_WHITESPACE);
         return Integer.parseInt(firstLineParts[1]);
     }
 
-    /* proc/stat
-    proc/net/dev
-     */
+    private int sumNetworkUsageColumn(int column){
+        ArrayList<String> networkFileLines = getFileLines(PROC_NET_DEV);
+        int totalBytes = 0;
 
+        // Remove first two lines from the /proc/net/dev file
+        networkFileLines.remove(0);
+        networkFileLines.remove(0);
+
+        for (String networkLine : networkFileLines) {
+            networkLine = networkLine.substring(networkLine.indexOf(":"));
+            String[] networkStats = networkLine.split(REGEX_WHITESPACE);
+            totalBytes += Integer.parseInt(networkStats[column]);
+        }
+
+        return totalBytes;
+    }
 }
