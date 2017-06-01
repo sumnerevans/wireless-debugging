@@ -17,9 +17,6 @@ from helpers import util
 _ws_routes = {} # pylint: disable=invalid-name
 _web_interface_ws_connections = {} # pylint: disable=invalid-name
 
-# TODO: Make this an instance variable in handle_websocket
-_mobile_interface_ws_connections = {} # pylint: disable=invalid-name
-
 
 @route('/ws')
 def handle_websocket():
@@ -75,10 +72,6 @@ def start_session(message, websocket, metadata):
     for attribute, value in message.items():
         metadata[attribute] = value
 
-    # Dead code, to be removed
-    #_mobile_interface_ws_connections[websocket] = message['apiKey']
-    #print(_mobile_interface_ws_connections)
-
 @ws_router('logDump')
 def log_dump(message, websocket, metadata):
     """ Handles Log Dumps from the Mobile API
@@ -90,12 +83,15 @@ def log_dump(message, websocket, metadata):
         message: the decoded JSON message from the Mobile API
         websocket: the full websocket connection
     """
+
     parsed_logs = LogParser.parse(message)
 
-    api_key = metadata["apiKey"]
-
-    # Dead code
-    #api_key = _mobile_interface_ws_connections[websocket]
+    if metadata:
+        api_key = metadata["apiKey"]
+    # This if/else is just to fit with legacy code
+    # TODO: remove this once code is updated on mobile side
+    else:
+        api_key = ""
 
     # At first glance this looks like a copy, 
     # but this is actually grabbing the keys from a dict
@@ -110,9 +106,6 @@ def log_dump(message, websocket, metadata):
 @ws_router('endSession')
 def end_session(message, websocket, metadata):
     print("currently defunct")
-    # This function may become meaningless in the context of just streaming logs
-    # TODO: Remove websocket from list of websockets
-    #del _mobile_interface_ws_connections[websocket]
 
 @ws_router('associateUser')
 def associate_user(message, websocket, metadata):
@@ -128,11 +121,4 @@ def associate_user(message, websocket, metadata):
 
     # TODO: Currently we only have one session, when we implement multiple
     #       connections, modify this to handle it
-    """ Classic graveyarded code
-    connection = {
-        'api_key': message['apiKey'],
-        'websocket': websocket,
-    }
-    _web_interface_ws_connections.append(connection)
-    """
     _web_interface_ws_connections[websocket] = message['apiKey']
