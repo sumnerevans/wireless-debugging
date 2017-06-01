@@ -59,15 +59,15 @@ class LogReader implements Runnable {
 
             Log.d(TAG, "Begin Read line in buffer");
             while (mHostAppRunning && mWebSocketMessenger.isRunning()) {
+                sendLogsIfReady();
+
+                /* If bufferReader is ready to be read from, read the line then proceed with the
+                   remainder of the loop.
+                   If not, sleep the thread for 10ms and continue the loop.
+                 */
                 if (bufferedReader.ready()) {
                     logLine = bufferedReader.readLine();
                 } else {
-                    logLine = null;
-                }
-
-                sendLogsIfReady();
-
-                if (logLine == null) {
                     try {
                         /* This is mostly a test.  With high accelerometer logging this value
                            the difference between mLogs is about 20 ms, so hopefully a
@@ -79,6 +79,7 @@ class LogReader implements Runnable {
                     }
                     continue;
                 }
+
                 mWebSocketMessenger.enqueueLog(logLine);
                 mLogs.add(logLine);
             }

@@ -41,6 +41,7 @@ public class WirelessDebugger extends Service {
      * @param hostname IP/domain of the server to send logs to
      * @param apiKey API Key given from the web interface
      * @param appContext Context of the calling application (use getApplicationContext())
+     * @param timeInterval Time (in ms) to wait between sending logs to the server
      */
     public static void start(String hostname, String apiKey, Context appContext, int timeInterval) {
         if (mWirelessDebuggerInstance == null) {
@@ -50,8 +51,10 @@ public class WirelessDebugger extends Service {
     }
 
     /**
+     * @Private 
      * Private Constructor that starts the WirelessDebugger service.
      * @param hostname Server IP/Hostname
+     * @param apiKey API Key given from the web interface
      * @param timeInterval Time Interval between sending logs
      * @param appContext Hosting application's context
      */

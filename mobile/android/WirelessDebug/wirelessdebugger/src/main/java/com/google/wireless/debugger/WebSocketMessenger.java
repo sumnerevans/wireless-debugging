@@ -71,7 +71,7 @@ class WebSocketMessenger extends WebSocketClient {
             payload.put("appName", R.string.app_name);
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.toString());
         }
         send(payload.toString());
     }
@@ -118,8 +118,11 @@ class WebSocketMessenger extends WebSocketClient {
             payload.put("osType", "Android");
 
             String queuedLogs = "";
+
+            // Copy the array list to prevent possible race conditions when sending/enqueuing logs
             ArrayList<String> logsToSendCopy = new ArrayList<>(mLogsToSend);
             mLogsToSend.clear();
+
             for (String logLine : logsToSendCopy) {
                 queuedLogs += logLine + "\n";
             }
