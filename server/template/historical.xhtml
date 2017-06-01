@@ -1,0 +1,57 @@
+<html py:extends="master.xhtml" py:strip="True">
+<head py:block="head" py:strip="True">
+  <title py:block="master_title">Historical Sessions</title>
+</head>
+
+<body py:block="body" py:strip="True">
+  <div class="row">
+    <div class="col-md-12">
+      <table>
+        <tr>
+          <td>
+	    <p>User GUID</p>
+          </td>
+          <td>
+            <p class="guid"></p>
+          </td>
+        </tr>
+        <tr>
+	  <td>
+	    <p>Select a device:</p>
+          </td>
+	  <td>
+	    <select name="device" id="device">
+	    </select>
+  	  </td>
+        </tr>
+	<tr>
+	  <td>
+            <p>Select an app:</p>
+	  </td>
+	  <td>
+	    <select name="app" id="app">
+            </select>
+	  </td>
+	</tr>
+	<tr>
+	  <td>
+	    <p>Select a start time for session:</p>
+	  </td>
+	  <td>
+	    <select name="starttime" id="starttime">
+            </select>
+	  </td>
+        </tr>
+      </table>
+      <table class="table table-hover table-condensed table-bordered historical-log-table">
+        <tr>
+          <th>Time</th>
+          <th>Tag</th>
+          <th>Type</th>
+          <th>Log Text</th>
+        </tr>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

@@ -6,6 +6,7 @@ Controller Module
 import controller.root
 import controller.sessions
 import controller.websocket
+from datastore_interfaces.mongo_datastore_interface import MongoDatastoreInterface
 
 # Replace email_auth with your desired user management interface
 from user_management_interfaces import email_auth
@@ -15,3 +16,4 @@ from user_management_interfaces import email_auth
 # Also replace email_auth.EmailAuth() with your desired user management
 # interface.
 user_management_interface = email_auth.EmailAuth()
+_datastore_interface = MongoDatastoreInterface()

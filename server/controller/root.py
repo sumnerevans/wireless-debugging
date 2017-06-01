@@ -41,6 +41,20 @@ def index():
         'api_key': api_key,
     }
 
+@route('/current')
+@kajiki_view('current')
+def current():
+    return {'page': 'current'}
+
+@route('/historical')
+@kajiki_view('historical')
+def historical():
+    return {'page': 'historical'}
+
+@route('/new_login')
+@kajiki_view('new_login')
+def new_login():
+    return {'page': 'new_login'}
 
 @route('/resources/<filepath:path>')
 def static(filepath):

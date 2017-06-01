@@ -1,5 +1,6 @@
 /**
  * Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+ *
  * @fileoverview This contains the main app logic
  */
 
@@ -12,6 +13,7 @@ class WirelessDebug {
   constructor() {
     /** @private @const {!jQuery} */
     this.logTable_ = $('.log-table');
+    this.guid_ = $('.guid');
 
     /** @private @const {?WebSocket} */
     this.ws_ = null;
@@ -45,16 +47,58 @@ class WirelessDebug {
     };
 
     this.ws_.send(JSON.stringify(payload));
+    //TO DO: remove, for testing purposes only
+    payload = {
+        "messageType": "startSession",
+        "apiKey": "tikalin",
+        "osType": "Android",
+        "deviceName": "Google Pixel5",
+        "appName": "Not Google Hangouts"
+      }
+
+    this.ws_.send(JSON.stringify(payload));
+    //TO DO: remove, for testing purposes only
+    payload = {
+        "messageType": "startSession",
+        "apiKey": "tikalin",
+        "osType": "Android",
+        "deviceName": "Google Pixel6",
+        "appName": "Google Stuff6"
+    }
+
+    this.ws_.send(JSON.stringify(payload));
+
+    $.ajax({
+      type: "GET",
+      url: '/deviceList',
+      cache: false,
+      success: function(data){
+        var device = document.getElementById('device');
+        $(device).append('<option value="None"></option>');
+        for (var i in data.devices){
+          $(device).append('<option value=\"' + data.devices[i] + '\">' + data.devices[i] + '</option>');
+        }
+      }
+    });
+
+    // TODO: get rid of this, only for testing purposes
+    payload = {
+      messageType: 'logDump',
+      rawLogData: '05-22 11:44:32.191 7080 7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection'
+,
+    };
+
+this.ws_.send(JSON.stringify(payload));
   }
 
   /** Decodes the WebSocket message and adds to table */
   websocketOnMessage(message) {
     let messageData = JSON.parse(message.data);
     if (messageData.messageType === 'logData') {
-      for (let entry of messageData.logEntries) {
-        this.logTable_.append(this.renderLog(entry));
-      }
-      $('#log-table').DataTable();
+      this.logTable_.append(messageData.logEntries);
+    }
+    if (messageData.messageType === 'guid') {
+      this.guid_.append(messageData.user);
     }
   }
 
@@ -77,4 +121,27 @@ class WirelessDebug {
 /** When the document has been loaded, start Widb */
 $(document).ready(() => {
   new WirelessDebug().start();
+  (function() {
+  let A = document.getElementById('device');
+  A.onchange = function () {
+      let device = document.getElementById('device');
+      let data = {'device': device.options[device.selectedIndex].text};
+      $.ajax({
+      type: "POST",
+      url: '/appList',
+      data: JSON.stringify(data, null, '\t'),
+      contentType: 'application/json;charset=UTF-8',
+      cache: false,
+      success: function(data){
+        let app = document.getElementById('app');
+        app.length = 0;
+        $(app).append('<option value="None"></option>');
+        for (var i in data.apps){
+          $(app).append('<option value=' + data.apps[i] + '>' + data.apps[i] + '</option>');
+        }
+      },
+    });
+  };
+  A.onchange();
+  })();
 });
