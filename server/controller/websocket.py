@@ -16,6 +16,8 @@ from helpers import util
 # Store a dictionary of string -> function
 _ws_routes = {} # pylint: disable=invalid-name
 _web_interface_ws_connections = {} # pylint: disable=invalid-name
+
+# TODO: Make this an instance variable in handle_websocket
 _mobile_interface_ws_connections = {} # pylint: disable=invalid-name
 
 
@@ -32,6 +34,8 @@ def handle_websocket():
     if not websocket:
         abort(400, 'Expected WebSocket request.')
 
+    _websocket_metadata = {}
+
     print('connection received')
 
     while not websocket.closed:
@@ -41,24 +45,19 @@ def handle_websocket():
                 continue
 
             decoded_message = json.loads(message)
-            print(decoded_message['messageType'])
             message_type = decoded_message['messageType']
             if message_type is None:
                 # TODO: blow up
                 pass
 
-            _ws_routes[message_type](decoded_message, websocket)
+            _ws_routes[message_type](decoded_message, websocket,
+                                     _websocket_metadata)
         except WebSocketError:
             break
 
-    # Remove the WebSocket connection from the list once it is closed
-    print(websocket)
     #_web_interface_ws_connections.remove(websocket)
     if websocket in _web_interface_ws_connections:
-        print("Websocket's here!")
         del _web_interface_ws_connections[websocket]
-        print("'Kay, Goodbye!")
-
 
 def ws_router(message_type):
     """ Provide a decorator for adding functions to the _ws_route dictionary """
@@ -69,14 +68,21 @@ def ws_router(message_type):
     return decorator
 
 @ws_router('startSession')
-def start_session(message, websocket):
-    # TODO: Maybe replace api_key with all of message,
-    # so all of the metadata is retained?
-    _mobile_interface_ws_connections[websocket] = message['apiKey']
-    print(_mobile_interface_ws_connections)
+def start_session(message, websocket, metadata):
+    """ Marks the start of a logging session,
+        and attaches metadata to the websocket receiving the raw logs
+    """
+
+    # There's probably a better way to do this and it should be refactored
+    for attribute, value in message.items():
+        metadata[attribute] = value
+
+    # Dead code, to be removed
+    #_mobile_interface_ws_connections[websocket] = message['apiKey']
+    #print(_mobile_interface_ws_connections)
 
 @ws_router('logDump')
-def log_dump(message, websocket):
+def log_dump(message, websocket, metadata):
     """ Handles Log Dumps from the Mobile API
 
     When a log dump comes in from the Mobile API, this function takes the raw
@@ -88,24 +94,30 @@ def log_dump(message, websocket):
     """
     parsed_logs = LogParser.parse(message)
 
-    api_key = _mobile_interface_ws_connections[websocket]
+    api_key = metadata["apiKey"]
+
+    # Dead code
+    #api_key = _mobile_interface_ws_connections[websocket]
 
     # At first glance this looks like a copy, 
     # but this is actually grabbing the keys from a dict
     web_ws_connections = [ws for ws in _web_interface_ws_connections]
-    associated_websockets = ( #
+    associated_websockets = ( 
         controller.user_management_interface.find_associated_websockets(api_key,
             web_ws_connections))
+
     for connection in associated_websockets:
         connection.send(util.serialize_json(parsed_logs))
 
 @ws_router('endSession')
-def end_session(message, websocket):
+def end_session(message, websocket, metadata):
+    print("currently defunct")
+    # This function may become meaningless in the context of just streaming logs
     # TODO: Remove websocket from list of websockets
-    del _mobile_interface_ws_connections[websocket]
+    #del _mobile_interface_ws_connections[websocket]
 
 @ws_router('associateUser')
-def associate_session(message, websocket):
+def associate_user(message, websocket, metadata):
     """ Associates a WebSocket connection with a session
 
     When a browser requests to be associated with a session, add the associated
