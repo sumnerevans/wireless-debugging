@@ -64,19 +64,6 @@ def ws_router(message_type):
 
     return decorator
 
-@ws_router('startSession')
-def start_session(message, websocket, metadata):
-    """ Marks the start of a logging session,
-        and attaches metadata to the websocket receiving the raw logs
-    """
-
-    # There's probably a better way to do this and it should be refactored
-    for attribute, value in message.items():
-        metadata[attribute] = value
-
-    # Dead code, to be removed
-    #_mobile_interface_ws_connections[websocket] = message['apiKey']
-    #print(_mobile_interface_ws_connections)
 
 @ws_router('startSession')
 def start_session(message, websocket, metadata):
@@ -120,7 +107,7 @@ def end_session(message, websocket, metadata):
     # TODO: Accept an end session message and notify the database to stop adding
     #       entries to the current log. 
     print("currently defunct")
-    
+
 @ws_router('associateUser')
 def associate_user(message, websocket, metadata):
     """ Associates a WebSocket connection with a session
