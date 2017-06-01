@@ -172,13 +172,65 @@ def test_parse():
 
 
 def test_parse_raw_log():
+    """ Tests that the LogParser.parse_raw_log method works properly. """
+
+    with open('test_parse_raw.json') as test_case_file:
+        test_cases = json.load(test_case_file, object_hook=_test_case_parser)
+
+        for test_case in test_cases:
+            test = test_case['input']
+            expected_result = test_case['expectedResult']
+            assert parsing_lib.LogParser.parse_raw_log(test) == expected_result
+
+def test_convert_line_to_html():
     current_year = datetime.now().year
-    tests = {
-        '05-22 11:44:31.180 7080 7080 I WiDB Example: aX: 3.0262709 aY: 2.0685902':
+    tests = [
+            {
+                'time': datetime(current_year, 5, 22, 11, 44, 31, 180000),
+                'processId': '7080',
+                'threadId': '7080',
+                'logType': 'Info',
+                'tag': 'WiDB Example',
+                'text': 'aX: 3.0262709 aY: 2.0685902',
+            },
+            {
+                'time': datetime(current_year, 5, 22, 11, 44, 32, 191000),
+                'processId': '7080',
+                'threadId': '7080',
+                'logType': 'Warning',
+                'tag': 'IInputConnectionWrapper',
+                'text': 'getTextBeforeCursor on inactive InputConnection',
+            },
+    ]
+
+    expected_results = [
+
+            '<tr class="">' +
+            '<td>' + str(datetime(current_year, 5, 22, 11, 44, 31, 180000)) + '</td>' +
+            '<td>WiDB Example</td>' +
+            '<td>Info</td>' +
+            '<td>aX: 3.0262709 aY: 2.0685902</td>' +
+            '</tr>'
+        ,
+
+            '<tr class="warning">' +
+            '<td>' + str(datetime(current_year, 5, 22, 11, 44, 32, 191000)) + '</td>'+
+            '<td>IInputConnectionWrapper</td>' +
+            '<td>Warning</td>' +
+            '<td>getTextBeforeCursor on inactive InputConnection</td>' +
+            '</tr>'
+        ,
+    ]
+
+    for test, expected_result in zip(tests, expected_results):
+        assert parsing_lib.LogParser.convert_line_to_html(test) == expected_result
+
+
+def test_convert_to_html():
+    current_year = datetime.now().year
+    tests = [[
         {
             'time': datetime(current_year, 5, 22, 11, 44, 31, 180000),
-            'processId': '7080',
-            'threadId': '7080',
             'logType': 'Info',
             'tag': 'WiDB Example',
             'text': 'aX: 3.0262709 aY: 2.0685902',
@@ -188,11 +240,27 @@ def test_parse_raw_log():
             'time': datetime(current_year, 5, 22, 11, 44, 32, 191000),
             'processId': '7080',
             'threadId': '7080',
+        {
+            'time': datetime(current_year, 5, 22, 11, 44, 32, 191000),
             'logType': 'Warning',
             'tag': 'IInputConnectionWrapper',
             'text': 'getTextBeforeCursor on inactive InputConnection',
         },
-    }
-
-    for test, expected_result in tests.items():
-        assert parsing_lib.LogParser.parse_raw_log(test) == expected_result
+    ],
+    ]
+    expected_results = [
+                '<tr class="">' +
+                '<td>' + str(datetime(current_year, 5, 22, 11, 44, 31, 180000)) + '</td>' +
+                '<td>WiDB Example</td>' +
+                '<td>Info</td>' +
+                '<td>aX: 3.0262709 aY: 2.0685902</td>' +
+                '</tr>'+
+                '<tr class="warning">' +
+                '<td>' + str(datetime(current_year, 5, 22, 11, 44, 32, 191000)) + '</td>'+
+                '<td>IInputConnectionWrapper</td>' +
+                '<td>Warning</td>' +
+                '<td>getTextBeforeCursor on inactive InputConnection</td>' +
+                '</tr>'
+    ]
+    for test, expected_result in zip(tests, expected_results):
+        assert parsing_lib.LogParser.convert_to_html(test) == expected_result

@@ -10,7 +10,7 @@ class LogParser(object):
     """ Handles parsing of all logs from the Mobile API """
 
     @staticmethod
-    def parse(message):
+    def parse(message, type="dict"):
         """ Parses a log message from the Mobile API
 
         Args:
@@ -118,3 +118,26 @@ class LogParser(object):
             'tag': parsed_log.group(5),
             'text': parsed_log.group(6),
         }
+
+    @staticmethod
+    def convert_line_to_html(parsed_line):
+        color = ''
+        color_dict = {
+            'Warning': 'warning',
+            'Error': 'danger',
+            }
+        if parsed_line['logType'] in ['Warning','Error']:
+            color = color_dict[parsed_line['logType']]
+        return ('<tr class=\"' + color + '\">' +
+            '<td>' + str(parsed_line['time']) + '</td>' +
+            '<td>' + parsed_line['tag'] + '</td>' +
+            '<td>' + parsed_line['logType'] + '</td>' +
+            '<td>' + parsed_line['text'] + '</td>' +
+            '</tr>')
+
+    @staticmethod
+    def convert_to_html(parsed_log_dict):
+        html = ""
+        for line in parsed_log_dict:
+            html += LogParser.convert_line_to_html(line)
+        return html

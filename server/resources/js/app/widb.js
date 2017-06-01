@@ -82,7 +82,8 @@ this.ws_.send(JSON.stringify(payload))
     // TODO: get rid of this, only for testing purposes
     payload = {
       messageType: 'logDump',
-      rawLogData: '05-22 11:44:31.180 7080 7080 I WiDB Example: aX: 3.0262709 aY: 2.0685902',
+      rawLogData: '05-22 11:44:32.191 7080 7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection'
+,
     };
 
 this.ws_.send(JSON.stringify(payload));
@@ -132,16 +133,16 @@ $(document).ready(() => {
       type: "POST",
       url: '/appList',
       data: JSON.stringify(data, null, '\t'),
-      contentType: 'application/json;charset=UTF-8', 
+      contentType: 'application/json;charset=UTF-8',
       cache: false,
       success: function(data){
-        let app = document.getElementById('app');	
-	app.length = 0; 
+        let app = document.getElementById('app');
+	app.length = 0;
 	$(app).append('<option value="None"></option>');
         for (var i in data.apps){
           $(app).append('<option value=' + data.apps[i] + '>' + data.apps[i] + '</option>');
         }
-      }, 
+      },
       fail: function (data) {
 	console.log("failure");
       }
@@ -150,5 +151,3 @@ $(document).ready(() => {
   A.onchange();
   })();
 });
-
-

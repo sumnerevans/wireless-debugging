@@ -8,7 +8,7 @@ class MongoDatastoreInterface(DatastoreInterface):
         """ Set up datastore interface
         Ensure MongoDB is installed with the default location.
         Ensure pymongo is installed.
-        Ensure that you run `mongod` before executing the application. 
+        Ensure that you run `mongod` before executing the application.
 
         Args:
             hostname : hostname. Defaulted to None
@@ -42,7 +42,7 @@ class MongoDatastoreInterface(DatastoreInterface):
             start_time: the time that the session started
 
         """
-        
+
     def retrieve_logs(self, api_key, device_name, app_name, start_time):
          """Retrieve logs for given session
 
@@ -64,7 +64,7 @@ class MongoDatastoreInterface(DatastoreInterface):
             api_key: the API Key to retrieve devices for
 
         Returns:
-            array: array of names of device names 
+            array: array of names of device names
 
         """
         return self._logs.distinct("devName", {"api_key" : api_key})
@@ -74,7 +74,7 @@ class MongoDatastoreInterface(DatastoreInterface):
 
         Args:
             api_key: the API Key to retrieve logs for
-            device: the device name to retrieve logs for  
+            device: the device name to retrieve logs for
 
         Returns:
             array: array of the names of the apps on the given device
@@ -98,10 +98,10 @@ class MongoDatastoreInterface(DatastoreInterface):
         """Add a device/app combination to the device/app collection
 
         Args:
-            api_key: the API Key 
-            device_name: api_key contatenated with the name of the device 
-            app_name: the name of the app 
-        
+            api_key: the API Key
+            device_name: api_key contatenated with the name of the device
+            app_name: the name of the app
+
         """
         self._logs.insert( { "api_key": api_key, "devName": device, "apps": app } )
 
@@ -111,4 +111,4 @@ class MongoDatastoreInterface(DatastoreInterface):
 
         gets api key for user (simply returns a simple string)
         """
-        return 'tikalin2'
+        return 'tikalin'
