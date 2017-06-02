@@ -22,7 +22,11 @@ class LogParser(object):
         """
         log_entries = []
         if 'rawLogData' not in message:
-            return {}
+            return {
+                'messageType': 'logData',
+                'osType': 'Android',
+                'logEntries': [],
+            }
 
         raw_data = message['rawLogData'].splitlines()
 
@@ -88,7 +92,8 @@ class LogParser(object):
             dict: the log entry from the log line
         """
         parsed_log = re.search(
-            '(.*)\\s+(\\d*)\\s+(\\d*) ([IWVEDAF]) (.*?): ((?:.*\\n*)*)', log_data)
+            '(.*)\\s+(\\d*)\\s+(\\d*) ([IWVEDAF]) (.*?): ((?:.*\\n*)*)',
+            log_data)
 
         # Parse the Year, we have to add the year to the string so that it
         # parses correctly.
