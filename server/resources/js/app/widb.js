@@ -141,12 +141,12 @@ $(document).ready(() => {
 	let time = document.getElementById('starttime');
 	app.length = 0;
 	      time.length = 0;
-	      $("#historical-log-table tbody tr").remove(); 	
+	      $("#historical-log-table tbody tr").remove();
 	      $(app).append('<option value="None"></option>');
         for (var i in data.apps){
           $(app).append('<option value=' + data.apps[i] + '>' + data.apps[i] + '</option>');
         }
-	
+
       },
     });
   });
@@ -216,7 +216,7 @@ $(document).ready(() => {
       contentType: 'application/json;charset=UTF-8',
       success: function(data) {
 	window.location.reload();
-      }, 
+      },
     });
   });
 
@@ -235,8 +235,7 @@ $(document).ready(() => {
       contentType: 'application/json;charset=UTF-8',
       success: function(data) {
 	window.location.reload();
-      }, 
+      },
     });
   });
 });
-

@@ -47,6 +47,7 @@ class DatastoreInterface(object):
         """
         raise NotImplementedError
 
+
     def retrieve_devices(self, api_key):
         """Retrieve a list of devices associated with the given API Key
         Args:
@@ -55,6 +56,7 @@ class DatastoreInterface(object):
             array: array of names of device names
         """
         raise NotImplementedError
+
 
     def retrieve_apps(self, api_key, device_name):
         """Retrieves apps given a device
@@ -66,6 +68,7 @@ class DatastoreInterface(object):
         """
         raise NotImplementedError
 
+
     def retrieve_sessions(self, api_key, device_name, app_name):
         """Retrieve a list of sessions for a given API Key, device, and app.
         Args:
@@ -76,6 +79,7 @@ class DatastoreInterface(object):
             array: list of datetime objects, one for each of the session start times associated with the given API Key, device, and app
         """
         raise NotImplementedError
+
 
     def add_device_app(self, api_key, device_name, app_name):
         """Add a device/app combination to the device/app collection
