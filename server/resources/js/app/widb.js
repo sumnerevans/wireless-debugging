@@ -52,25 +52,20 @@ class WirelessDebug {
         "messageType": "startSession",
         "apiKey": "tikalin",
         "osType": "Android",
-        "deviceName": "Google Pixel5",
-        "appName": "Not Google Hangouts"
-      }
-
-    this.ws_.send(JSON.stringify(payload));
-    //TO DO: remove, for testing purposes only
-    payload = {
-        "messageType": "startSession",
-        "apiKey": "tikalin",
-        "osType": "Android",
-        "deviceName": "Google Pixel6",
-        "appName": "Google Stuff6"
+        "deviceName": "Google Pixel7",
+        "appName": "Google Stuff9"
     }
 
     this.ws_.send(JSON.stringify(payload));
 
+    let data = {
+      'apiKey': payload.apiKey,
+    };
     $.ajax({
-      type: "GET",
+      type: "POST",
       url: '/deviceList',
+      data: JSON.stringify(data, null, '\t'),
+      contentType: 'application/json;charset=UTF-8',
       cache: false,
       success: function(data){
         var device = document.getElementById('device');
@@ -84,11 +79,18 @@ class WirelessDebug {
     // TODO: get rid of this, only for testing purposes
     payload = {
       messageType: 'logDump',
-      rawLogData: '05-22 11:44:32.191 7080 7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection'
-,
+      rawLogData: "--------- beginning of /dev/log/system \n05-22 11:44:31.180 7080 7080 I WiDB Example: aX: 3.0262709 aY: 2.0685902 \n05-22 11:44:32.191 7080 7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection",
     };
 
-this.ws_.send(JSON.stringify(payload));
+    this.ws_.send(JSON.stringify(payload));
+
+        // TODO: get rid of this, only for testing purposes
+    payload = {
+      messageType: 'endSession',
+    };
+
+    this.ws_.send(JSON.stringify(payload));
+
   }
 
   /** Decodes the WebSocket message and adds to table */
@@ -121,11 +123,13 @@ this.ws_.send(JSON.stringify(payload));
 /** When the document has been loaded, start Widb */
 $(document).ready(() => {
   new WirelessDebug().start();
-  (function() {
   let A = document.getElementById('device');
-  A.onchange = function () {
+  $(A).change(function () {
       let device = document.getElementById('device');
-      let data = {'device': device.options[device.selectedIndex].text};
+      let data = {
+	      'apiKey': document.getElementById('apiKey').innerHTML,
+	      'device': device.options[device.selectedIndex].text
+      };
       $.ajax({
       type: "POST",
       url: '/appList',
@@ -134,14 +138,105 @@ $(document).ready(() => {
       cache: false,
       success: function(data){
         let app = document.getElementById('app');
-        app.length = 0;
-        $(app).append('<option value="None"></option>');
+	let time = document.getElementById('starttime');
+	app.length = 0;
+	      time.length = 0;
+	      $("#historical-log-table tbody tr").remove(); 	
+	      $(app).append('<option value="None"></option>');
         for (var i in data.apps){
           $(app).append('<option value=' + data.apps[i] + '>' + data.apps[i] + '</option>');
         }
+	
       },
     });
-  };
-  A.onchange();
-  })();
+  });
+  let B = document.getElementById('app');
+  $(B).change (function () {
+      let device = document.getElementById('device');
+      let app = document.getElementById('app');
+      let data = {
+	      'apiKey': document.getElementById('apiKey').innerHTML,
+	      'device': device.options[device.selectedIndex].text,
+      	      'app': app.options[app.selectedIndex].text,
+      };
+      $.ajax({
+      type: "POST",
+      url: '/sessionList',
+      data: JSON.stringify(data, null, '\t'),
+      contentType: 'application/json;charset=UTF-8',
+      cache: false,
+      success: function(data){
+        let time = document.getElementById('starttime');
+	time.length = 0;
+	$("#historical-log-table tbody tr").remove();
+	$(time).append('<option value="None"></option>');
+        for (var i in data.starttimes){
+          $(time).append('<option value=' + data.starttimes[i] + '>' + data.starttimes[i] + '</option>');
+        }
+      },
+    });
+  });
+
+  let C = document.getElementById('starttime');
+  $(C).change (function () {
+      let device = document.getElementById('device');
+      let app = document.getElementById('app');
+      let time = document.getElementById('starttime');
+      let data = {
+	      'apiKey': document.getElementById('apiKey').innerHTML,
+	      'device': device.options[device.selectedIndex].text,
+      	      'app': app.options[app.selectedIndex].text,
+	      'starttime': time.options[time.selectedIndex].text,
+      };
+      $.ajax({
+      type: "POST",
+      url: '/logs',
+      data: JSON.stringify(data, null, '\t'),
+      contentType: 'application/json;charset=UTF-8',
+      cache: false,
+      success: function(data){
+	$("#historical-log-table tbody tr").remove();
+        let table = document.getElementById('historical-log-table');
+	$(table).append(data.logs);
+      },
+    });
+  });
+
+  $("#device-alias").click(function(e) {
+    e.preventDefault();
+    let data = {
+	'apiKey': document.getElementById('apiKey').innerHTML,
+	'device': device.options[device.selectedIndex].text,
+	'alias' : document.getElementById('dev-alias').value,
+    };
+    $.ajax({
+      type: "POST",
+      url: "/aliasDevice",
+      data: JSON.stringify(data, null, '\t'),
+      contentType: 'application/json;charset=UTF-8',
+      success: function(data) {
+	window.location.reload();
+      }, 
+    });
+  });
+
+  $("#appname-alias").click(function(e) {
+    e.preventDefault();
+    let data = {
+	'apiKey': document.getElementById('apiKey').innerHTML,
+	'device': device.options[device.selectedIndex].text,
+	'app'   : app.options[device.selectedIndex].text,
+	'alias' : document.getElementById('app-alias').value,
+    };
+    $.ajax({
+      type: "POST",
+      url: "/aliasApp",
+      data: JSON.stringify(data, null, '\t'),
+      contentType: 'application/json;charset=UTF-8',
+      success: function(data) {
+	window.location.reload();
+      }, 
+    });
+  });
 });
+

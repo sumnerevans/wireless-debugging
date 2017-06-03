@@ -12,8 +12,9 @@
 	    <p>User GUID</p>
           </td>
           <td>
-            <p class="guid"></p>
+            <p class="guid" id="apiKey"></p>
           </td>
+	  <td></td>
         </tr>
         <tr>
 	  <td>
@@ -23,6 +24,12 @@
 	    <select name="device" id="device">
 	    </select>
   	  </td>
+	  <td>
+            <form method="post">
+	      <input type="text" name="dev-alias" id="dev-alias"/>
+	      <button type="submit" id="device-alias" value="device-alias">Alias a Device</button>
+	    </form>
+	  </td>
         </tr>
 	<tr>
 	  <td>
@@ -31,6 +38,12 @@
 	  <td>
 	    <select name="app" id="app">
             </select>
+	  </td>
+	  <td>
+	    <form method="post">
+	      <input type="text" name="app-alias" id="app-alias"/>
+	      <button id="appname-alias">Alias an app</button>
+	    </form>	  
 	  </td>
 	</tr>
 	<tr>
@@ -43,13 +56,15 @@
 	  </td>
         </tr>
       </table>
-      <table class="table table-hover table-condensed table-bordered historical-log-table">
-        <tr>
+      <table class="table table-hover table-condensed table-bordered historical-log-table" id="historical-log-table">
+        <thead>
           <th>Time</th>
           <th>Tag</th>
           <th>Type</th>
           <th>Log Text</th>
-        </tr>
+        </thead>
+	<tbody>
+	</tbody>
       </table>
     </div>
   </div>

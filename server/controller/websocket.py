@@ -118,7 +118,9 @@ def log_dump(message, websocket, metadata):
 
     #Send to database and convert to html.
     html_logs = LogParser.convert_to_html(parsed_logs['logEntries'])
-    controller._datastore_interface.store_logs(metadata["apiKey"],metadata["deviceName"],metadata["appName"],metadata["osType"],datetime.datetime.now(),parsed_logs)
+    metadata["start_time"] = str(datetime.datetime.now())
+    controller._datastore_interface.store_logs(metadata["apiKey"],metadata["deviceName"],metadata["appName"],metadata["start_time"],metadata["osType"],parsed_logs)
+    
     send_logs = {
             'messageType': 'logData',
             'osType': 'Android',
@@ -130,8 +132,10 @@ def log_dump(message, websocket, metadata):
 
 @ws_router('endSession')
 def end_session(message, websocket, metadata):
-    print("currently defunct")
-
+    #set session is over and add to the device/app collection
+    controller._datastore_interface.set_session_over(metadata["apiKey"],metadata["deviceName"],metadata["appName"],metadata["start_time"])
+    controller._datastore_interface.add_device_app(metadata["apiKey"],metadata["deviceName"],metadata["appName"])
+    
 @ws_router('associateUser')
 def associate_user(message, websocket, metadata):
     """ Associates a WebSocket connection with a session
@@ -153,7 +157,7 @@ def associate_user(message, websocket, metadata):
     controller._current_guid = message['apiKey']
     guid = {
         'messageType': 'guid',
-        'user': controller._current_guid,
+        'user': message['apiKey'],
         }
 
     for connection in _web_interface_ws_connections:
