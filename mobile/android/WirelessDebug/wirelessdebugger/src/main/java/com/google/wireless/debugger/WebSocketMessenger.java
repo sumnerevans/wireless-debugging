@@ -66,7 +66,9 @@ class WebSocketMessenger extends WebSocketClient {
 
         StringBuilder deviceNameBuilder = new StringBuilder();
         deviceNameBuilder.append(Build.MANUFACTURER);
+        deviceNameBuilder.append(" ");
         deviceNameBuilder.append(Build.MODEL);
+        deviceNameBuilder.append(" ");
         deviceNameBuilder.append(Build.DEVICE);
 
         try {
