@@ -14,7 +14,7 @@ import controller
 def index():
     """ The log streaming dashboard, this is where logs go when they're
         streamed.
-    
+
     Checks if the user is logged in. If not, redirects them to a login page.
     Otherwise sends them to the log viewing dashboard, where the logs are 
     streamed to.
@@ -29,6 +29,7 @@ def index():
         api_key: The Web UI user's API key. 
 
     """
+
     if not controller.user_management_interface.is_user_logged_in(request):
         redirect('/login_page')
 
@@ -54,6 +55,7 @@ def static(filepath):
 def login():
     """ Retrieves the login page from the user management interface and serves
         it to the user.
+
     Args:
         None
     Returns:
@@ -70,6 +72,7 @@ def login():
 
     # TODO: Change base_url to be relative URL
     url = "http://%s:%s" % (hostname, str(port))
+
     return {
         'login_fields': controller.user_management_interface.get_login_ui(url),
     }

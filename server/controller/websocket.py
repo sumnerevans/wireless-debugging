@@ -18,6 +18,7 @@ _ws_routes = {}
 # TODO: Reverse map to go API key -> websocket, rather than websocket -> API key
 _web_interface_ws_connections = {}
 
+
 @route('/ws')
 def handle_websocket():
     """ Handle an incomming WebSocket connection.
@@ -92,21 +93,23 @@ def log_dump(message, websocket, metadata):
 
     api_key = metadata.get('apiKey', '')
 
-    # At first glance this looks like a copy, 
-    # but this is actually grabbing the keys from a dict
+    # At first glance this looks like a copy, but this is actually grabbing the
+    # keys from a dict.
     web_ws_connections = [ws for ws in _web_interface_ws_connections]
     associated_websockets = ( 
         controller.user_management_interface.find_associated_websockets(api_key,
             web_ws_connections))
 
     for connection in associated_websockets:
-        connection.send(util.serialize_json(parsed_logs))
+        connection.send(util.serialize_to_json(parsed_logs))
+
 
 @ws_router('endSession')
 def end_session(message, websocket, metadata):
     # TODO: Accept an end session message and notify the database to stop adding
     #       entries to the current log. 
     print("currently defunct")
+
 
 @ws_router('associateUser')
 def associate_user(message, websocket, metadata):
