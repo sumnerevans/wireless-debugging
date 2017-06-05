@@ -6,6 +6,7 @@ Root Controller
 from bottle import abort, post, redirect, request, response, route, static_file
 from helpers.util import from_config_yaml
 from kajiki_view import kajiki_view
+
 import controller
 
 @route('/')

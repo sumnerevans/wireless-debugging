@@ -4,8 +4,9 @@ Tests for the Parsing Library
 """
 
 import json
-from datetime import datetime
 import parsing_lib
+
+from datetime import datetime
 
 
 def _test_case_parser(test_case):

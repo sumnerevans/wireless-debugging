@@ -4,6 +4,7 @@ LogParser class
 """
 
 import re
+
 from datetime import datetime
 
 

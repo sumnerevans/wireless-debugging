@@ -49,14 +49,14 @@ class UserManagementInterfaceBase:
         raise NotImplementedError
 
     def get_api_key_for_user(self, request):
-        """Returns the API Key associated with the request
+        """Returns the API Key associated with the request.
 
         Args:
-            request: the HTTP request context from Bottle
+            request: the HTTP request context from Bottle.
         Returns:
             The API Key associated with the given request.
-            The request parameter can be used to access any cookies
-            that may have been set in handle_login
+            The request parameter can be used to access any cookies that may
+            have been set in handle_login.
         """
         raise NotImplementedError
 
@@ -64,9 +64,9 @@ class UserManagementInterfaceBase:
         """Determines which WebSocket connections to send parsed logs to.
 
             Args:
-                api_key: The API Key for which to find associated sessions
-                websocket_connections: a list of all Websocket connections
-                to Web UI's connected to the Web App Backend
+                api_key: The API Key for which to find associated sessions.
+                websocket_connections: a list of all Websocket connections to
+                Web UI's connected to the Web App Backend.
             Returns:
                 A list of WebSocket connections to send the logs to.
                 (This should be a subset of websocket_connections)
