@@ -23,7 +23,7 @@ class LogReader implements Runnable {
     /**
      * Creates LogReader instance if none exists.
      * Creates a new WebSocketMessenger also.
-     * @param hostname     Server's IP/Host address
+     * @param hostname Server's IP/Host address
      * @param timeInterval Time interval between log sends
      */
     LogReader(String hostname, String apiKey, int timeInterval) {
@@ -98,8 +98,8 @@ class LogReader implements Runnable {
      * Checks if enough time has passed to send logs through the WebSocketManager.
      */
     private void sendLogsIfReady() {
-        long diff = System.currentTimeMillis() - mLastSendTime;
-        if (diff > mUpdateTimeInterval && mWebSocketMessenger.isOpen()) {
+        long timeDifference = System.currentTimeMillis() - mLastSendTime;
+        if (timeDifference > mUpdateTimeInterval && mWebSocketMessenger.isOpen()) {
             mWebSocketMessenger.sendLogDump();
             mLastSendTime = System.currentTimeMillis();
         }

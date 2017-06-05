@@ -38,6 +38,18 @@ public class WirelessDebugger extends Service {
 
     /**
      * Starts wireless debugging for the calling application.
+     * @param hostnameResId IP/domain of the server to send logs to, given as resource ID
+     * @param apiKeyResId API Key given from the web interface, given as resource ID
+     * @param appContext Context of the calling application (use getApplicationContext())
+     */
+    public static void start(int hostnameResId, int apiKeyResId, Context appContext) {
+        String hostname = appContext.getResources().getString(hostnameResId);
+        String apiKey = appContext.getResources().getString(apiKeyResId);
+        start(hostname, apiKey, appContext);
+    }
+
+    /**
+     * Starts wireless debugging for the calling application.
      * @param hostname IP/domain of the server to send logs to
      * @param apiKey API Key given from the web interface
      * @param appContext Context of the calling application (use getApplicationContext())
@@ -48,6 +60,20 @@ public class WirelessDebugger extends Service {
             mWirelessDebuggerInstance = new WirelessDebugger(hostname, apiKey, timeInterval,
                     appContext);
         }
+    }
+
+    /**
+     * Starts wireless debugging for the calling application.
+     * @param hostnameResId IP/domain of the server to send logs to, given as resource ID
+     * @param apiKeyResId API Key given from the web interface, given as resource ID
+     * @param appContext Context of the calling application (use getApplicationContext())
+     * @param timeInterval Time (in ms) to wait between sending logs to the server
+     */
+    public static void start(int hostnameResId, int apiKeyResId, Context appContext, int
+            timeInterval) {
+        String hostname = appContext.getResources().getString(hostnameResId);
+        String apiKey = appContext.getResources().getString(apiKeyResId);
+        start(hostname, apiKey, appContext, timeInterval);
     }
 
     /**

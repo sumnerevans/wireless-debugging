@@ -63,13 +63,18 @@ class WebSocketMessenger extends WebSocketClient {
         Log.i(TAG, "Connection opened!");
 
         JSONObject payload = new JSONObject();
+
+        StringBuilder deviceNameBuilder = new StringBuilder();
+        deviceNameBuilder.append(Build.MANUFACTURER);
+        deviceNameBuilder.append(Build.MODEL);
+        deviceNameBuilder.append(Build.DEVICE);
+
         try {
             payload.put("messageType", "startSession");
             payload.put("osType", "Android");
             payload.put("apiKey", mApiKey);
-            payload.put("deviceName", Build.MANUFACTURER + " " + Build.MODEL + " " + Build.DEVICE);
+            payload.put("deviceName", deviceNameBuilder.toString());
             payload.put("appName", R.string.app_name);
-
         } catch (JSONException e) {
             Log.e(TAG, e.toString());
         }
