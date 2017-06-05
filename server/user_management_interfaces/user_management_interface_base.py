@@ -9,6 +9,7 @@ class UserManagementInterfaceBase:
         to use user authentication on their server.
     """
 
+    # TODO: Change base_url to be relative URL
     def get_login_ui(self, base_url):
         """Generates an HTML UI to show on the login page.
 

@@ -72,6 +72,7 @@ def login():
     if yaml_port:
         port = yaml_port
 
+    # TODO: Change base_url to be relative URL
     url = "http://" + hostname + ":" + str(port)
     return {
         'login_fields': controller.user_management_interface.get_login_ui(url),
