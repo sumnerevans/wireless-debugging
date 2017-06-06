@@ -67,11 +67,13 @@ class SystemMonitor {
         double cpuUsagePercent = (double) (currentCpuStats[0] - mPreviousCpuStats[0]) /
                 (double) (currentCpuStats[1] - mPreviousCpuStats[1]);
 
+        /*
         Log.d(TAG, "0: " + Integer.toString(currentCpuStats[0]) + " 1: "
                 + Integer.toString(currentCpuStats[1]) );
 
         Log.d(TAG, "0: " + Integer.toString(mPreviousCpuStats[0]) + " 1: "
                 + Integer.toString(mPreviousCpuStats[1]) );
+        */
 
         mPreviousCpuStats = currentCpuStats;
 
@@ -120,7 +122,6 @@ class SystemMonitor {
 
     private int[] parseCpuLine(String line) {
         String[] lineParts = line.split(REGEX_WHITESPACE);
-        Log.d(TAG, line);
         int[] times = new int[2];
 
         int timeUser = Integer.parseInt(lineParts[1]);
@@ -131,15 +132,13 @@ class SystemMonitor {
         int timeIrq = Integer.parseInt(lineParts[6]);
         int timeSoftIrq = Integer.parseInt(lineParts[7]);
         int timeSteal = Integer.parseInt(lineParts[8]);
-        int timeGuest = Integer.parseInt(lineParts[9]);
-        int timeGuestNice = Integer.parseInt(lineParts[10]);
 
         int totalIdleTime = timeIdle + timeIoWait;
-        int totalTime = totalIdleTime + timeIrq + timeSoftIrq + timeSystem + timeSteal +
-                timeGuest + timeGuestNice;
+        int totalTime = totalIdleTime + timeIrq + timeSoftIrq + timeSystem + timeSteal + timeUser
+                + timeNice;
 
-        times[0] = timeUser + timeNice + timeSystem;
-        times[1] = times[0] + totalIdleTime;
+        times[0] = totalTime - totalIdleTime;
+        times[1] = totalTime;
 
         return times;
     }

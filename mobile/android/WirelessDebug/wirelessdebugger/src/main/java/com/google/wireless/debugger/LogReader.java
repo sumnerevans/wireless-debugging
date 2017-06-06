@@ -60,36 +60,37 @@ class LogReader implements Runnable {
             int i = 0;
 
             Log.d(TAG, "Begin Read line in buffer");
-            while (mHostAppRunning) {
-                //while (mHostAppRunning && mWebSocketMessenger.isRunning()) {
+            while (mHostAppRunning && mWebSocketMessenger.isRunning()) {
+                    logLine = bufferedReader.readLine();
 
-                logLine = bufferedReader.readLine();
+                    if (i % 100 == 0){
+                        int currentMemUsage = systemMonitor.getMemoryUsage();
+                        Log.i(TAG, "Mem Usage: " +Integer.toString(currentMemUsage));
+                        Log.i(TAG, "Mem Usage %: "  +
+                                Double.toString(((double) currentMemUsage / (double)
+                                        totalSystemMemory) * 100));
+                        Log.i(TAG, "Sent b/s: " + systemMonitor.getSentBytesPerSecond() + " Received " +
+                                "b/s: " + systemMonitor.getReceivedBytesPerSecond());
+                        Log.i(TAG, "CPU Usage %: " + systemMonitor.getCpuUsage() * 100);
+                    }
+                    i++;
 
-                if (i % 100 == 0){
-                    int currentMemUsage = systemMonitor.getMemoryUsage();
-                    Log.i(TAG, Integer.toString(currentMemUsage));
-                    Log.i(TAG, "Mem Usage: "  +
-                            Double.toString((double) currentMemUsage / (double) totalSystemMemory));
-                    Log.i(TAG, "Sent b/s: " + systemMonitor.getSentBytesPerSecond() + " Received " +
-                            "b/s: " + systemMonitor.getReceivedBytesPerSecond());
-                }
-                i++;
-
-                if (logLine == null) {
-                    try {
+                    if (logLine == null) {
+                        try {
                         /* This is mostly a test.  With high accelerometer logging this value
                            the difference between mLogs is about 20 ms, so hopefully a
                            sleep time of 10ms is enough to not miss any mLogs.
                          */
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                            Thread.sleep(10);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        continue;
                     }
-                    continue;
-                }
-                mWebSocketMessenger.enqueueLog(logLine);
-                mLogs.add(logLine);
+                    mWebSocketMessenger.enqueueLog(logLine);
+                    mLogs.add(logLine);
             }
+
 
             // TODO (Reece): Replace with a send finished signal to the web socket messenger
             outputLogs();
