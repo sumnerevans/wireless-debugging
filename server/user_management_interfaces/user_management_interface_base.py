@@ -44,8 +44,9 @@ class UserManagementInterfaceBase:
                 login_successful: Boolean, returns true if the login was
                     successful. Returns false otherwise.
                 error_message: String, returns a message describing why the 
-                    login failed if login_successful is false. Empty if
-                    login_successful is true.
+                    login failed if login_successful is false. If 
+                    login_successful is true, this can return either a blank
+                    string or log message to describe anything important.
         """
         raise NotImplementedError
 

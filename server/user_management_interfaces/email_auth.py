@@ -54,8 +54,22 @@ class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
     def handle_login(self, form_data, request, response):
         """Function is unused, but is abstract so needs to be implemented"""
 
-        
-        return (True, "")
+        user_email = form_data.get("username")
+
+        if self.exists_in_table(user_email, True):
+            return (True, "")
+        else:
+            user_key_file = open(self.user_key_table, 'a')
+            user_key_file.write(user_email + ',' + user_email + '\n')
+            user_key_file.close()
+
+            # This should be a trivial test since we just added the entry, but
+            # just in case
+            if self.exists_in_table(user_email, True):
+                return (True, "New user! Adding to users table.")
+
+        return (False, "Failed to login! User does not exist in table!")
+
 
     def get_api_key_for_user(self, request):
         """Unused, but abstract so needs implementation"""
