@@ -14,7 +14,7 @@ import controller
 def index():
     """ The log streaming dashboard, this is where logs go when they're
         streamed.
-
+    
     Checks if the user is logged in. If not, redirects them to a login page.
     Otherwise sends them to the log viewing dashboard, where the logs are 
     streamed to.
