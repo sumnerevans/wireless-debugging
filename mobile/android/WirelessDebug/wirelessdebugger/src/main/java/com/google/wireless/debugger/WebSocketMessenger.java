@@ -76,7 +76,7 @@ class WebSocketMessenger extends WebSocketClient {
             payload.put("osType", "Android");
             payload.put("apiKey", mApiKey);
             payload.put("deviceName", deviceNameBuilder.toString());
-            payload.put("appName", R.string.app_name);
+            payload.put("appName", "NOT IMPLEMENTED");
         } catch (JSONException e) {
             Log.e(TAG, e.toString());
         }
@@ -138,6 +138,7 @@ class WebSocketMessenger extends WebSocketClient {
             Log.e(TAG, e.toString());
         }
 
+        // TODO: Handle WebsocketNotConnectedException
         send(payload.toString());
     }
 
@@ -147,6 +148,27 @@ class WebSocketMessenger extends WebSocketClient {
      */
     public void enqueueLog(String logLine) {
         mLogsToSend.add(logLine);
+    }
+
+    public void sendSystemMetrics(int memUsed, int memTotal, double cpuUsage, double
+            bytesSentPerSec, double
+            bytesReceivedPerSec, long timeStamp) {
+        JSONObject payload = new JSONObject();
+        try {
+            payload.put("messageType", "systemMetrics");
+            payload.put("osType", "Android");
+            payload.put("timeStamp", timeStamp);
+            payload.put("cpuUsage", cpuUsage);
+            payload.put("memUsage", memUsed);
+            payload.put("memTotal", memTotal);
+            payload.put("netSent", bytesSentPerSec);
+            payload.put("netReceive", bytesReceivedPerSec);
+        } catch (JSONException e) {
+            Log.e(TAG, e.toString());
+        }
+
+        // TODO: Handle WebsocketNotConnectedException
+        send(payload.toString());
     }
 
     /**

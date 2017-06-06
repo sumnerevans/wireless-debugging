@@ -34,6 +34,8 @@ class LogReader implements Runnable {
             Log.e(TAG, "Failed to create WebSocketMessenger Object");
         }
         mUpdateTimeInterval = timeInterval;
+        systemMonitor = new SystemMonitor();
+        totalSystemMemory = systemMonitor.getTotalMemory();
     }
 
     /**
@@ -58,19 +60,6 @@ class LogReader implements Runnable {
                     new InputStreamReader(logcatProcess.getInputStream()));
 
             String logLine = "";
-                   /*
-                    if (i % 100 == 0){
-                        int currentMemUsage = systemMonitor.getMemoryUsage();
-                        Log.i(TAG, "Mem Usage: " +Integer.toString(currentMemUsage));
-                        Log.i(TAG, "Mem Usage %: "  +
-                                Double.toString(((double) currentMemUsage / (double)
-                                        totalSystemMemory) * 100));
-                        Log.i(TAG, "Sent b/s: " + systemMonitor.getSentBytesPerSecond() + " Received " +
-                                "b/s: " + systemMonitor.getReceivedBytesPerSecond());
-                        Log.i(TAG, "CPU Usage %: " + systemMonitor.getCpuUsage() * 100);
-                    }
-                    i++;
-                    */
 
             Log.d(TAG, "Begin Read line in buffer");
             while (mHostAppRunning && mWebSocketMessenger.isRunning()) {
@@ -113,8 +102,16 @@ class LogReader implements Runnable {
      * Checks if enough time has passed to send logs through the WebSocketManager.
      */
     private void sendLogsIfReady() {
-        long timeDifference = System.currentTimeMillis() - mLastSendTime;
+        long currentTime = System.currentTimeMillis();
+        long timeDifference = currentTime - mLastSendTime;
         if (timeDifference > mUpdateTimeInterval && mWebSocketMessenger.isOpen()) {
+            int currentMemUsage = systemMonitor.getMemoryUsage();
+            double networkBytesSentPerSec = systemMonitor.getSentBytesPerSecond();
+            double networkBytesReceivedPerSec = systemMonitor.getReceivedBytesPerSecond();
+            double cpuUsage = systemMonitor.getCpuUsage();
+
+            mWebSocketMessenger.sendSystemMetrics(currentMemUsage, totalSystemMemory, cpuUsage,
+                    networkBytesSentPerSec, networkBytesReceivedPerSec, currentTime);
             mWebSocketMessenger.sendLogDump();
             mLastSendTime = System.currentTimeMillis();
         }

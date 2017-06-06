@@ -90,7 +90,9 @@ class SystemMonitor {
 
     public double getSentBytesPerSecond() {
         int currentBytesSent = getSentBytes();
+        long currentTime = System.currentTimeMillis();
         long elapsedMilliseconds = System.currentTimeMillis() - mLastBytesSentTime;
+        mLastBytesSentTime = currentTime;
         double bytesPerMillisecond  = (currentBytesSent - mPreviousBytesSent) /
                 (double) elapsedMilliseconds;
 
@@ -101,7 +103,9 @@ class SystemMonitor {
 
     public double getReceivedBytesPerSecond() {
         int currentBytesReceived = getReceivedBytes();
+        long currentTime = System.currentTimeMillis();
         long elapsedMilliseconds = System.currentTimeMillis() - mLastBytesReceivedTime;
+        mLastBytesReceivedTime = currentTime;
         double bytesPerMillisecond  = (currentBytesReceived - mPreviousBytesReceived) /
                 (double) elapsedMilliseconds;
 
@@ -111,12 +115,10 @@ class SystemMonitor {
     }
 
     private int getSentBytes() {
-        mLastBytesSentTime = System.currentTimeMillis();
         return sumNetworkUsageColumn(9);
     }
 
     private int getReceivedBytes() {
-        mLastBytesReceivedTime = System.currentTimeMillis();
         return sumNetworkUsageColumn(1);
     }
 
