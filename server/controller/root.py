@@ -12,7 +12,8 @@ import controller
 @route('/')
 @kajiki_view('index')
 def index():
-    """ The log streaming dashboard, this is where logs go when they're streamed
+    """ The log streaming dashboard, this is where logs go when they're
+        streamed.
     
     Checks if the user is logged in. If not, redirects them to a login page.
     Otherwise sends them to the log viewing dashboard, where the logs are 
@@ -67,13 +68,10 @@ def login():
         Currently defunct
     """
     hostname = from_config_yaml('hostname')
-    port = 80
-    yaml_port = from_config_yaml('port')
-    if yaml_port:
-        port = yaml_port
+    port = from_config_yaml('port') or 80
 
     # TODO: Change base_url to be relative URL
-    url = "http://" + hostname + ":" + str(port)
+    url = "http://%s:%s" % (hostname, str(port))
     return {
         'login_fields': controller.user_management_interface.get_login_ui(url),
     }
@@ -82,7 +80,7 @@ def login():
 @post('/login')
 def handle_login():
     """ Takes a login form and verifies the user's identity. """
-    login_successful, error_message = ( # Parenthesis is grooooss
+    login_successful, error_message = (
         controller.user_management_interface.handle_login(request.forms,
                                                           request, response))
 

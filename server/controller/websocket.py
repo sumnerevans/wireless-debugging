@@ -91,12 +91,7 @@ def log_dump(message, websocket, metadata):
 
     parsed_logs = LogParser.parse(message)
 
-    if metadata:
-        api_key = metadata["apiKey"]
-    # This if/else is just to fit with legacy code
-    # TODO: remove this once code is updated on mobile side
-    else:
-        api_key = ""
+    api_key = metadata.get('apiKey', '')
 
     # At first glance this looks like a copy, but this is actually grabbing the
     # keys from a dict.

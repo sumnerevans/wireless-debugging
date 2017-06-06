@@ -1,5 +1,5 @@
 """
-Defines the interface for user management interfaces
+Defines the interface for user management interfaces.
 """
 
 class UserManagementInterfaceBase:
