@@ -20,31 +20,75 @@ public class WirelessDebugger extends Service {
     // Extras to pass arguments to the intent that starts the service
     private static final String HOSTNAME_EXTRA = "hostname";
     private static final String TIME_INTERVAL_EXTRA = "time_interval";
+    private static final String API_KEY_EXTRA = "api_key";
 
     private LogReader mLogReader;
 
     /**
      * Starts wireless debugging for the calling application.
      * @param hostname IP/domain of the server to send logs to
-     * @param timeInterval Time interval (in ms) between sending logs
+     * @param apiKey API Key given from the web interface
      * @param appContext Context of the calling application (use getApplicationContext())
      */
-    public static void start(String hostname, int timeInterval, Context appContext) {
+    public static void start(String hostname, String apiKey, Context appContext) {
         if (mWirelessDebuggerInstance == null) {
-            mWirelessDebuggerInstance = new WirelessDebugger(hostname, timeInterval, appContext);
+            mWirelessDebuggerInstance = new WirelessDebugger(hostname, apiKey, 200, appContext);
         }
     }
 
     /**
+     * Starts wireless debugging for the calling application.
+     * @param hostnameResId IP/domain of the server to send logs to, given as resource ID
+     * @param apiKeyResId API Key given from the web interface, given as resource ID
+     * @param appContext Context of the calling application (use getApplicationContext())
+     */
+    public static void start(int hostnameResId, int apiKeyResId, Context appContext) {
+        String hostname = appContext.getResources().getString(hostnameResId);
+        String apiKey = appContext.getResources().getString(apiKeyResId);
+        start(hostname, apiKey, appContext);
+    }
+
+    /**
+     * Starts wireless debugging for the calling application.
+     * @param hostname IP/domain of the server to send logs to
+     * @param apiKey API Key given from the web interface
+     * @param appContext Context of the calling application (use getApplicationContext())
+     * @param timeInterval Time (in ms) to wait between sending logs to the server
+     */
+    public static void start(String hostname, String apiKey, Context appContext, int timeInterval) {
+        if (mWirelessDebuggerInstance == null) {
+            mWirelessDebuggerInstance = new WirelessDebugger(hostname, apiKey, timeInterval,
+                    appContext);
+        }
+    }
+
+    /**
+     * Starts wireless debugging for the calling application.
+     * @param hostnameResId IP/domain of the server to send logs to, given as resource ID
+     * @param apiKeyResId API Key given from the web interface, given as resource ID
+     * @param appContext Context of the calling application (use getApplicationContext())
+     * @param timeInterval Time (in ms) to wait between sending logs to the server
+     */
+    public static void start(int hostnameResId, int apiKeyResId, Context appContext, int
+            timeInterval) {
+        String hostname = appContext.getResources().getString(hostnameResId);
+        String apiKey = appContext.getResources().getString(apiKeyResId);
+        start(hostname, apiKey, appContext, timeInterval);
+    }
+
+    /**
+     * @Private 
      * Private Constructor that starts the WirelessDebugger service.
      * @param hostname Server IP/Hostname
+     * @param apiKey API Key given from the web interface
      * @param timeInterval Time Interval between sending logs
      * @param appContext Hosting application's context
      */
-    private WirelessDebugger(String hostname, int timeInterval, Context appContext) {
+    private WirelessDebugger(String hostname, String apiKey, int timeInterval, Context appContext) {
         Intent startIntent = new Intent(appContext, this.getClass());
         startIntent.putExtra(HOSTNAME_EXTRA, hostname);
         startIntent.putExtra(TIME_INTERVAL_EXTRA, timeInterval);
+        startIntent.putExtra(API_KEY_EXTRA, apiKey);
         appContext.startService(startIntent);
     }
 
@@ -67,8 +111,9 @@ public class WirelessDebugger extends Service {
         Log.d(TAG, "Service Started");
         // Create and start threads
         String hostname = intent.getStringExtra(HOSTNAME_EXTRA);
-        int timeInterval = intent.getIntExtra(TIME_INTERVAL_EXTRA, 500);
-        mLogReader = new LogReader(hostname, timeInterval);
+        int timeInterval = intent.getIntExtra(TIME_INTERVAL_EXTRA, 200);
+        String apiKey = intent.getStringExtra(API_KEY_EXTRA);
+        mLogReader = new LogReader(hostname, apiKey, timeInterval);
         Thread logThread = new Thread(mLogReader);
         logThread.start();
 
