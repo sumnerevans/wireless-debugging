@@ -56,6 +56,12 @@ def test_parse():
             expected_result = test_case['expectedResult']
             assert parsing_lib.LogParser.parse(test_input) == expected_result
 
+        assert parsing_lib.LogParser.parse({}) == {
+            'messageType': 'logData',
+            'osType': 'Android',
+            'logEntries': [],
+        }
+
 
 def test_parse_raw_log():
     """ Tests that the LogParser.parse_raw_log method works properly. """
