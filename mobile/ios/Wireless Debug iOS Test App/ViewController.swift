@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var LogText: UITextField!
     @IBOutlet weak var AccelerometerToggle: UIButton!
     
@@ -17,6 +17,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        LogText.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,10 +32,15 @@ class ViewController: UIViewController {
     
     @IBAction func exception_pressed() {
         // TODO: throw an exception
+        do {
+            try raiseException();
+        } catch {
+            NSLog("Test")
+        }
     }
     
-    @IBAction func crash_pressed() {
-        // TODO: crash the app
+    @IBAction func crash_pressed() throws {
+        NSException(name:NSExceptionName(rawValue: "ForcedException"), reason:"You pressed the crash button", userInfo:nil).raise()
     }
     
     @IBAction func accelerometerToggle_pressed() {
@@ -48,6 +54,24 @@ class ViewController: UIViewController {
         
         loggingAccelerometer = !loggingAccelerometer
     }
-
+    
+    /// Handle enter on the log text field.
+    ///
+    /// - parameters:
+    ///   - _ The text field whose return button was pressed.
+    ///
+    /// - returns: true if the text field should implement its default behavior for the return button; otherwise, false.
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.logButton_pressed()
+        return true
+    }
+    
+    enum ForcedError: Error {
+        case Error
+    }
+    
+    func raiseException() throws {
+        throw ForcedError.Error 
+    }
 }
 

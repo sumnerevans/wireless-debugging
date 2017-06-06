@@ -193,6 +193,7 @@
 				TargetAttributes = {
 					442CC6381EDBC40E005A52AE = {
 						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = 3DJHQLE2C6;
 						ProvisioningStyle = Automatic;
 					};
 					442CC64C1EDBC40E005A52AE = {
@@ -414,6 +415,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 3DJHQLE2C6;
 				INFOPLIST_FILE = "Wireless Debug iOS Test App/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "google.Wireless-Debug-iOS-Test-App";
@@ -426,6 +428,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 3DJHQLE2C6;
 				INFOPLIST_FILE = "Wireless Debug iOS Test App/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "google.Wireless-Debug-iOS-Test-App";
@@ -507,6 +510,7 @@
 				442CC6631EDBC40E005A52AE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		442CC6641EDBC40E005A52AE /* Build configuration list for PBXNativeTarget "Wireless Debug iOS Test AppTests" */ = {
 			isa = XCConfigurationList;
@@ -515,6 +519,7 @@
 				442CC6661EDBC40E005A52AE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		442CC6671EDBC40E005A52AE /* Build configuration list for PBXNativeTarget "Wireless Debug iOS Test AppUITests" */ = {
 			isa = XCConfigurationList;
@@ -523,6 +528,7 @@
 				442CC6691EDBC40E005A52AE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
