@@ -30,6 +30,7 @@ class WirelessDebug {
   websocketOnOpen() {
     let payload = {
       messageType: 'associateUser',
+      apiKey: "",
     };
 
     this.ws_.send(JSON.stringify(payload));

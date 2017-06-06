@@ -43,6 +43,7 @@ def handle_websocket():
                 continue
 
             decoded_message = json.loads(message)
+            print(decoded_message)
             message_type = decoded_message['messageType']
             if message_type is None:
                 # TODO: blow up
@@ -74,6 +75,7 @@ def start_session(message, websocket, metadata):
 
     # There's probably a better way to do this and it should be refactored
     for attribute, value in message.items():
+        print('attribute:', attribute, " value:", value)
         metadata[attribute] = value
 
 

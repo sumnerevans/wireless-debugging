@@ -31,6 +31,7 @@ def index():
 
     """
 
+    print(controller.user_management_interface.is_user_logged_in(request))
     if not controller.user_management_interface.is_user_logged_in(request):
         redirect('/login_page')
 

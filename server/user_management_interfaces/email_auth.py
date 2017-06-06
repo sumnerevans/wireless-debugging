@@ -19,7 +19,14 @@ class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
 
     def get_login_ui(self, base_url):
         """Unused, but abstract so needs an implementation"""
-        return ""
+
+        login_fields_file = open('user_management_interfaces/email_login.xhtml',
+                                 'r')
+        login_fields = login_fields_file.read()
+        login_fields_file.close()
+
+        print(login_fields)
+        return login_fields
 
     def is_user_logged_in(self, request):
         """ If a stashed cookie is found indicating that the user has logged in,
@@ -32,6 +39,10 @@ class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
         """
 
         # Check if the user's already logged in,
+        print("eh")
+        blep = request.get_cookie("api_key")
+        print(blep, "type:", type(blep))
+        print("it's here")
         if request.get_cookie("api_key"):
             # ... and that the api key they have is valid.
             api_key = request.get_cookie("api_key")
@@ -42,6 +53,8 @@ class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
 
     def handle_login(self, form_data, request, response):
         """Function is unused, but is abstract so needs to be implemented"""
+
+        
         return (True, "")
 
     def get_api_key_for_user(self, request):
