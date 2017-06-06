@@ -29,7 +29,8 @@ class WirelessDebug {
   /** Handles WebSocket opening */
   websocketOnOpen() {
     let payload = {
-      messageType: 'associateSession',
+      messageType: 'associateUser',
+      apiKey = 'none',
     };
 
     this.ws_.send(JSON.stringify(payload));
