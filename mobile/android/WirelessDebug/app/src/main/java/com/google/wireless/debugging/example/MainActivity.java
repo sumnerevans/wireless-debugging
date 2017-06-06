@@ -17,10 +17,11 @@ public class MainActivity extends AppCompatActivity {
          * Call to start wireless debugging
          * Params:
          * String - Hostname/IP of the server to send logs to
-         * String - API Key
+         * int - time (in ms) between sending logs to the server
          * Context - context for the application (used to start the service)
          */
-        WirelessDebugger.start("138.67.232.18", "KEY", getApplicationContext());
+        WirelessDebugger.start(R.string.wireless_debug_server, R.string.wireless_debug_api_key,
+                getApplicationContext());
         setContentView(R.layout.activity_fragment);
 
         FragmentManager fm = getSupportFragmentManager();
