@@ -42,8 +42,8 @@ def handle_websocket():
                 continue
 
             decoded_message = json.loads(message)
-            messageType = decoded_message['messageType']
-            if messageType is None:
+            message_type = decoded_message['messageType']
+            if message_type is None:
                 # TODO: blow up
                 pass
 
@@ -64,7 +64,7 @@ def ws_router(message_type):
     """ Provide a decorator for adding functions to the _ws_route dictionary """
 
     def decorator(function):
-        _ws_routes[messageType] = function
+        _ws_routes[message_type] = function
 
     return decorator
 
