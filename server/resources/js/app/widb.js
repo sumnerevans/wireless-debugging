@@ -18,6 +18,8 @@ class WirelessDebug {
 
     /** @private @const {?WebSocket} */
     this.ws_ = null;
+
+    this.metricGrapher = new MetricGrapher();
   }
 
   /**
@@ -48,7 +50,9 @@ class WirelessDebug {
       }
     }
     if (messageData.messageType === 'deviceMetrics') {
-      this.metricsTable_.append(this.renderMetrics(messageData))
+      //this.metricsTable_.append(this.renderMetrics(messageData))
+      metricGrapher.setMetrics(messageData);
+      metricGrapher.render();
     }
   }
 

@@ -95,7 +95,7 @@ def log_dump(message, websocket, metadata):
         message: the decoded JSON message from the Mobile API
         websocket: the full websocket connection
     """
-"""
+    """ TEMPORARY
     parsed_logs = LogParser.parse(message)
 
     api_key = metadata["apiKey"]
@@ -109,7 +109,7 @@ def log_dump(message, websocket, metadata):
 
     for connection in associated_websockets:
         connection.send(util.serialize_json(parsed_logs))
-"""
+    """
 
 @ws_router('endSession')
 def end_session(message, websocket, metadata):
@@ -133,7 +133,7 @@ def associate_user(message, websocket, metadata):
     _web_interface_ws_connections[websocket] = message['apiKey']
 
 
-@ws_router('systemMetrics')
+@ws_router('deviceMetrics')
 def associate_user(message, websocket, metadata):
 
     web_ws_connections = [ws for ws in _web_interface_ws_connections]

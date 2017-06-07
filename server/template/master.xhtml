@@ -9,8 +9,10 @@
     <!-- Scripts -->
     <script src="/resources/js/lib/jquery-3.2.0.min.js"></script>
     <script src="/resources/js/lib/bootstrap.min.js"></script>
+    <script src="/resources/js/lib/d3.v4.min.js"></script>
 
     <script src="/resources/js/app/widb.js"></script>
+    <script src="/resources/js/app/device_metric_graphs.js"></script>
     <py:block name="head"></py:block>
   </head>
   <body>
@@ -33,7 +35,7 @@
         </div>
       </div>
     </nav>
-    <div class="container">
+    <div class="container-fluid">
       <!-- Flash messages -->
       <div py:if="self.defined('flash') and len(flash) &gt; 0">
         <div class="row" id="flash">

@@ -30,3 +30,18 @@ body {
 span.dot-sep {
   padding: 0 5px;
 }
+
+.metricsGraph{
+  background-color: #dddddd;
+  margin: 2px;
+  padding: 8px;
+}
+
+.cpuUsageGraph div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
+}
