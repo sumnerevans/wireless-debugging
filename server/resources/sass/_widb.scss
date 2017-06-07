@@ -35,13 +35,14 @@ span.dot-sep {
   background-color: #dddddd;
   margin: 2px;
   padding: 8px;
+  font-weight: 20px;
 }
 
 .cpuUsageGraph div {
-  font: 10px sans-serif;
+  font: 16px sans-serif;
   background-color: steelblue;
-  text-align: right;
+  text-align: left;
   padding: 3px;
   margin: 1px;
-  color: white;
+  color: black;
 }

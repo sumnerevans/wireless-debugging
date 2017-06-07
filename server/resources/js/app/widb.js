@@ -20,6 +20,7 @@ class WirelessDebug {
     this.ws_ = null;
 
     this.metricGrapher = new MetricGrapher();
+    this.metricGrapher.render();
   }
 
   /**
@@ -51,8 +52,8 @@ class WirelessDebug {
     }
     if (messageData.messageType === 'deviceMetrics') {
       //this.metricsTable_.append(this.renderMetrics(messageData))
-      metricGrapher.setMetrics(messageData);
-      metricGrapher.render();
+      this.metricGrapher.setMetrics(messageData);
+      this.metricGrapher.render();
     }
   }
 
