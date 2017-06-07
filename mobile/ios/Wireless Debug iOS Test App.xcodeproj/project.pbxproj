@@ -14,6 +14,7 @@
 		442CC6471EDBC40E005A52AE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 442CC6451EDBC40E005A52AE /* LaunchScreen.storyboard */; };
 		442CC6521EDBC40E005A52AE /* Wireless_Debug_iOS_Test_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442CC6511EDBC40E005A52AE /* Wireless_Debug_iOS_Test_AppTests.swift */; };
 		442CC65D1EDBC40E005A52AE /* Wireless_Debug_iOS_Test_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442CC65C1EDBC40E005A52AE /* Wireless_Debug_iOS_Test_AppUITests.swift */; };
+		44E51AE81EE752D600504599 /* WirelessDebugger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E51AE71EE752D600504599 /* WirelessDebugger.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		442CC6581EDBC40E005A52AE /* Wireless Debug iOS Test AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Wireless Debug iOS Test AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		442CC65C1EDBC40E005A52AE /* Wireless_Debug_iOS_Test_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wireless_Debug_iOS_Test_AppUITests.swift; sourceTree = "<group>"; };
 		442CC65E1EDBC40E005A52AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		44E51AE71EE752D600504599 /* WirelessDebugger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WirelessDebugger.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 		442CC6301EDBC40E005A52AE = {
 			isa = PBXGroup;
 			children = (
+				44E51AE61EE751DF00504599 /* WirelessDebugger */,
 				442CC63B1EDBC40E005A52AE /* Wireless Debug iOS Test App */,
 				442CC6501EDBC40E005A52AE /* Wireless Debug iOS Test AppTests */,
 				442CC65B1EDBC40E005A52AE /* Wireless Debug iOS Test AppUITests */,
@@ -123,6 +126,14 @@
 				442CC65E1EDBC40E005A52AE /* Info.plist */,
 			);
 			path = "Wireless Debug iOS Test AppUITests";
+			sourceTree = "<group>";
+		};
+		44E51AE61EE751DF00504599 /* WirelessDebugger */ = {
+			isa = PBXGroup;
+			children = (
+				44E51AE71EE752D600504599 /* WirelessDebugger.swift */,
+			);
+			name = WirelessDebugger;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -260,6 +271,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44E51AE81EE752D600504599 /* WirelessDebugger.swift in Sources */,
 				442CC63F1EDBC40E005A52AE /* ViewController.swift in Sources */,
 				442CC63D1EDBC40E005A52AE /* AppDelegate.swift in Sources */,
 			);

@@ -34,8 +34,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         // TODO: throw an exception
         do {
             try raiseException();
-        } catch {
-            NSLog("Test")
+        } catch let err {
+            NSLog("\(err)")
         }
     }
     
@@ -67,11 +67,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     enum ForcedError: Error {
-        case Error
+        case ForcedError
     }
     
     func raiseException() throws {
-        throw ForcedError.Error 
+        throw ForcedError.ForcedError
     }
 }
 
