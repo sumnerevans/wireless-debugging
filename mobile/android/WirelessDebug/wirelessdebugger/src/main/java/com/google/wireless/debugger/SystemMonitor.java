@@ -15,7 +15,6 @@ class SystemMonitor {
     private static final String PROC_MEMINFO = PROC_ROOT + "meminfo";
     private static final String PROC_NET_DEV = PROC_ROOT + "net/dev";
     private static final String REGEX_WHITESPACE = "\\s+";
-    private static final int TIME_INTERVAL = 500;
 
     private int[] mPreviousCpuStats = new int[2];
     private long mLastBytesSentTime;
@@ -64,17 +63,18 @@ class SystemMonitor {
 
         int[] currentCpuStats = parseCpuLine(cpuStatLines.get(0));
 
-        double cpuUsagePercent = (double) (currentCpuStats[0] - mPreviousCpuStats[0]) /
-                (double) (currentCpuStats[1] - mPreviousCpuStats[1]);
+        int systemUsage = currentCpuStats[0] - mPreviousCpuStats[0];
+        int totalUsage = currentCpuStats[1] - mPreviousCpuStats[1];
+        // Absolute value taken because sometimes the the file is read from the past (what!)
+        double cpuUsagePercent = Math.abs(systemUsage / (double) totalUsage);
 
         /*
-        Log.d(TAG, "0: " + Integer.toString(currentCpuStats[0]) + " 1: "
-                + Integer.toString(currentCpuStats[1]) );
-
-        Log.d(TAG, "0: " + Integer.toString(mPreviousCpuStats[0]) + " 1: "
-                + Integer.toString(mPreviousCpuStats[1]) );
+        Log.d(TAG, "SysUsage: " + systemUsage);
+        Log.d(TAG, "CurrentTot " + currentCpuStats[1]);
+        Log.d(TAG, "PrevTot " + mPreviousCpuStats[1]);
+        Log.d(TAG, "TotUsage: " + totalUsage);
+        Log.e(TAG, "CPU% " + cpuUsagePercent);
         */
-
         mPreviousCpuStats = currentCpuStats;
 
         return cpuUsagePercent;
@@ -125,6 +125,7 @@ class SystemMonitor {
     private int[] parseCpuLine(String line) {
         String[] lineParts = line.split(REGEX_WHITESPACE);
         int[] times = new int[2];
+        //Log.e(TAG, "RawLine: " + line);
 
         int timeUser = Integer.parseInt(lineParts[1]);
         int timeNice = Integer.parseInt(lineParts[2]);
