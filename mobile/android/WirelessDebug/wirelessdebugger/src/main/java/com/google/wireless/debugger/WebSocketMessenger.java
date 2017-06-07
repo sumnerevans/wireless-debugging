@@ -155,14 +155,14 @@ class WebSocketMessenger extends WebSocketClient {
             bytesReceivedPerSec, long timeStamp) {
         JSONObject payload = new JSONObject();
         try {
-            payload.put("messageType", "systemMetrics");
+            payload.put("messageType", "deviceMetrics");
             payload.put("osType", "Android");
             payload.put("timeStamp", timeStamp);
             payload.put("cpuUsage", cpuUsage);
             payload.put("memUsage", memUsed);
             payload.put("memTotal", memTotal);
-            payload.put("netSent", bytesSentPerSec);
-            payload.put("netReceive", bytesReceivedPerSec);
+            payload.put("netSentPerSec", bytesSentPerSec);
+            payload.put("netReceivePerSec", bytesReceivedPerSec);
         } catch (JSONException e) {
             Log.e(TAG, e.toString());
         }
