@@ -6,6 +6,9 @@
 class MetricGrapher {
 
   constructor(){
+
+    this.cpuUsageHistory = Array.apply(null, new Array(150)).map(Number.prototype.valueOf,0);
+    console.log(this.cpuUsageHistory);
     this.metrics = {
       cpuUsage: 0.0
     }
@@ -14,7 +17,7 @@ class MetricGrapher {
 
     d3.select(".cpuUsageGraph")
       .selectAll("div")
-      .data([this.metrics.cpuUsage])
+      .data(this.cpuUsageHistory)
       .enter().append("div")
       // d for data selected
       .style("width", function(d) { return (barGraph(d) * 100) + "%"; })
@@ -31,17 +34,17 @@ class MetricGrapher {
   }
 
   render(){
-    console.log(this.metrics.cpuUsage)
-    let barGraph = d3.scaleLinear().domain([0,1.0]).range([0, 1.0]);
+    this.cpuUsageHistory.push(this.metrics.cpuUsage);
+    this.cpuUsageHistory.shift();
 
     let graph = d3.select(".cpuUsageGraph")
       .selectAll("div")
-      .data([this.metrics.cpuUsage])
+      .data(this.cpuUsageHistory)
       .style("width", function(d) { return (barGraph(d) * 100) + "%"; })
       .text(function(d) { return (d * 100) + "%"; });
 
     graph.enter().append("div")
-    .data([this.metrics.cpuUsage])
+    .data(this.cpuUsageHistory)
     .style("width", function(d) { return (barGraph(d) * 100) + "%"; })
     .text(function(d) { return (d * 100) + "%"; });
 
