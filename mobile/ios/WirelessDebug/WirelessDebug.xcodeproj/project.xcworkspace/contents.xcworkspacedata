@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:Wireless Debug iOS Test App.xcodeproj">
+      location = "self:WirelessDebug.xcodeproj">
    </FileRef>
 </Workspace>

@@ -25,7 +25,6 @@ def handle_websocket():
     incoming messages from the connection. When a message is recieved, it calls
     the appropriate function.
     """
-
     websocket = request.environ.get('wsgi.websocket')
     if not websocket:
         abort(400, 'Expected WebSocket request.')

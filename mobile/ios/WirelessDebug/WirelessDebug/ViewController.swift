@@ -2,9 +2,6 @@
 //  ViewController.swift
 //  Wireless Debug iOS Test App
 //
-//  Created by Sumner Evans on 5/28/17.
-//  Copyright © 2017 Google Field Session Team. All rights reserved.
-//
 
 import UIKit
 

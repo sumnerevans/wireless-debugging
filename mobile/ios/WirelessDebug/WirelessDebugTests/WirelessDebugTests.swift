@@ -1,15 +1,15 @@
 //
-//  Wireless_Debug_iOS_Test_AppTests.swift
-//  Wireless Debug iOS Test AppTests
+//  WirelessDebugTests.swift
+//  WirelessDebugTests
 //
-//  Created by Sumner Evans on 5/28/17.
+//  Created by Sumner Evans on 6/7/17.
 //  Copyright © 2017 Google Field Session Team. All rights reserved.
 //
 
 import XCTest
-@testable import Wireless_Debug_iOS_Test_App
+@testable import WirelessDebug
 
-class Wireless_Debug_iOS_Test_AppTests: XCTestCase {
+class WirelessDebugTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
