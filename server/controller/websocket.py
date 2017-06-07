@@ -106,6 +106,8 @@ def log_dump(message, websocket, metadata):
 
 @ws_router('endSession')
 def end_session(message, websocket, metadata):
+    # TODO: Accept an end session message and notify the database to stop adding
+    #       entries to the current log. 
     print("currently defunct")
 
 
