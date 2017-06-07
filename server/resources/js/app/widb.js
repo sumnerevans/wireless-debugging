@@ -13,6 +13,9 @@ class WirelessDebug {
     /** @private @const {!jQuery} */
     this.logTable_ = $('.log-table');
 
+    /** @private @const {!jQuery} */
+    this.metricsTable_ = $('.metrics-table');
+
     /** @private @const {?WebSocket} */
     this.ws_ = null;
   }
@@ -30,7 +33,7 @@ class WirelessDebug {
   websocketOnOpen() {
     let payload = {
       messageType: 'associateUser',
-      apiKey = 'none',
+      apiKey: 'api_key',
     };
 
     this.ws_.send(JSON.stringify(payload));
@@ -43,6 +46,9 @@ class WirelessDebug {
       for (let entry of messageData.logEntries) {
         this.logTable_.append(this.renderLog(entry));
       }
+    }
+    if (messageData.messageType === 'deviceMetrics') {
+      this.metricsTable_.append(this.renderMetrics(messageData))
     }
   }
 
@@ -58,6 +64,14 @@ class WirelessDebug {
     <td>${logEntry.tag}</td>
     <td>${logEntry.logType}</td>
     <td>${logEntry.text}</td>
+    </tr>`;
+  }
+
+  renderMetrics(metrics) {
+    return `<tr>
+    <td>${metrics.cpuUsage}</td>
+    <td>${metrics.timeStamp}</td>
+    <td>${metrics.memUsage}</td>
     </tr>`;
   }
 }
