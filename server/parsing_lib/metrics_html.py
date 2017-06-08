@@ -8,6 +8,8 @@ class MetricsHTML(object):
     def to_html(message):
         return {"messageType":"deviceMetrics",
             "cpuUsage":message['cpuUsage'],
-            "timeStamp":"11:00",
             "memUsage":(message['memUsage'])/1024.0,
+            "netSentPerSec":  message['netSentPerSec'],
+            "netReceivePerSec": message["netReceivePerSec"],
+            "timeStamp":"11:00",
             }
