@@ -16,7 +16,7 @@ class MetricGrapher {
     this.xAxisScale = [];
 
     for (let i = 0; i < recordedTime; i++) {
-      this.cpuUsageHistory.push(0);
+      this.cpuUsageHistory.push(0.5);
       this.memoryUsageHistory.push(0);
       this.networkUsageHistory.push(0);
       this.xAxisScale.push((recordedTime - i) / 5);
@@ -37,14 +37,26 @@ class MetricGrapher {
       data: {
         labels: this.xAxisScale,
         datasets: [{
+            radius: 1.5,
             data: this.cpuUsageHistory,
             label: "CPU Usage",
-            borderColor: "#3e95cd",
+            borderColor: "#3cba9f",
+            pointBackgroundColor: "#3cba9f",
             fill: true
           },
         ]
       },
-      options: {}
+      options: {
+        legend: {
+            display: false
+         },
+         scales:
+        {
+            xAxes: [{
+                display: false
+            }]
+        },
+      }
     });
 
 
