@@ -21,12 +21,14 @@ class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
     def get_login_ui(self, base_url):
         """ Returns XHTML containing a login form. 
 
+        class members used:
+            login_fields_path: String, contains the path to the file that 
+                contains the XHTML.
         Args:
-            class members:
-                login_fields_path: String, contains the path to the file that 
-                    contains the XHTML.
+            base_url: String, contains the url to get to the index page of the 
+                app. 
         Returns:
-            An XHTML page containing the login form.
+            An XHTML fragment containing the login form.
         """
         login_fields_file = open(self.login_fields_path, 'r')
         login_fields = login_fields_file.read()
@@ -50,8 +52,7 @@ class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
         if request.get_cookie('api_key'):
             # ... and that the api key they have is valid.
             api_key = request.get_cookie('api_key')
-            print(api_key)
-            if self.exists_in_table(api_key, False):
+            if self._exists_in_table(api_key, 'api_key'):
                 return True
             
         return False
@@ -82,18 +83,17 @@ class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
 
         user_email = form_data.get('username')
 
-        if self.exists_in_table(user_email, True):
+        if self._exists_in_table(user_email, 'user'):
             response.set_cookie('api_key', 
                                 self.get_api_key_for_user(request))
             return (True, '')
         else:
-            user_key_file = open(self.user_key_table, 'a')
-            user_key_file.write(user_email + ',' + user_email + '\n')
-            user_key_file.close()
+            with open(self.user_key_table, 'a') as user_key_file:
+                user_key_file.write(user_email + ',' + user_email + '\n')
 
             # This should be a trivial test since we just added the entry, but
             # just in case.
-            if self.exists_in_table(user_email, True):
+            if self._exists_in_table(user_email, 'user'):
                 response.set_cookie('api_key', 
                                     self.get_api_key_for_user(request))
                 return (True, 'New user! Adding to users table.')
@@ -111,26 +111,12 @@ class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
             A string, containing the api key for the user.
         """
 
-        user_key_table = self.get_table()
+        user_key_table = self._get_table()
 
-        """ The less cool version of what's below
         api_key_cookie = request.get_cookie('api_key')
-        if api_key_cookie and self.exists_in_table(
-            request.get_cookie('api_key', False)):
-            return api_key_cookie
-
-        user_list = [table_row[0] for table_row in user_key_table]
-        row_index = user_list.index(request.forms.get('username'))
-        return user_key_table[row_index][1]
-        """
-
-        # This should probably be refactored, but it's pretty awesome
-        # ... and terrifying
-        return (request.get_cookie('api_key') if request.get_cookie('api_key') 
-                and self.exists_in_table(request.get_cookie('api_key'), False) 
-                else user_key_table[
-                    [table_row[0] for table_row in user_key_table].index(
-                        request.forms.get('username'))][1])
+        return (api_key_cookie if self._exists_in_table(api_key_cookie, 'api_key') 
+                else [table_row[1] for table_row in user_key_table if
+                table_row[0] == request.forms.get('username')][0])
 
     def find_associated_websockets(self, api_key, websocket_connections):
         """ Returns a list of websockets that correspond to the given api key.
@@ -146,21 +132,19 @@ class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
         """
         return websocket_connections.get(api_key, [])
 
-    def get_table(self):
+    def _get_table(self):
         """ Returns the table of users to api keys as a list of tuples. 
     
         Args:
             class members:
                 user_key_table: String, the path to the user to api key table.
         Returns:
-            None if the file doesn't exist.
-            A list of tuples containing the table of users to api keys
-            otherwise.
+            A list of tuples containing the table of users to api keys.
         """
 
         # If the table doesn't exist yet, then they can't exist in the table.
         if not os.path.isfile(self.user_key_table):
-            return None
+            return []
 
         with open(self.user_key_table, 'r') as user_key_file:    
             # Splits each row of the file by comma, yielding an email and an api
@@ -170,25 +154,32 @@ class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
 
         return user_key_table
 
-    def exists_in_table(self, user_key, is_user):
+    def _exists_in_table(self, user_key, key_type):
         """ Checks if a given API key or user exists in the user to api key
             table.
 
         Args:
             user_key: The key to verify in the table. This can either be an API 
                       key or a user email.
-            is_user: Boolean, if this is true, then a user email was passed in,
-                              if this is false, then an api key was passed in.
+            key_type: String, if this is 'user', then a user email was passed 
+                              in, if this is 'api_key', then an api key was 
+                              passed in.
         Returns:
             Boolean, true if the key existed in the table, false otherwise.
         """
 
-        user_key_table = self.get_table()
+        user_key_table = self._get_table()
         if not user_key_table:
             return False
 
         # 0 is for users, 1 is for api keys
-        check_index = 0 if is_user else 1
+        check_index = None
+        if key_type == 'user':
+            check_index = 0
+        elif key_type == 'api_key':
+            check_index = 1
+        else:
+            raise ValueError
 
         if any(user_key == key[check_index] for key in user_key_table):
             return True

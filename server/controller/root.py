@@ -30,9 +30,6 @@ def index():
         api_key: The Web UI user's API key. 
 
     """
-
-    print('User is logged in:', 
-          controller.user_management_interface.is_user_logged_in(request))
     if not controller.user_management_interface.is_user_logged_in(request):
         redirect('/login_page')
 
@@ -100,16 +97,15 @@ def handle_login():
 def logout():
     """ Logs the user out of the web UI interface.
 
-    Functionally this just takes the api key cookie on the user's machine and
+    Functionally this just takes the API key cookie on the user's machine and
     sets it to a dummy value and expires it immediately.
 
-    Args:
-        Uses the bottle response object, which can modify cookies on a user's
-        browser. 
-    Returns:
-        A modified, expried cookie on the user's browser.
-        Also redirects to this website's index page, which should redirect to
-        the login page.
+    Uses the bottle response object, which can modify cookies on a user's
+    browser. 
+
+    Returns a modified, expried cookie on the user's browser.
+    Also redirects to this website's index page, which should redirect to
+    the login page.
     """
 
     response.set_cookie("api_key", "", expires=0)

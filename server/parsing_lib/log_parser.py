@@ -93,9 +93,8 @@ class LogParser(object):
             dict: the log entry from the log line
         """
         parsed_log = re.search(
-            '(.*)\\s+(\\d*)\\s+(\\d*) ([IWVEDAF]) (.*?): ((?:.*\\n*)*)',
+            '(.*)\\s+(\\d+)\\s+(\\d+) ([IWVEDAF]) (.*?): ((?:.*\\n*)*)',
             log_data)
-
         # Parse the Year, we have to add the year to the string so that it
         # parses correctly.
         current_year = datetime.now().year

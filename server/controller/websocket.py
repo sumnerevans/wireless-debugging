@@ -15,7 +15,6 @@ from helpers import util
 
 # Store a dictionary of string -> function
 _ws_routes = {}
-# TODO: Reverse map to go API key -> websocket, rather than websocket -> API key
 _web_ui_ws_connections = {}
 
 
@@ -34,8 +33,6 @@ def handle_websocket():
 
     _websocket_metadata = {}
 
-    print('connection received')
-
     while not websocket.closed:
         try:
             message = websocket.receive()
@@ -43,7 +40,6 @@ def handle_websocket():
                 continue
 
             decoded_message = json.loads(message)
-            print(decoded_message)
             message_type = decoded_message['messageType']
             if message_type is None:
                 # TODO: blow up
@@ -54,16 +50,17 @@ def handle_websocket():
         except WebSocketError:
             break
 
-    # If we have the api key, we can waste a little less time searching for the
-    # websocket.
+    # If we have the API key, we can waste a little less time searching for the
+    # WebSocket.
     ws_api_key = _websocket_metadata.get('apiKey', '')
-    if ws_api_key and ws_api_key in _web_ui_ws_connections:
+    if (ws_api_key and ws_api_key in _web_ui_ws_connections and websocket in 
+            _web_ui_ws_connections[_websocket_metadata['apiKey']]):
         _web_ui_ws_connections[_websocket_metadata['apiKey']].remove(websocket)
     # ... Otherwise we have to search everywhere to find and delete it.
     else:
-        for api_key, websockets in _web_ui_ws_connections.items():
-            if websocket in websockets: 
-                websockets.remove(websocket)
+        for api_key, websockets_for_api_key in _web_ui_ws_connections.items():
+            if websocket in websockets_for_api_key: 
+                websockets_for_api_key.remove(websocket)
                 break
 
     for api_key in list(_web_ui_ws_connections):
@@ -84,7 +81,7 @@ def ws_router(message_type):
 @ws_router('startSession')
 def start_session(message, websocket, metadata):
     """ Marks the start of a logging session, and attaches metadata to the
-        websocket receiving the raw logs.
+        WebSocket receiving the raw logs.
     """
 
     # There's probably a better way to do this and it should be refactored.
@@ -101,7 +98,7 @@ def log_dump(message, websocket, metadata):
 
     Args:
         message: The decoded JSON message from the Mobile API.
-        websocket: The websocket connection object where the log is being
+        websocket: The WebSocket connection object where the log is being
             received.
     """
 
@@ -132,13 +129,15 @@ def associate_user(message, websocket, metadata):
     WebSocket connection to the list connections for that session.
 
     Args:
-        message: The decoded JSON message from the Mobile API. Contains the api
+        message: The decoded JSON message from the Mobile API. Contains the API
             key for the user.
-        websocket: The websocket connection object where the log is being
+        websocket: The WebSocket connection object where the log is being
             received.
     """
 
-    if not _web_ui_ws_connections.get(message['apiKey'], ''):
-        _web_ui_ws_connections[message['apiKey']] = []
+    api_key = message['apiKey']
 
-    _web_ui_ws_connections.get(message['apiKey'], '').append(websocket)
+    if api_key not in _web_ui_ws_connections:
+        _web_ui_ws_connections[api_key] = []
+
+    _web_ui_ws_connections.get(api_key, '').append(websocket)

@@ -2,6 +2,8 @@
 The default User Management Interface where there is no login, and all logs are
 broadcasted to all Web UI WebSockets.
 """
+import itertools
+
 from user_management_interfaces import user_management_interface_base
 
 class NoAuth(user_management_interface_base.UserManagementInterfaceBase):
@@ -44,11 +46,11 @@ class NoAuth(user_management_interface_base.UserManagementInterfaceBase):
 
         Args:
             api_key: The API Key, but this is an arbitrary value.
-            websocket_connections: A dictionary of api keys to associated
+            websocket_connections: A dictionary of API keys to associated
                 websockets. There should only be a single key that's a blank
                 string with a single array of websockets.
         Returns:
             The list of WebSockets that go to web UIs.
         """
-        return sum([websockets for api_keys, websockets in 
-                    websocket_connections.items()], [])
+        return itertools.chain(*[websockets for api_keys, websockets in 
+                                 websocket_connections.items()])

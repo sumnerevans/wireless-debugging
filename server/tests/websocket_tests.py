@@ -1,13 +1,13 @@
 """
-Tests components of the websocket controller.
+Tests components of the WebSocket controller.
 """
 
 from controller import websocket
-from tests.dummy_socket import DummySocket
+from tests.test_classes import DummySocket
 
 def test_start_session():
     """ Verifies that start session passes all of data from message into
-        metadata where it can be stored for the lifetime of the websocket.
+        metadata where it can be stored for the lifetime of the WebSocket.
     """
     socket = DummySocket()
     _metadata = {}

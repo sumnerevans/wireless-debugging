@@ -8,7 +8,7 @@ These are pretty trivial tests.
 
 from user_management_interfaces import no_auth
 from bottle import request, response
-from tests.dummy_socket import DummySocket
+from tests.test_classes import DummySocket
 
 def test_get_login():
     """ Verify that the login UI doesn't exist, and that a blank HTML page is
