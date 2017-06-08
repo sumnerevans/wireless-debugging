@@ -24,13 +24,18 @@ class WirelessDebugger {
             while true {
                 let data = stderrPipe.fileHandleForReading.availableData
                 DispatchQueue.main.async {
-                    self.sendLogsIfReady()
-                    
                     // Capture the log
                     let logData = String(data: data, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue)) ?? ""
                     self.webSocketMessenger!.enqueueLog(logLine: logData)
                     print(logData)
                 }
+            }
+        }
+        
+        DispatchQueue.global().async {
+            while true {
+                self.sendLogsIfReady()
+                usleep(10000) // sleep for 10 ms, usleep accepts microseconds
             }
         }
     }

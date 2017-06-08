@@ -42,7 +42,7 @@ class WebSocketMessenger {
         logsToSend.removeAll()
         
         self.send("logDump", data: [
-            "rawLogData": logsToSendCopy.joined(separator: "\n"),
+            "rawLogData": logsToSendCopy.joined(),
         ])
     }
     

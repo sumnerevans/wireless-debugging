@@ -3,13 +3,16 @@
 //  Wireless Debug iOS Test App
 //
 
+import Foundation
 import UIKit
+import CoreMotion
 
 class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var LogText: UITextField!
     @IBOutlet weak var AccelerometerToggle: UIButton!
     
-    var loggingAccelerometer = false
+    private var loggingAccelerometer = false
+    private let manager = CMMotionManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,10 +46,20 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBAction func accelerometerToggle_pressed() {
         if loggingAccelerometer {
             AccelerometerToggle.setTitle("Start Accelerometer Logging", for: .normal)
-            // TODO: stop accelerometer logging
+            manager.stopAccelerometerUpdates()
         } else {
             AccelerometerToggle.setTitle("Stop Accelerometer Logging", for: .normal)
-            // TODO: start accelerometer logging
+            print(manager.isAccelerometerAvailable)
+            if manager.isAccelerometerAvailable {
+                print("here")
+                manager.accelerometerUpdateInterval = 0.01
+                manager.startAccelerometerUpdates(to: .main) {(data: CMAccelerometerData?, error: Error?) in
+                    if let acceleration = data?.acceleration {
+                        NSLog("x: \(acceleration.x), y: \(acceleration.y)")
+                    }
+                }
+            }
+
         }
         
         loggingAccelerometer = !loggingAccelerometer
