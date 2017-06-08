@@ -9,11 +9,12 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    let hostname = "138.67.193.0"
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        WirelessDebugger.start(hostname: "192.168.0.14", apiKey: "test")
+        WirelessDebugger.start(hostname: self.hostname, apiKey: "test")
         return true
     }
 

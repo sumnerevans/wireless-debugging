@@ -16,22 +16,23 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        // Needed to enable handling of return key on the LogText box.
         LogText.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     
+    // Log the text in the LogText box.
     @IBAction func logButton_pressed() {
         NSLog(LogText.text ?? "")
     }
     
+    /// Log an exception.
     @IBAction func exception_pressed() {
-        // TODO: throw an exception
         do {
             try raiseException();
         } catch let err {
@@ -39,10 +40,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    /// Crash the application
     @IBAction func crash_pressed() throws {
         NSException(name:NSExceptionName(rawValue: "ForcedException"), reason:"You pressed the crash button", userInfo:nil).raise()
     }
     
+    /// Toggle logging of accelerometer data.
     @IBAction func accelerometerToggle_pressed() {
         if loggingAccelerometer {
             AccelerometerToggle.setTitle("Start Accelerometer Logging", for: .normal)
@@ -51,7 +54,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
             AccelerometerToggle.setTitle("Stop Accelerometer Logging", for: .normal)
             print(manager.isAccelerometerAvailable)
             if manager.isAccelerometerAvailable {
-                print("here")
                 manager.accelerometerUpdateInterval = 0.01
                 manager.startAccelerometerUpdates(to: .main) {(data: CMAccelerometerData?, error: Error?) in
                     if let acceleration = data?.acceleration {
@@ -76,10 +78,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     
+    // ForcedError enum to show how errors are handled.
     enum ForcedError: Error {
         case ForcedError
     }
     
+    // I had to make this a function so that I could use it in a do-try-catch block.
     func raiseException() throws {
         throw ForcedError.ForcedError
     }
