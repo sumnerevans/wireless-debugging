@@ -37,20 +37,20 @@ class MetricGrapher {
     let memoryGraphCanvas = document.getElementById(memoryCanvasId).getContext('2d');
     let networkGraphCanvas = document.getElementById(networkCanvasId).getContext('2d');
 
-
     this.cpuGraph = new Chart(cpuGraphCanvas, {
       type: 'line',
       data: {
         labels: this.xAxisScale,
         datasets: [{
-            radius: 1.5,
-            data: this.cpuUsageHistory,
-            label: "CPU Usage",
-            borderColor: "#3cba9f",
-            pointBackgroundColor: "#3cba9f",
-            fill: true,
-            cubicInterpolationMode: "default",
-          },
+          radius: 1.5,
+          data: this.cpuUsageHistory,
+          label: "CPU Usage",
+          borderColor: "#3cba9f",
+          pointBackgroundColor: "#3cba9f",
+          fill: true,
+          cubicInterpolationMode: "default",
+          pointRadius: 0.5,
+        },
         ]
       },
       options: this.getOptions(100)
@@ -61,11 +61,12 @@ class MetricGrapher {
       data: {
         labels: this.xAxisScale,
         datasets: [{
-            data: this.memoryUsageHistory,
-            label: "CPU Usage",
-            borderColor: "#3e95cd",
-            fill: true
-          },
+          data: this.memoryUsageHistory,
+          label: "CPU Usage",
+          borderColor: "#3e95cd",
+          fill: true,
+          pointRadius: 0.5,
+        },
         ]
       },
       options: this.getOptions(1024)
@@ -76,17 +77,19 @@ class MetricGrapher {
       data: {
         labels: this.xAxisScale,
         datasets: [{
-            data: this.networkSentHistory,
-            label: "Sent",
-            borderColor: "#fcc182",
-            fill: true
-          },
-          {
-            data: this.networkReceiveHistory,
-            label: "Received",
-            borderColor: "#8e5ea2",
-            fill: true
-          },
+          data: this.networkSentHistory,
+          label: "Sent",
+          borderColor: "#fcc182",
+          fill: true,
+          pointRadius: 0.5,
+        },
+        {
+          data: this.networkReceiveHistory,
+          label: "Received",
+          borderColor: "#8e5ea2",
+          fill: true,
+          pointRadius: 0.5,
+        },
         ]
       },
       options: this.getOptions(1000)
