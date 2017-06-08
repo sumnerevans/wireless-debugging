@@ -47,13 +47,14 @@ class WirelessDebug {
     };
 
     this.ws_.send(JSON.stringify(payload));
-    //TO DO: remove, for testing purposes only
+
+    //TODO: remove, for testing purposes only
     payload = {
       "messageType": "startSession",
       "apiKey": "tikalin",
       "osType": "Android",
-      "deviceName": "Google Pixel9",
-      "appName": "Google Stuff599"
+      "deviceName": "Google Pixel10",
+      "appName": "tuff"
     };
 
     this.ws_.send(JSON.stringify(payload));
@@ -127,16 +128,15 @@ $(document).ready(() => {
   let app = $('#app');
   let time = $('#starttime');
   device.on('change', () => {
-    let chosen_device = device.get(0).options[device.get(0).selectedIndex].text;
-    console.log(chosen_device);
-    if (chosen_device !== "") {
+    let chosen_device = device.val();
+    if (chosen_device !== "None") {
       $('#hidden-dev-alias').css("display", "block");
       $('#hidden-app').css("display", "block");
       $('#hidden-app-alias').css("display", "none");
-      $('#dev-alias').get(0).value = "";
+      $('#dev-alias').val("");
       $('#hidden-start').css("display", "none");
       let data = {
-        'apiKey': api_key.get(0).innerHTML,
+        'apiKey': api_key.html(),
         'device': chosen_device,
       };
       $.ajax({
@@ -144,8 +144,8 @@ $(document).ready(() => {
         data: data,
         cache: false,
         success: function(data) {
-          app.get(0).length = 0;
-          time.get(0).length = 0;
+          app.empty();
+          time.empty();
           $("#historical-log-table tbody tr").remove();
           app.append('<option value="None"></option>');
           for (let i of data.apps) {
@@ -161,14 +161,14 @@ $(document).ready(() => {
     }
   });
   app.on('change', () => {
-    let chosen_app = app.get(0).options[app.get(0).selectedIndex].text;
-    if (chosen_app !== "") {
+    let chosen_app = app.val();
+    if (chosen_app !== "None") {
       $('#hidden-app-alias').css("display", "block");
       $('#hidden-start').css("display", "block");
-      $('#app-alias').get(0).value = "";
+      $('#app-alias').val("");
       let data = {
-        'apiKey': api_key.get(0).innerHTML,
-        'device': device.get(0).options[device.get(0).selectedIndex].text,
+        'apiKey': api_key.html(),
+        'device': device.val(),
         'app': chosen_app,
       };
       $.ajax({
@@ -176,7 +176,7 @@ $(document).ready(() => {
         data: data,
         cache: false,
         success: function(data) {
-          time.get(0).length = 0;
+          time.empty();
           $("#historical-log-table tbody tr").remove();
           time.append('<option value="None"></option>');
           for (let i of data.starttimes) {
@@ -192,13 +192,14 @@ $(document).ready(() => {
   });
 
   time.on('change', () => {
-    let chosen_starttime = time.get(0).options[time.get(0).selectedIndex].text;
+    let chosen_starttime = time.val();
     $("#historical-log-table tbody tr").remove();
-    if (chosen_starttime !== "") {
+    console.log(chosen_starttime);
+    if (chosen_starttime !== "None") {
       let data = {
-        'apiKey': api_key.get(0).innerHTML,
-        'device': device.get(0).options[device.get(0).selectedIndex].text,
-        'app': app.get(0).options[app.get(0).selectedIndex].text,
+        'apiKey': api_key.html(),
+        'device': device.val(),
+        'app': app.val(),
         'starttime': chosen_starttime,
       };
       $.ajax({
@@ -215,9 +216,9 @@ $(document).ready(() => {
   $("#device-alias").click(function(e) {
     e.preventDefault();
     let data = {
-      'apiKey': api_key.get(0).innerHTML,
-      'device': device.get(0).options[device.get(0).selectedIndex].text,
-      'alias': $('#dev-alias').get(0).value,
+      'apiKey': api_key.html(),
+      'device': device.val(),
+      'alias': $('#dev-alias').val(),
     };
     $.ajax({
       url: "/aliasDevice",
@@ -235,10 +236,10 @@ $(document).ready(() => {
   $("#appname-alias").click(function(e) {
     e.preventDefault();
     let data = {
-      'apiKey': api_key.get(0).innerHTML,
-      'device': device.get(0).options[device.get(0).selectedIndex].text,
-      'app': app.get(0).options[app.get(0).selectedIndex].text,
-      'alias': $('#app-alias').get(0).value,
+      'apiKey': api_key.html(),
+      'device': device.val(),
+      'app': app.val(),
+      'alias': $('#app-alias').val(),
     };
     $.ajax({
       url: "/aliasApp",

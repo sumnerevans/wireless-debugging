@@ -5,7 +5,6 @@ WebSocket Controller
 
 import json
 import datetime
-
 import controller
 
 from bottle import route, request, abort
@@ -87,6 +86,7 @@ def start_session(message, websocket, metadata):
 
     for attribute, value in message.items():
         metadata[attribute] = value
+    metadata["start_time"] = str(datetime.datetime.now())
 
 
 @ws_router('logDump')
@@ -113,7 +113,6 @@ def log_dump(message, websocket, metadata):
 
     # Send to database and convert to html.
     html_logs = LogParser.convert_to_html(parsed_logs['logEntries'])
-    metadata["start_time"] = str(datetime.datetime.now())
     controller.datastore_interface.store_logs(
         metadata["apiKey"], metadata["deviceName"], metadata["appName"],
         metadata["start_time"], metadata["osType"], parsed_logs)
@@ -142,10 +141,11 @@ def end_session(message, websocket, metadata):
 
 @ws_router('associateUser')
 def associate_user(message, websocket, metadata):
-    """ Associates a WebSocket connection with a session
+    """ Associates a WebSocket connection with a session.
 
     When a browser requests to be associated with a session, add the associated
     WebSocket connection to the list connections for that session.
+
     Args:
         message: The decoded JSON message from the Mobile API. Contains the API
             key for the user.

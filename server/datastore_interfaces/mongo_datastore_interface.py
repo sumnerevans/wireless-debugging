@@ -1,5 +1,4 @@
 from pymongo import MongoClient
-
 from datastore_interfaces.base_datastore_interface import DatastoreInterface
 
 
@@ -16,11 +15,10 @@ class MongoDatastoreInterface(DatastoreInterface):
             hostname : hostname. Defaulted to test_database
         """
         self._client = MongoClient()
-        self._db = self._client[hostname]
-        self._logs = self._db.logs
-        self._dev = self._db.dev
-        self._app = self._db.app
-        self._sessions = self._db.sessions
+        self._logs = self._client[hostname].logs
+        self._device = self._client[hostname].dev
+        self._app_name = self._client[hostname].app
+        self._start_times = self._client[hostname].sessions
 
     def store_logs(self, api_key, device_name, app_name, start_time, os_type, log_entries):
         """This function stores a set of log entries to the datastore. This function may
@@ -53,7 +51,7 @@ class MongoDatastoreInterface(DatastoreInterface):
         session = self._logs.find_one(
             {"api_key": api_key, "device_name": device_name,
              "app_name": app_name, "start_time": start_time})
-        if session is not None:
+        if session:
             session['ended'] = True
             self._logs.update_one({"api_key": api_key, "device_name": device_name,
                                    "app_name": app_name, "start_time": start_time},
@@ -91,7 +89,7 @@ class MongoDatastoreInterface(DatastoreInterface):
         Returns:
             array: array of names of device names
         """
-        return self._dev.distinct("device_alias", {"api_key": api_key})
+        return self._device.distinct("device_alias", {"api_key": api_key})
 
     def retrieve_apps(self, api_key, device_name):
         """This function retrieves apps given a device.
@@ -103,7 +101,7 @@ class MongoDatastoreInterface(DatastoreInterface):
         Returns:
             array: array of the names of the apps on the given device
         """
-        return self._app.distinct("app_alias",
+        return self._app_name.distinct("app_alias",
                                   {"api_key": api_key,
                                    "device_name":
                                    self.get_raw_device_name_from_alias(
@@ -140,34 +138,34 @@ class MongoDatastoreInterface(DatastoreInterface):
             device_name: the name of the device
             app_name: the name of the app
         """
-        dev = self._dev.find_one(
+        dev = self._device.find_one(
             {"api_key": api_key, "device_name": device_name})
-        if dev is None:
-            self._dev.insert_one(
+        if not dev:
+            self._device.insert_one(
                 {"api_key": api_key, "device_name": device_name, "device_alias": device_name})
-        app = self._app.find_one(
+        app = self._app_name.find_one(
             {"api_key": api_key, "device_name": device_name, "app_name": app_name})
-        if app is None:
-            self._app.insert_one({"api_key": api_key, "device_name": device_name,
-                                  "app_name": app_name, "app_alias": app_name})
+        if not app:
+            self._app_name.insert_one({"api_key": api_key, "device_name": device_name,
+                                       "app_name": app_name, "app_alias": app_name})
 
-    def alias_device(self, api_key, device_raw_name, device_alias):
+    def update_alias_device(self, api_key, device_raw_name, device_alias):
         """This function updates alias for a device.
 
         Args:
             api_key: the API key
             device_raw_name: name being aliased
-            device_alias: new alias for device
+            device_alias: new alias for device. his is what shows in the web app dropboxes.
         """
-        find_dev_alias = self._dev.find_one(
+        find_dev_alias = self._device.find_one(
             {"api_key": api_key, "device_alias": device_alias})
-        if find_dev_alias is None:
-            dev = self._dev.find_one(
+        if not find_dev_alias:
+            dev = self._device.find_one(
                 {"api_key": api_key,
                  "device_name": self.get_raw_device_name_from_alias(api_key, device_raw_name)})
-            if dev is not None:
+            if dev:
                 dev['device_alias'] = device_alias
-                self._dev.update_one(
+                self._device.update_one(
                     {"api_key": api_key,
                      "device_name": self.get_raw_device_name_from_alias(api_key, device_raw_name)},
                     {"$set": dev}, upsert=False)
@@ -175,24 +173,24 @@ class MongoDatastoreInterface(DatastoreInterface):
         else:
             return False
 
-    def alias_app(self, api_key, device_name, app_raw_name, app_alias):
+    def update_alias_app(self, api_key, device_name, app_raw_name, app_alias):
         """This function updates alias for an app.
 
         Args:
             api_key: the API key
             device_name: device connected to app
             app_raw_name: name being aliased
-            app_alias: new alias for app
+            app_alias: new alias for app. This is what shows in the web app dropboxes.
         """
-        find_app_alias = self._app.find_one(
+        find_app_alias = self._app_name.find_one(
             {"api_key": api_key, "app_alias": app_alias})
-        if find_app_alias is None:
-            app = self._app.find_one(
+        if not find_app_alias:
+            app = self._app_name.find_one(
                 {"api_key": api_key, "app_name": self.get_raw_app_name_from_alias(
                     api_key, device_name, app_raw_name)})
-            if app is not None:
+            if app:
                 app['app_alias'] = app_alias
-                self._app.update_one(
+                self._app_name.update_one(
                     {"api_key": api_key, "app_name": self.get_raw_app_name_from_alias(
                         api_key, device_name, app_raw_name)},
                     {"$set": app}, upsert=False)
@@ -210,9 +208,12 @@ class MongoDatastoreInterface(DatastoreInterface):
         Returns:
             string: raw device name
         """
-        return self._dev.find_one(
+        device_alias_entry = self._device.find_one(
             {"api_key": api_key,
-             "device_alias": device_alias})['device_name'].strip()
+             "device_alias": device_alias})
+
+        # Returns the device_name associated with an alias.
+        return device_alias_entry['device_name'].strip()
 
     def get_raw_app_name_from_alias(self, api_key, device_name, app_alias):
         """This function returns raw app name based on an alias.
@@ -225,7 +226,7 @@ class MongoDatastoreInterface(DatastoreInterface):
         Returns:
             string: raw app name
         """
-        return self._app.find_one(
+        return self._app_name.find_one(
             {"api_key": api_key,
              "device_name": self.get_raw_device_name_from_alias(api_key, device_name),
              "app_alias": app_alias})['app_name'].strip()
@@ -233,6 +234,6 @@ class MongoDatastoreInterface(DatastoreInterface):
     def clear_datastore(self):
         """This function clears datastore of records."""
         self._logs.drop()
-        self._dev.drop()
-        self._app.drop()
-        self._sessions.drop()
+        self._device.drop()
+        self._app_name.drop()
+        self._start_times.drop()

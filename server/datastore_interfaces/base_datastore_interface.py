@@ -102,7 +102,7 @@ class DatastoreInterface(object):
         """
         raise NotImplementedError
 
-    def alias_device(self, api_key, device_raw_name, device_alias):
+    def update_alias_device(self, api_key, device_raw_name, device_alias):
         """This function updates alias for a device.
 
         Args:
@@ -112,7 +112,7 @@ class DatastoreInterface(object):
         """
         raise NotImplementedError
 
-    def alias_app(self, api_key, device_name, app_raw_name, app_alias):
+    def update_alias_app(self, api_key, device_name, app_raw_name, app_alias):
         """This function updates alias for an app.
 
         Args:

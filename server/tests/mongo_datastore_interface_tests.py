@@ -98,8 +98,8 @@ def test_set_session_over():
 def test_retrieve_logs():
     """This function checks if class retrieves logs as expected."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
-    di.store_logs(api_key, device_name, app_name,
-                  start_time, os_type, log_entries)
+    di.store_logs(api_key, device_name, app_name, start_time, os_type,
+                  log_entries)
     di.add_device_app(api_key, device_name, app_name)
     log = di.retrieve_logs(api_key, device_name, app_name, start_time)
     assert log == logs
@@ -136,11 +136,11 @@ def test_add_device_app():
     """This function checks if class adds device/app to historical databases as expected."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
     di.add_device_app(api_key, device_name, app_name)
-    log_dev = di._dev.find_one()
+    log_dev = di._device.find_one()
     assert log_dev['api_key'] == api_key
     assert log_dev['device_name'] == device_name
     assert log_dev['device_alias'] == device_name
-    log_app = di._app.find_one()
+    log_app = di._app_name.find_one()
     assert log_app['app_name'] == app_name
     assert log_app['api_key'] == api_key
     assert log_app['device_name'] == device_name
@@ -151,34 +151,34 @@ def test_alias_device():
     """This function checks if class aliases device as expected including ensuring uniqueness."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
     di.add_device_app(api_key, device_name, app_name)
-    assert di.alias_device(api_key, device_name, "Alias")
-    log_dev = di._dev.find_one()
+    assert di.update_alias_device(api_key, device_name, "Alias")
+    log_dev = di._device.find_one()
     assert log_dev['api_key'] == api_key
     assert log_dev['device_name'] == device_name
     assert log_dev['device_alias'] == "Alias"
     di.add_device_app("23", "dev", "app")
-    assert not di.alias_device("23", "dev", "Alias")
+    assert not di.update_alias_device("23", "dev", "Alias")
     di.clear_datastore()
 
 def test_alias_app():
     """This function checks if class aliases apps expected including ensuring uniqueness."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
     di.add_device_app(api_key, device_name, app_name)
-    assert di.alias_app(api_key, device_name, app_name, "Alias")
-    log_app = di._app.find_one()
+    assert di.update_alias_app(api_key, device_name, app_name, "Alias")
+    log_app = di._app_name.find_one()
     assert log_app['api_key'] == api_key
     assert log_app['device_name'] == device_name
     assert log_app['app_name'] == app_name
     assert log_app['app_alias'] == "Alias"
     di.add_device_app("23", "dev", "app")
-    assert not di.alias_app("23", "dev", "app","Alias")
+    assert not di.update_alias_app("23", "dev", "app","Alias")
     di.clear_datastore()
 
 def test_get_raw_device_name_from_alias():
     """This function checks if class retrieves raw device name given an alias as expected."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
     di.add_device_app(api_key, device_name, app_name)
-    di.alias_device(api_key, device_name, "Alias")
+    di.update_alias_device(api_key, device_name, "Alias")
     raw_dev_name = di.get_raw_device_name_from_alias(api_key, "Alias")
     assert raw_dev_name == device_name
     di.clear_datastore()
@@ -187,7 +187,7 @@ def test_get_raw_app_name_from_alias():
     """This function checks if class retrieves raw app name given an alias as expected."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
     di.add_device_app(api_key, device_name, app_name)
-    di.alias_app(api_key, device_name, app_name, "Alias")
+    di.update_alias_app(api_key, device_name, app_name, "Alias")
     raw_app_name = di.get_raw_app_name_from_alias(api_key, device_name, "Alias")
     assert raw_app_name == app_name
     di.clear_datastore()
@@ -197,6 +197,6 @@ def test_clear_datastore():
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
     di.clear_datastore()
     assert di._logs.find_one() is None
-    assert di._app.find_one() is None
-    assert di._dev.find_one() is None
-    assert di._sessions.find_one() is None
+    assert di._app_name.find_one() is None
+    assert di._device.find_one() is None
+    assert di._start_times.find_one() is None
