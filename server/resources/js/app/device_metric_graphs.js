@@ -7,7 +7,13 @@ class MetricGrapher {
 
   constructor(){
 
-    this.cpuUsageHistory = Array.apply(null, new Array(150)).map(Number.prototype.valueOf,0);
+    this.cpuUsageHistory = [];
+    this.cpuXScale = [];
+    for (let i = 0; i < 150; i++) {
+      this.cpuUsageHistory.push([i / 2, i / 5]);
+      //this.cpuXScale.push(i / 5);
+    }
+    //console.log(this.cpuXScale);
     console.log(this.cpuUsageHistory);
     this.metrics = {
       cpuUsage: 0.0
@@ -37,6 +43,55 @@ class MetricGrapher {
     this.cpuUsageHistory.push(this.metrics.cpuUsage);
     this.cpuUsageHistory.shift();
 
+
+
+    var vis = d3.select(".cpuUsageGraph"),
+    WIDTH = 300,
+    HEIGHT = 150,
+    MARGINS = {
+        top: 20,
+        right: 20,
+        bottom: 20,
+        left: 50
+    },
+    xScale = d3.scaleLinear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,30]),
+    yScale = d3.scaleLinear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0,100]),
+    xAxis = d3.axisBottom()
+    .scale(xScale),
+    yAxis = d3.axisLeft()
+    .scale(yScale);
+
+    vis.append("svg:g")
+    .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
+    .call(xAxis);
+
+    vis.append("svg:g")
+    .attr("transform", "translate(" + (MARGINS.left) + ",0)")
+    .call(yAxis);
+
+    var lineGen = d3.line()
+    .x(function(d) {
+      return xScale(d[1]);
+    })
+    .y(function(d) {
+      return yScale(d[0]);
+    });
+
+    vis.append('svg:path')
+      .attr('d', lineGen(this.cpuUsageHistory))
+      .attr('stroke', 'green')
+      .attr('stroke-width', 2)
+      .attr('fill', 'none');
+
+
+
+
+
+
+
+
+
+    /*
     let graph = d3.select(".cpuUsageGraph")
       .selectAll("div")
       .data(this.cpuUsageHistory)
@@ -49,6 +104,7 @@ class MetricGrapher {
     .text(function(d) { return (d * 100) + "%"; });
 
     graph.exit().remove();
+    */
   }
 
 }
