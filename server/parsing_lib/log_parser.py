@@ -21,10 +21,6 @@ class LogParser(object):
             dict: the message data to be sent to the web browser
         """
 
-        # TODO: (Sumner) fix when implementing the iOS parsing component.
-        if message['osType'] == 'iOS':
-            return
-
         log_entries = []
         if 'rawLogData' not in message:
             return {

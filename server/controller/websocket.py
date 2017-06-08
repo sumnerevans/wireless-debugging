@@ -100,11 +100,12 @@ def log_dump(message, websocket, metadata):
         websocket: The WebSocket connection object where the log is being
             received.
     """
-<<<<<<< HEAD
     print('logs sent')
 
-=======
->>>>>>> Removed temp server stuff
+    # TODO: (Sumner) fix when implementing the iOS parsing component.
+    if metadata['osType'] == 'iOS':
+        return
+
     parsed_logs = LogParser.parse(message)
 
     api_key = metadata.get('apiKey', '')
