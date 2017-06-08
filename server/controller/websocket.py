@@ -25,6 +25,7 @@ def handle_websocket():
     incoming messages from the connection. When a message is recieved, it calls
     the appropriate function.
     """
+
     websocket = request.environ.get('wsgi.websocket')
     if not websocket:
         abort(400, 'Expected WebSocket request.')
@@ -81,7 +82,6 @@ def start_session(message, websocket, metadata):
     """ Marks the start of a logging session, and attaches metadata to the
         WebSocket receiving the raw logs.
     """
-    print(message)
 
     for attribute, value in message.items():
         metadata[attribute] = value
@@ -100,8 +100,11 @@ def log_dump(message, websocket, metadata):
         websocket: The WebSocket connection object where the log is being
             received.
     """
+<<<<<<< HEAD
     print('logs sent')
 
+=======
+>>>>>>> Removed temp server stuff
     parsed_logs = LogParser.parse(message)
 
     api_key = metadata.get('apiKey', '')

@@ -82,9 +82,6 @@ def index():
         'page': 'index',
     }
 
-@route('/socket.io')
-def test():
-    print('hi')
 
 @route('/current')
 @kajiki_view('current')
