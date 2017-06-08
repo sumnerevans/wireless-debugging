@@ -49,12 +49,12 @@ class WirelessDebug {
     this.ws_.send(JSON.stringify(payload));
     //TO DO: remove, for testing purposes only
     payload = {
-        "messageType": "startSession",
-        "apiKey": "tikalin",
-        "osType": "Android",
-        "deviceName": "Google Pixel7",
-        "appName": "Google Stuff9"
-    }
+      "messageType": "startSession",
+      "apiKey": "tikalin",
+      "osType": "Android",
+      "deviceName": "Google Pixel9",
+      "appName": "Google Stuff599"
+    };
 
     this.ws_.send(JSON.stringify(payload));
 
@@ -62,16 +62,15 @@ class WirelessDebug {
       'apiKey': payload.apiKey,
     };
     $.ajax({
-      type: "POST",
+      type: "GET",
       url: '/deviceList',
-      data: JSON.stringify(data, null, '\t'),
-      contentType: 'application/json;charset=UTF-8',
+      data: data,
+      dataType: "json",
       cache: false,
-      success: function(data){
-        var device = document.getElementById('device');
-        $(device).append('<option value="None"></option>');
-        for (var i in data.devices){
-          $(device).append('<option value=\"' + data.devices[i] + '\">' + data.devices[i] + '</option>');
+      success: function(data) {
+        $('#device').append('<option value="None"></option>');
+        for (let i of data.devices) {
+          $('#device').append(`<option value="${i}">${i}</option>`);
         }
       }
     });
@@ -84,7 +83,7 @@ class WirelessDebug {
 
     this.ws_.send(JSON.stringify(payload));
 
-        // TODO: get rid of this, only for testing purposes
+    // TODO: get rid of this, only for testing purposes
     payload = {
       messageType: 'endSession',
     };
@@ -123,99 +122,112 @@ class WirelessDebug {
 /** When the document has been loaded, start Widb */
 $(document).ready(() => {
   new WirelessDebug().start();
-  let A = document.getElementById('device');
-  $(A).change(function () {
-      let device = document.getElementById('device');
+  let api_key = $('#apiKey');
+  let device = $('#device');
+  let app = $('#app');
+  let time = $('#starttime');
+  device.on('change', () => {
+    let chosen_device = device.get(0).options[device.get(0).selectedIndex].text;
+    console.log(chosen_device);
+    if (chosen_device !== "") {
+      $('#hidden-dev-alias').css("display", "block");
+      $('#hidden-app').css("display", "block");
+      $('#hidden-app-alias').css("display", "none");
+      $('#dev-alias').get(0).value = "";
+      $('#hidden-start').css("display", "none");
       let data = {
-	      'apiKey': document.getElementById('apiKey').innerHTML,
-	      'device': device.options[device.selectedIndex].text
+        'apiKey': api_key.get(0).innerHTML,
+        'device': chosen_device,
       };
       $.ajax({
-      type: "POST",
-      url: '/appList',
-      data: JSON.stringify(data, null, '\t'),
-      contentType: 'application/json;charset=UTF-8',
-      cache: false,
-      success: function(data){
-        let app = document.getElementById('app');
-	let time = document.getElementById('starttime');
-	app.length = 0;
-	      time.length = 0;
-	      $("#historical-log-table tbody tr").remove();
-	      $(app).append('<option value="None"></option>');
-        for (var i in data.apps){
-          $(app).append('<option value=' + data.apps[i] + '>' + data.apps[i] + '</option>');
-        }
-
-      },
-    });
+        url: '/appList',
+        data: data,
+        cache: false,
+        success: function(data) {
+          app.get(0).length = 0;
+          time.get(0).length = 0;
+          $("#historical-log-table tbody tr").remove();
+          app.append('<option value="None"></option>');
+          for (let i of data.apps) {
+            app.append(`<option value="${i}">${i}</option>`);
+          }
+        },
+      });
+    } else {
+      $('#hidden-dev-alias').css("display", "none");
+      $('#hidden-app').css("display", "none");
+      $('#hidden-start').css("display", "none");
+      $("#historical-log-table tbody tr").remove();
+    }
   });
-  let B = document.getElementById('app');
-  $(B).change (function () {
-      let device = document.getElementById('device');
-      let app = document.getElementById('app');
+  app.on('change', () => {
+    let chosen_app = app.get(0).options[app.get(0).selectedIndex].text;
+    if (chosen_app !== "") {
+      $('#hidden-app-alias').css("display", "block");
+      $('#hidden-start').css("display", "block");
+      $('#app-alias').get(0).value = "";
       let data = {
-	      'apiKey': document.getElementById('apiKey').innerHTML,
-	      'device': device.options[device.selectedIndex].text,
-      	      'app': app.options[app.selectedIndex].text,
+        'apiKey': api_key.get(0).innerHTML,
+        'device': device.get(0).options[device.get(0).selectedIndex].text,
+        'app': chosen_app,
       };
       $.ajax({
-      type: "POST",
-      url: '/sessionList',
-      data: JSON.stringify(data, null, '\t'),
-      contentType: 'application/json;charset=UTF-8',
-      cache: false,
-      success: function(data){
-        let time = document.getElementById('starttime');
-	time.length = 0;
-	$("#historical-log-table tbody tr").remove();
-	$(time).append('<option value="None"></option>');
-        for (var i in data.starttimes){
-          $(time).append('<option value=' + data.starttimes[i] + '>' + data.starttimes[i] + '</option>');
-        }
-      },
-    });
+        url: '/sessionList',
+        data: data,
+        cache: false,
+        success: function(data) {
+          time.get(0).length = 0;
+          $("#historical-log-table tbody tr").remove();
+          time.append('<option value="None"></option>');
+          for (let i of data.starttimes) {
+            time.append(`<option value="${i}">${i}</option>`);
+          }
+        },
+      });
+    } else {
+      $('#hidden-app-alias').css("display", "none");
+      $('#hidden-start').css("display", "none");
+      $("#historical-log-table tbody tr").remove();
+    }
   });
 
-  let C = document.getElementById('starttime');
-  $(C).change (function () {
-      let device = document.getElementById('device');
-      let app = document.getElementById('app');
-      let time = document.getElementById('starttime');
+  time.on('change', () => {
+    let chosen_starttime = time.get(0).options[time.get(0).selectedIndex].text;
+    $("#historical-log-table tbody tr").remove();
+    if (chosen_starttime !== "") {
       let data = {
-	      'apiKey': document.getElementById('apiKey').innerHTML,
-	      'device': device.options[device.selectedIndex].text,
-      	      'app': app.options[app.selectedIndex].text,
-	      'starttime': time.options[time.selectedIndex].text,
+        'apiKey': api_key.get(0).innerHTML,
+        'device': device.get(0).options[device.get(0).selectedIndex].text,
+        'app': app.get(0).options[app.get(0).selectedIndex].text,
+        'starttime': chosen_starttime,
       };
       $.ajax({
-      type: "POST",
-      url: '/logs',
-      data: JSON.stringify(data, null, '\t'),
-      contentType: 'application/json;charset=UTF-8',
-      cache: false,
-      success: function(data){
-	$("#historical-log-table tbody tr").remove();
-        let table = document.getElementById('historical-log-table');
-	$(table).append(data.logs);
-      },
-    });
+        url: '/logs',
+        data: data,
+        cache: false,
+        success: function(data) {
+          $('#historical-log-table').append(data.logs);
+        },
+      });
+    }
   });
 
   $("#device-alias").click(function(e) {
     e.preventDefault();
     let data = {
-	'apiKey': document.getElementById('apiKey').innerHTML,
-	'device': device.options[device.selectedIndex].text,
-	'alias' : document.getElementById('dev-alias').value,
+      'apiKey': api_key.get(0).innerHTML,
+      'device': device.get(0).options[device.get(0).selectedIndex].text,
+      'alias': $('#dev-alias').get(0).value,
     };
     $.ajax({
-      type: "POST",
       url: "/aliasDevice",
-      data: JSON.stringify(data, null, '\t'),
-      contentType: 'application/json;charset=UTF-8',
+      data: data,
       success: function(data) {
-	window.location.reload();
+        if (data.dev_success) {
+          window.location.reload();
+        } else {
+          alert("Device Alias needs to be unique");
+        }
       },
     });
   });
@@ -223,19 +235,29 @@ $(document).ready(() => {
   $("#appname-alias").click(function(e) {
     e.preventDefault();
     let data = {
-	'apiKey': document.getElementById('apiKey').innerHTML,
-	'device': device.options[device.selectedIndex].text,
-	'app'   : app.options[device.selectedIndex].text,
-	'alias' : document.getElementById('app-alias').value,
+      'apiKey': api_key.get(0).innerHTML,
+      'device': device.get(0).options[device.get(0).selectedIndex].text,
+      'app': app.get(0).options[app.get(0).selectedIndex].text,
+      'alias': $('#app-alias').get(0).value,
     };
     $.ajax({
-      type: "POST",
       url: "/aliasApp",
-      data: JSON.stringify(data, null, '\t'),
-      contentType: 'application/json;charset=UTF-8',
+      data: data,
       success: function(data) {
-	window.location.reload();
+        if (data.app_success) {
+          window.location.reload();
+        } else {
+          alert("App Alias needs to be unique");
+        }
       },
+    });
+  });
+
+  $("#clear-datastore").click(function(e) {
+    e.preventDefault();
+    $.ajax({
+      url: "/clearDatastore",
+      success: window.location.reload()
     });
   });
 });

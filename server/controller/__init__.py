@@ -16,4 +16,4 @@ from user_management_interfaces import email_auth
 # Also replace email_auth.EmailAuth() with your desired user management
 # interface.
 user_management_interface = email_auth.EmailAuth()
-_datastore_interface = MongoDatastoreInterface()
+datastore_interface = MongoDatastoreInterface()

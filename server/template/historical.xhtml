@@ -1,4 +1,5 @@
 <html py:extends="master.xhtml" py:strip="True">
+
 <head py:block="head" py:strip="True">
   <title py:block="master_title">Historical Sessions</title>
 </head>
@@ -6,56 +7,54 @@
 <body py:block="body" py:strip="True">
   <div class="row">
     <div class="col-md-12">
-      <table>
-        <tr>
-          <td>
-	    <p>User GUID</p>
-          </td>
-          <td>
+      <form class="form-horizontal" id="historical-choices">
+        <div class="form-group">
+          <label class="col-md-2">
+            <p>User API Key: </p>
+          </label>
+          <div class="col-md-5">
             <p class="guid" id="apiKey"></p>
-          </td>
-	  <td></td>
-        </tr>
-        <tr>
-	  <td>
-	    <p>Select a device:</p>
-          </td>
-	  <td>
-	    <select name="device" id="device">
-	    </select>
-  	  </td>
-	  <td>
-            <form method="post">
-	      <input type="text" name="dev-alias" id="dev-alias"/>
-	      <button type="submit" id="device-alias" value="device-alias">Alias a Device</button>
-	    </form>
-	  </td>
-        </tr>
-	<tr>
-	  <td>
+          </div>
+          <div class="col-md-5">
+            <button id="clear-datastore">Clear Datastore</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-2">
+            <p>Select a device:</p>
+          </label>
+          <div class="col-md-5">
+            <select name="device" id="device">
+            </select>
+          </div>
+          <div class="col-md-5" style="display:none" id="hidden-dev-alias">
+            <input type="text" name="dev-alias" id="dev-alias" />
+            <button type="submit" id="device-alias" value="device-alias">Alias a Device</button>
+          </div>
+        </div>
+        <div class="form-group" id="hidden-app" style="display:none">
+          <label class="col-md-2">
             <p>Select an app:</p>
-	  </td>
-	  <td>
-	    <select name="app" id="app">
+          </label>
+          <div class="col-md-5">
+            <select name="app" id="app">
             </select>
-	  </td>
-	  <td>
-	    <form method="post">
-	      <input type="text" name="app-alias" id="app-alias"/>
-	      <button id="appname-alias">Alias an app</button>
-	    </form>	  
-	  </td>
-	</tr>
-	<tr>
-	  <td>
-	    <p>Select a start time for session:</p>
-	  </td>
-	  <td>
-	    <select name="starttime" id="starttime">
+          </div>
+          <div class="col-md-5" style="display:none" id="hidden-app-alias">
+            <input type="text" name="app-alias" id="app-alias" />
+            <button id="appname-alias">Alias an app</button>
+          </div>
+        </div>
+        <div class="form-group" id="hidden-start" style="display:none">
+          <label class="col-md-2">
+            <p>Select a start time for session:</p>
+          </label>
+          <div class="col-md-5">
+            <select name="starttime" id="starttime">
             </select>
-	  </td>
-        </tr>
-      </table>
+          </div>
+        </div>
+      </form>
       <table class="table table-hover table-condensed table-bordered historical-log-table" id="historical-log-table">
         <thead>
           <th>Time</th>
@@ -63,8 +62,8 @@
           <th>Type</th>
           <th>Log Text</th>
         </thead>
-	<tbody>
-	</tbody>
+        <tbody>
+        </tbody>
       </table>
     </div>
   </div>

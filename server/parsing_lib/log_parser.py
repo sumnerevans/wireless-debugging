@@ -12,7 +12,7 @@ class LogParser(object):
     """ Handles parsing of all logs from the Mobile API """
 
     @staticmethod
-    def parse(message, type="dict"):
+    def parse(message, type_file="dict"):
         """ Parses a log message from the Mobile API
         Args:
             message: the actual decoded message
@@ -48,15 +48,15 @@ class LogParser(object):
             # check if current log is like the previous log parsed
             current_log = LogParser.parse_raw_log(line)
             if (current_log['time'] != old_log['time'] or
-                current_log['processId'] != old_log['processId'] or
-                current_log['threadId'] != old_log['threadId'] or
-                current_log['logType'] != old_log['logType'] or
-                current_log['tag'] != old_log['tag']):
+                    current_log['processId'] != old_log['processId'] or
+                    current_log['threadId'] != old_log['threadId'] or
+                    current_log['logType'] != old_log['logType'] or
+                    current_log['tag'] != old_log['tag']):
                 log_entries.append(LogParser.parse_entries(current_log))
             else:
                 # if part of the same event, add the log's text to the previous
                 # parsed log
-                log_entries[-1]['text'] += ('\n %s' % current_log['text'])
+                log_entries[-1]['text'] += ('\n%s' % current_log['text'])
             old_log = current_log
 
         return {
@@ -80,7 +80,6 @@ class LogParser(object):
             'text': log_entry['text'],
         }
 
-
     @staticmethod
     def parse_raw_log(log_data):
         """ Parse a raw log line
@@ -95,7 +94,8 @@ class LogParser(object):
         # Parse the Year, we have to add the year to the string so that it
         # parses correctly.
         current_year = datetime.now().year
-        date_with_year = '%s-%s' % (str(current_year), parsed_log.group(1).strip())
+        date_with_year = '%s-%s' % (str(current_year),
+                                    parsed_log.group(1).strip())
         log_time = datetime.strptime(date_with_year, '%Y-%m-%d %H:%M:%S.%f')
 
         # Determine the log type
@@ -130,15 +130,15 @@ class LogParser(object):
         color_dict = {
             'Warning': 'warning',
             'Error': 'danger',
-            }
-        if parsed_line['logType'] in ['Warning','Error']:
+        }
+        if parsed_line['logType'] in ['Warning', 'Error']:
             color = color_dict[parsed_line['logType']]
         return ('<tr class=\"' + color + '\">' +
-            '<td>' + str(parsed_line['time']) + '</td>' +
-            '<td>' + parsed_line['tag'] + '</td>' +
-            '<td>' + parsed_line['logType'] + '</td>' +
-            '<td>' + parsed_line['text'] + '</td>' +
-            '</tr>')
+                '<td>' + str(parsed_line['time']) + '</td>' +
+                '<td>' + parsed_line['tag'] + '</td>' +
+                '<td>' + parsed_line['logType'] + '</td>' +
+                '<td>' + parsed_line['text'] + '</td>' +
+                '</tr>')
 
     @staticmethod
     def convert_to_html(parsed_log_dict):

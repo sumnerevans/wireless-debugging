@@ -1,34 +1,84 @@
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
-"""
+'''
 Session Controller
-"""
-
-from bottle import get, post, request
+'''
 import controller
+
+from bottle import request, route
 from parsing_lib.log_parser import LogParser
 
-@post('/sessionList')
-def postSessionList():
-    return {"starttimes": controller._datastore_interface.retrieve_sessions(request.json['apiKey'].strip(), request.json['device'], request.json['app'])}
 
-@post('/deviceList')
-def postDeviceList():
-    return {"devices": controller._datastore_interface.retrieve_devices(request.json['apiKey'].strip())}
+@route('/deviceList')
+def get_device_list():
+    """ This function retrieves the list of devices for a given api_key."""
+    api_key = request.query.get('apiKey').strip()
+    return {
+        'devices': controller.datastore_interface.retrieve_devices(api_key)
+    }
 
-@post('/appList')
-def postAppList():
-    return {"apps":controller._datastore_interface.retrieve_apps(request.json['apiKey'].strip(), request.json['device'])}
 
-@post('/logs')
-def getLogs():
-    return {"logs": LogParser.convert_to_html(controller._datastore_interface.retrieve_logs(request.json['apiKey'].strip(), request.json['device'], request.json['app'], request.json['starttime']))}
+@route('/appList')
+def get_app_list():
+    """ This function retrieves the list of apps for a given api_key and device."""
+    api_key = request.query.get('apiKey').strip()
+    device = request.query.get('device').strip()
+    return {
+        'apps': controller.datastore_interface.retrieve_apps(api_key, device)
+    }
 
-@post('/aliasDevice')
-def postAliasDevice():
-    controller._datastore_interface.alias_device(request.json['apiKey'].strip(), request.json['device'], request.json['alias'])
-    return {}
 
-@post('/aliasApp')
-def postAliasApp():
-    controller._datastore_interface.alias_app(request.json['apiKey'].strip(), request.json['device'], request.json['app'], request.json['alias'])
-    return {}
+@route('/sessionList')
+def get_session_list():
+    """ This function retrieves the list of start times for a given api_key, device, and app."""
+    api_key = request.query.get('apiKey').strip()
+    device = request.query.get('device').strip()
+    app = request.query.get('app').strip()
+    return {
+        'starttimes': controller.datastore_interface.retrieve_sessions(api_key, device, app)
+    }
+
+
+@route('/logs')
+def get_logs():
+    """ This function retrieves the logs for a given api_key, device, app, and start time."""
+    api_key = request.query.get('apiKey').strip()
+    device = request.query.get('device').strip()
+    app = request.query.get('app').strip()
+    start_time = request.query.get('starttime').strip()
+    return {
+        'logs': LogParser.convert_to_html(
+            controller.datastore_interface.retrieve_logs(api_key, device, app, start_time))
+    }
+
+
+@route('/aliasDevice')
+def post_alias_device():
+    """ This function stores an alias for a device given the device name."""
+    api_key = request.query.get('apiKey').strip()
+    device = request.query.get('device').strip()
+    dev_alias = request.query.get('alias').strip()
+    dev_success = controller.datastore_interface.alias_device(
+        api_key, device, dev_alias)
+    return {
+        'dev_success': dev_success
+    }
+
+
+@route('/aliasApp')
+def post_alias_app():
+    """ This function stores an alias for an app given the app's name."""
+    api_key = request.query.get('apiKey').strip()
+    device = request.query.get('device').strip()
+    app = request.query.get('app').strip()
+    app_alias = request.query.get('alias').strip()
+    app_success = controller.datastore_interface.alias_app(
+        api_key, device, app, app_alias)
+    return {
+        'app_success': app_success
+    }
+
+
+@route('/clearDatastore')
+def get_clear_datastore():
+    """This function clears the datastore of any entries."""
+    controller.datastore_interface.clear_datastore()
