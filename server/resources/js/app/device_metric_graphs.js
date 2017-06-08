@@ -12,27 +12,32 @@ class MetricGrapher {
 
     this.cpuUsageHistory = [];
     this.memoryUsageHistory = [];
-    this.networkUsageHistory = [];
+    this.networkSentHistory = [];
+    this.networkReceiveHistory = [];
     this.xAxisScale = [];
 
     for (let i = 0; i < recordedTime; i++) {
       this.cpuUsageHistory.push(0.5);
       this.memoryUsageHistory.push(0);
-      this.networkUsageHistory.push(0);
+      this.networkSentHistory.push(0);
+      this.networkReceiveHistory.push(0);
       this.xAxisScale.push((recordedTime - i) / 5);
     }
 
     this.metrics = {
       cpuUsage: 0.0,
-      memUsage: 0.0,
+      memUsage: 0,
+      memTotal: 0,
+      netSentPerSec: 0,
+      netReceivePerSec: 0
     }
 
     let cpuGraphCanvas = document.getElementById(cpuCanvasId).getContext('2d');
-    let memoryGraphCanvas = document.getElementById(cpuCanvasId).getContext('2d');
-    let networkGraphCanvas = document.getElementById(cpuCanvasId).getContext('2d');
+    let memoryGraphCanvas = document.getElementById(memoryCanvasId).getContext('2d');
+    let networkGraphCanvas = document.getElementById(networkCanvasId).getContext('2d');
 
 
-    this.lineGraph = new Chart(cpuGraphCanvas, {
+    this.cpuGraph = new Chart(cpuGraphCanvas, {
       type: 'line',
       data: {
         labels: this.xAxisScale,
@@ -59,8 +64,41 @@ class MetricGrapher {
       }
     });
 
+    this.memoryGraph = new Chart(memoryGraphCanvas, {
+      type: 'line',
+      data: {
+        labels: this.xAxisScale,
+        datasets: [{
+            data: this.memoryUsageHistory,
+            label: "CPU Usage",
+            borderColor: "#3e95cd",
+            fill: true
+          },
+        ]
+      },
+      options: {}
+    });
 
-
+    this.networkGraph = new Chart(networkGraphCanvas, {
+      type: 'line',
+      data: {
+        labels: this.xAxisScale,
+        datasets: [{
+            data: this.networkSentHistory,
+            label: "Sent",
+            borderColor: "#3e95cd",
+            fill: true
+          },
+          {
+            data: this.networkReceiveHistory,
+            label: "Received",
+            borderColor: "#cd9535",
+            fill: true
+          },
+        ]
+      },
+      options: {}
+    });
   }
 
   setMetrics(metricsObject){
@@ -68,14 +106,28 @@ class MetricGrapher {
   }
 
   render(){
-    this.cpuUsageHistory.push(this.metrics.cpuUsage);
+    this.cpuUsageHistory.push(this.metrics.cpuUsage * 100);
     this.cpuUsageHistory.shift();
 
-    console.log(this.metrics.cpuUsage);
+    this.memoryUsageHistory.push(this.metrics.memUsage);
+    this.memoryUsageHistory.shift();
 
-    this.lineGraph.data.datasets[0].data = this.cpuUsageHistory;
-    this.lineGraph.update();
+    this.networkSentHistory.push(this.metrics.netSentPerSec);
+    this.networkSentHistory.shift();
 
+    this.networkReceiveHistory.push(this.metrics.netReceivePerSec);
+    this.networkReceiveHistory.shift();
+
+    console.log(this.metrics);
+
+    this.cpuGraph.data.datasets[0].data = this.cpuUsageHistory;
+    this.memoryGraph.data.datasets[0].data = this.memoryUsageHistory;
+    this.networkGraph.data.datasets[0].data = this.networkSentHistory;
+    this.networkGraph.data.datasets[1].data = this.networkReceiveHistory;
+
+    this.cpuGraph.update();
+    this.memoryGraph.update();
+    this.networkGraph.update();
   }
 
 }
