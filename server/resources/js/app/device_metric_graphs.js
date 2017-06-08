@@ -16,8 +16,8 @@ class MetricGrapher {
     this.networkReceiveHistory = [];
     this.xAxisScale = [];
 
-    for (let i = 0; i < recordedTime; i++) {
-      this.cpuUsageHistory.push(0.5);
+    for (let i = 0; i <= recordedTime; i++) {
+      this.cpuUsageHistory.push(0.0);
       this.memoryUsageHistory.push(0);
       this.networkSentHistory.push(0);
       this.networkReceiveHistory.push(0);
@@ -58,8 +58,19 @@ class MetricGrapher {
          scales:
         {
             xAxes: [{
-                display: false
-            }]
+                display: true,
+                ticks: {
+                  autoSkip: true,
+                  maxTicksLimit: 10
+              }
+            }],
+            yAxes: [{
+            display: true,
+            ticks: {
+                suggestedMax: 100,    // minimum will be 0, unless there is a lower value.
+                beginAtZero: true   // minimum value will be 0.
+            }
+        }]
         },
       }
     });
@@ -76,7 +87,29 @@ class MetricGrapher {
           },
         ]
       },
-      options: {}
+      options: {
+
+          legend: {
+              display: false
+           },
+           scales:
+          {
+              xAxes: [{
+                  display: true,
+                  ticks: {
+                    autoSkip: true,
+                    maxTicksLimit: 10
+                }
+              }],
+              yAxes: [{
+              display: true,
+              ticks: {
+                  suggestedMax: 100,    // minimum will be 0, unless there is a lower value.
+                  beginAtZero: true   // minimum value will be 0.
+              }
+          }]
+          },
+      }
     });
 
     this.networkGraph = new Chart(networkGraphCanvas, {
@@ -86,18 +119,40 @@ class MetricGrapher {
         datasets: [{
             data: this.networkSentHistory,
             label: "Sent",
-            borderColor: "#3e95cd",
+            borderColor: "#fcc182",
             fill: true
           },
           {
             data: this.networkReceiveHistory,
             label: "Received",
-            borderColor: "#cd9535",
+            borderColor: "#8e5ea2",
             fill: true
           },
         ]
       },
-      options: {}
+      options: {
+
+          legend: {
+              display: true
+           },
+           scales:
+          {
+              xAxes: [{
+                  display: true,
+                  ticks: {
+                    autoSkip: true,
+                    maxTicksLimit: 10
+                }
+              }],
+              yAxes: [{
+              display: true,
+              ticks: {
+                  suggestedMax: 1000,    // minimum will be 0, unless there is a lower value.
+                  beginAtZero: true   // minimum value will be 0.
+              }
+          }]
+          },
+      }
     });
   }
 
