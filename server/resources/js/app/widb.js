@@ -19,7 +19,7 @@ class WirelessDebug {
     /** @private @const {?WebSocket} */
     this.ws_ = null;
 
-    this.metricGrapher = new MetricGrapher();
+    this.metricGrapher = new MetricGrapher("cpuUsageGraph", "memUsageGraph", "netUsageGraph");
     this.metricGrapher.render();
   }
 

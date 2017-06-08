@@ -38,11 +38,9 @@ span.dot-sep {
   font-weight: 20px;
 }
 
-.cpuUsageGraph svg {
-  font: 16px sans-serif;
-  background-color: steelblue;
-  text-align: left;
+.cpuUsageGraph metricsGraph {
+  width: auto;
+  width: auto;
   padding: 3px;
   margin: 1px;
-  color: black;
 }

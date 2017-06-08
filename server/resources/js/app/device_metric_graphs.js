@@ -5,21 +5,34 @@
 
 class MetricGrapher {
 
-  constructor(){
+  constructor(cpuCanvasId, memoryCanvasId, networkCanvasId) {
+    let timeInterval = 0.2;
+    // 30 seconds times sample rate gives number of metrics recorded
+    let recordedTime = 30 * (1 / timeInterval);
 
     this.cpuUsageHistory = [];
+    this.memoryUsageHistory = [];
+    this.networkUsageHistory = [];
     this.xAxisScale = [];
-    for (let i = 0; i < 150; i++) {
-      this.cpuUsageHistory.push(0.5);
-      this.xAxisScale.push(i / 5);
-    }
-    console.log(this.cpuUsageHistory);
-    this.metrics = {
-      cpuUsage: 0.0
+
+    for (let i = 0; i < recordedTime; i++) {
+      this.cpuUsageHistory.push(0);
+      this.memoryUsageHistory.push(0);
+      this.networkUsageHistory.push(0);
+      this.xAxisScale.push((recordedTime - i) / 5);
     }
 
-    var ctx = document.getElementById("cpuUsageGraph").getContext('2d');
-    this.myLineChart = new Chart(ctx, {
+    this.metrics = {
+      cpuUsage: 0.0,
+      memUsage: 0.0,
+    }
+
+    let cpuGraphCanvas = document.getElementById(cpuCanvasId).getContext('2d');
+    let memoryGraphCanvas = document.getElementById(cpuCanvasId).getContext('2d');
+    let networkGraphCanvas = document.getElementById(cpuCanvasId).getContext('2d');
+
+
+    this.lineGraph = new Chart(cpuGraphCanvas, {
       type: 'line',
       data: {
         labels: this.xAxisScale,
@@ -48,8 +61,8 @@ class MetricGrapher {
 
     console.log(this.metrics.cpuUsage);
 
-    this.myLineChart.data.datasets[0].data = this.cpuUsageHistory;
-    this.myLineChart.update();
+    this.lineGraph.data.datasets[0].data = this.cpuUsageHistory;
+    this.lineGraph.update();
 
   }
 
