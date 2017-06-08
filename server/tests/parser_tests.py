@@ -4,8 +4,9 @@ Tests for the Parsing Library
 """
 
 import json
-from datetime import datetime
 import parsing_lib
+
+from datetime import datetime
 
 
 def _test_case_parser(test_case):
@@ -55,6 +56,12 @@ def test_parse():
             }
             expected_result = test_case['expectedResult']
             assert parsing_lib.LogParser.parse(test_input) == expected_result
+
+        assert parsing_lib.LogParser.parse({}) == {
+            'messageType': 'logData',
+            'osType': 'Android',
+            'logEntries': [],
+        }
 
 
 def test_parse_raw_log():

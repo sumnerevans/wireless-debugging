@@ -77,6 +77,7 @@ class WebSocketMessenger extends WebSocketClient {
             payload.put("apiKey", mApiKey);
             payload.put("deviceName", deviceNameBuilder.toString());
             payload.put("appName", "NOT IMPLEMENTED");
+
         } catch (JSONException e) {
             Log.e(TAG, e.toString());
         }
