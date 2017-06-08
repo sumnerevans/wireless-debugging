@@ -9,13 +9,15 @@ from datetime import datetime
 
 
 class LogParser(object):
-    """ Handles parsing of all logs from the Mobile API """
+    """ Handles parsing of all logs from the Mobile API. """
 
     @staticmethod
     def parse(message, type_file="dict"):
-        """ Parses a log message from the Mobile API
+        """ Parses a log message from the Mobile API.
+
         Args:
             message: the actual decoded message
+
         Returns:
             dict: the message data to be sent to the web browser
         """
@@ -33,12 +35,13 @@ class LogParser(object):
         while re.search('beginning of', raw_data[0]) is not None:
             raw_data = raw_data[1:]
 
-        # get first log to start checking for if an event was split across
-        # different logs
+        # Parse the first log line to have context for futher log lines if an
+        # event was split across multiple lines.
         old_log = LogParser.parse_raw_log(raw_data[0])
         log_entries.append(LogParser.parse_entries(old_log))
         current_log = None
 
+        # Since we've already parsed the first line, start at index 1.
         for line in raw_data[1:]:
             # Skip "beginning of /dev/log" lines. There may be cases when these
             # appear in a log line that is not at the beginning of the raw data
@@ -47,11 +50,7 @@ class LogParser(object):
 
             # check if current log is like the previous log parsed
             current_log = LogParser.parse_raw_log(line)
-            if (current_log['time'] != old_log['time'] or
-                    current_log['processId'] != old_log['processId'] or
-                    current_log['threadId'] != old_log['threadId'] or
-                    current_log['logType'] != old_log['logType'] or
-                    current_log['tag'] != old_log['tag']):
+            if current_log['time'] != old_log['time']:
                 log_entries.append(LogParser.parse_entries(current_log))
             else:
                 # if part of the same event, add the log's text to the previous
@@ -67,11 +66,14 @@ class LogParser(object):
 
     @staticmethod
     def parse_entries(log_entry):
-        """ Returns the elements that the web interface shows of a log
+        """ Returns the elements that the web interface shows of a log.
+
         Args:
             log_entry: the logEntry to return including processId and threadId
+
         Returns:
-            dict: the message data to be sent to the web browser (no processId nor threadId)
+            dict: the message data to be sent to the web browser (no processId
+            nor threadId)
         """
         return {
             'time': log_entry['time'],
@@ -82,9 +84,11 @@ class LogParser(object):
 
     @staticmethod
     def parse_raw_log(log_data):
-        """ Parse a raw log line
+        """ Parse a raw log line.
+
         Args:
             log_data: the raw log line
+
         Returns:
             dict: the log entry from the log line
         """
@@ -120,9 +124,11 @@ class LogParser(object):
 
     @staticmethod
     def convert_line_to_html(parsed_line):
-        """ Takes a parsed_line and converts it to HTML
+        """ Takes a parsed_line and converts it to HTML.
+
         Args:
             parsed_line: parsed line of log
+
         Returns:
             string: formatted HTML
         """
@@ -142,9 +148,11 @@ class LogParser(object):
 
     @staticmethod
     def convert_to_html(parsed_log_dict):
-        """ Takes a parsed block and converts it to HTML
+        """ Takes a parsed block and converts it to HTML.
+
         Args:
             parsed_log_dict: parsed block of logs
+
         Returns:
             string: formatted HTML
         """

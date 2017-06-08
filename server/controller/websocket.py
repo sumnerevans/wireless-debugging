@@ -1,3 +1,4 @@
+# Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 """
 WebSocket Controller
 """
@@ -21,6 +22,7 @@ _web_ui_ws_connections = {}
 @route('/ws')
 def handle_websocket():
     """ Handle an incomming WebSocket connection.
+
     This function handles incomming WebSocket connections and waits for
     incoming messages from the connection. When a message is recieved, it calls
     the appropriate function.
@@ -93,6 +95,7 @@ def log_dump(message, websocket, metadata):
 
     When a log dump comes in from the Mobile API, this function takes the raw
     log data, parses it and sends the parsed data to all connected web clients.
+
     Args:
         message: The decoded JSON message from the Mobile API.
         websocket: The WebSocket connection object where the log is being
@@ -129,7 +132,10 @@ def log_dump(message, websocket, metadata):
 def end_session(message, websocket, metadata):
     """Set session is over and add to the device/app collection."""
     controller.datastore_interface.set_session_over(
-        metadata["apiKey"], metadata["deviceName"], metadata["appName"], metadata["start_time"])
+        metadata["apiKey"],
+        metadata["deviceName"],
+        metadata["appName"],
+        metadata["start_time"])
     controller.datastore_interface.add_device_app(
         metadata["apiKey"], metadata["deviceName"], metadata["appName"])
 
