@@ -17,6 +17,7 @@
 		445BBC521EE89B4800085B83 /* WirelessDebugger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445BBC501EE89B4800085B83 /* WirelessDebugger.swift */; };
 		445BBC5C1EE8A11800085B83 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445BBC5B1EE8A11800085B83 /* WebSocket.swift */; };
 		449FFF121EE8A4D000074409 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 449FFF111EE8A4D000074409 /* libz.tbd */; };
+		449FFF161EE8AC7600074409 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449FFF151EE8AC7600074409 /* SwiftyJSON.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		445BBC501EE89B4800085B83 /* WirelessDebugger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WirelessDebugger.swift; path = WirelessDebugger/WirelessDebugger.swift; sourceTree = "<group>"; };
 		445BBC5B1EE8A11800085B83 /* WebSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebSocket.swift; path = WirelessDebugger/WebSocket.swift; sourceTree = "<group>"; };
 		449FFF111EE8A4D000074409 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		449FFF151EE8AC7600074409 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftyJSON.swift; path = WirelessDebugger/SwiftyJSON.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +112,7 @@
 		445BBC4C1EE89B2800085B83 /* WirelessDebugger */ = {
 			isa = PBXGroup;
 			children = (
+				449FFF151EE8AC7600074409 /* SwiftyJSON.swift */,
 				445BBC5B1EE8A11800085B83 /* WebSocket.swift */,
 				445BBC4F1EE89B4800085B83 /* WebSocketMessenger.swift */,
 				445BBC501EE89B4800085B83 /* WirelessDebugger.swift */,
@@ -233,6 +236,7 @@
 				445BBC521EE89B4800085B83 /* WirelessDebugger.swift in Sources */,
 				445BBC2E1EE89AC700085B83 /* ViewController.swift in Sources */,
 				445BBC2C1EE89AC700085B83 /* AppDelegate.swift in Sources */,
+				449FFF161EE8AC7600074409 /* SwiftyJSON.swift in Sources */,
 				445BBC511EE89B4800085B83 /* WebSocketMessenger.swift in Sources */,
 				445BBC5C1EE8A11800085B83 /* WebSocket.swift in Sources */,
 			);

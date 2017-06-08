@@ -81,6 +81,7 @@ def start_session(message, websocket, metadata):
     """ Marks the start of a logging session, and attaches metadata to the
         WebSocket receiving the raw logs.
     """
+    print(message)
 
     for attribute, value in message.items():
         metadata[attribute] = value

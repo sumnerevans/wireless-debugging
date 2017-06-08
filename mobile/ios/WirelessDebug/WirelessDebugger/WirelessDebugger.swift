@@ -10,26 +10,43 @@ class WirelessDebugger {
     private static var wirelessDebugger: WirelessDebugger?
     
     private var webSocketMessenger: WebSocketMessenger?
+    private var lastSendTime: UInt64 = 0
+    private var timeInterval: Int
     
-    init(_ hostname: String, timeInterval: Int) {
-        webSocketMessenger = WebSocketMessenger("ws://\(hostname)/ws")
+    init(_ hostname: String, apiKey: String, timeInterval: Int) {
+        self.webSocketMessenger = WebSocketMessenger("ws://\(hostname)/ws", apiKey: apiKey)
+        self.timeInterval = timeInterval
+        
         let stderrPipe = Pipe()
         dup2(stderrPipe.fileHandleForWriting.fileDescriptor, fileno(stderr))
         
         DispatchQueue.global().async {
-            while(true) {
+            while true {
                 let data = stderrPipe.fileHandleForReading.availableData
                 DispatchQueue.main.async {
+                    self.sendLogsIfReady()
+                    
+                    // Capture the log
                     let logData = String(data: data, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue)) ?? ""
+                    self.webSocketMessenger!.enqueueLog(logLine: logData)
                     print(logData)
                 }
             }
         }
     }
     
-    static func start(hostname: String, timeInterval: Int = 100) {
+    
+    static func start(hostname: String, apiKey: String, timeInterval: Int = 100) {
         if wirelessDebugger == nil {
-            wirelessDebugger = WirelessDebugger(hostname, timeInterval: timeInterval)
+            wirelessDebugger = WirelessDebugger(hostname, apiKey: apiKey, timeInterval: timeInterval)
+        }
+    }
+    
+    private func sendLogsIfReady() {
+        let currentTime = UInt64(Date().timeIntervalSince1970 * 1000)
+        if Int(currentTime - self.lastSendTime) > self.timeInterval {
+            webSocketMessenger?.sendLogDump()
+            self.lastSendTime = currentTime
         }
     }
 }
