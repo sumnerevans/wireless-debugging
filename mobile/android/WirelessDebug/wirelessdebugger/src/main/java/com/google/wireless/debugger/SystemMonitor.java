@@ -1,12 +1,14 @@
 package com.google.wireless.debugger;
 
 import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * System Monitor compiles CPU usage, Memory usage, and Network usage by reading from /proc.
+ */
 class SystemMonitor {
 
     private static final String TAG = "System Monitor";
@@ -22,6 +24,9 @@ class SystemMonitor {
     private int mPreviousBytesSent;
     private int mPreviousBytesReceived;
 
+    /**
+     * Creates a new System Monitor and reads initial system state
+     */
     public SystemMonitor() {
         ArrayList<String> cpuStatLines = getFileLines(PROC_STAT);
         if (!cpuStatLines.isEmpty()) {
@@ -34,6 +39,11 @@ class SystemMonitor {
         mLastBytesReceivedTime = System.currentTimeMillis();
     }
 
+    /**
+     * Reads the specified file and returns its lines as an array list of Strings.
+     * @param path Full path to the file.
+     * @return Array List of Strings, each entry is one line in the file.
+     */
     private ArrayList<String> getFileLines(String path) {
         ArrayList<String> fileLines = new ArrayList<>();
 
@@ -52,8 +62,11 @@ class SystemMonitor {
         return fileLines;
     }
 
+    /**
+     * Returns the CPU Usage as a decimal.
+     * @return CPU usage (multiply by 100 to get %).
+     */
     public double getCpuUsage() {
-
         ArrayList<String> cpuStatLines = getFileLines(PROC_STAT);
 
         if (cpuStatLines.isEmpty()) {
@@ -67,27 +80,31 @@ class SystemMonitor {
         int totalUsage = currentCpuStats[1] - mPreviousCpuStats[1];
         // Clamped value taken because sometimes the the file is read from the past (what!)
         double cpuUsagePercent = Math.max(0, Math.min(1, (systemUsage / (double) totalUsage)));
-
-        /*
-        Log.d(TAG, "SysUsage: " + systemUsage);
-        Log.d(TAG, "CurrentTot " + currentCpuStats[1]);
-        Log.d(TAG, "PrevTot " + mPreviousCpuStats[1]);
-        Log.d(TAG, "TotUsage: " + totalUsage);
-        Log.e(TAG, "CPU% " + cpuUsagePercent);
-        */
         mPreviousCpuStats = currentCpuStats;
 
         return cpuUsagePercent;
     }
 
+    /**
+     * Returns the amount of memory (in kilobytes used/active).
+     * @return Memory used in kilobytes.
+     */
     public int getMemoryUsage() {
         return getMemoryUsageStatFromLine(5);
     }
 
+    /**
+     * Returns the total amount of memory available on the system.
+     * @return Total system memory in kilobytes.
+     */
     public int getTotalMemory() {
         return getMemoryUsageStatFromLine(0);
     }
 
+    /**
+     * Returns the average number of bytes sent over the network per second.
+     * @return Bytes per second sent.
+     */
     public double getSentBytesPerSecond() {
         int currentBytesSent = getSentBytes();
         long currentTime = System.currentTimeMillis();
@@ -101,6 +118,10 @@ class SystemMonitor {
         return bytesPerMillisecond * (1000 / elapsedMilliseconds );
     }
 
+    /**
+     * Returns the average number of bytes received over the network per second.
+     * @return Bytes per second received.
+     */
     public double getReceivedBytesPerSecond() {
         int currentBytesReceived = getReceivedBytes();
         long currentTime = System.currentTimeMillis();
@@ -114,14 +135,28 @@ class SystemMonitor {
         return bytesPerMillisecond * (1000 / elapsedMilliseconds );
     }
 
+    /**
+     * Returns the total number of bytes sent.
+     * @return Bytes sent.
+     */
     private int getSentBytes() {
         return sumNetworkUsageColumn(9);
     }
 
+    /**
+     * Returns the total number of bytes received.
+     * @return Bytes received.
+     */
     private int getReceivedBytes() {
         return sumNetworkUsageColumn(1);
     }
 
+    /**
+     * Parses line to get total time and total system time from the CPU.
+     * @param line Line of cpu information to be parsed.
+     * @return Returns int[2], with the first value being total system time and second being
+     * total time.
+     */
     private int[] parseCpuLine(String line) {
         String[] lineParts = line.split(REGEX_WHITESPACE);
         int[] times = new int[2];
@@ -146,6 +181,11 @@ class SystemMonitor {
         return times;
     }
 
+    /**
+     * Returns the memory usage number from a line of text.
+     * @param line Line containing memory information.
+     * @return Number of kilobytes used in memory.
+     */
     private int getMemoryUsageStatFromLine(int line) {
         ArrayList<String> memInfoLines = getFileLines(PROC_MEMINFO);
 
@@ -157,6 +197,12 @@ class SystemMonitor {
         return Integer.parseInt(firstLineParts[1]);
     }
 
+    /**
+     * Sums the amount of bytes across a column.  Used to get total bytes sent/received across
+     * the network from every networking adapter.
+     * @param column Column to sum across.
+     * @return Total number of bytes in the column.
+     */
     private int sumNetworkUsageColumn(int column){
         ArrayList<String> networkFileLines = getFileLines(PROC_NET_DEV);
         int totalBytes = 0;

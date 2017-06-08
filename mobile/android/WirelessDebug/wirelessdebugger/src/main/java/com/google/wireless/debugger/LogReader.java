@@ -17,8 +17,8 @@ class LogReader implements Runnable {
     private Boolean mHostAppRunning = true;
     private Boolean mThreadRunning = true;
     private final WebSocketMessenger mWebSocketMessenger;
-    private SystemMonitor systemMonitor;
-    private int totalSystemMemory;
+    private final SystemMonitor systemMonitor;
+    private final int totalSystemMemory;
     private final int mUpdateTimeInterval;
     private long mLastSendTime = 0;
 
