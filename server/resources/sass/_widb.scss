@@ -31,16 +31,19 @@ span.dot-sep {
   padding: 0 5px;
 }
 
-.metricsGraph{
-  background-color: white;
-  margin: 2px;
-  padding: 8px;
-  font-weight: 20px;
+.metricsGraph {
+    font-size: 16px;
 }
 
-.cpuUsageGraph metricsGraph {
-  width: auto;
-  width: auto;
-  padding: 3px;
-  margin: 1px;
+.metricsGraph span{
+  font-weight: 700;
+}
+
+.metricsGraph #send {
+    color: #fcc182;
+    margin-right: 15px;
+}
+
+.metricsGraph #receive {
+    color: #8e5ea2;
 }

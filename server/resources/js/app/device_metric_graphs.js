@@ -16,13 +16,14 @@ class MetricGrapher {
     this.networkReceiveHistory = [];
     this.xAxisScale = [];
 
-    for (let i = 0; i <= recordedTime; i++) {
+    for (let i = 0; i < recordedTime; i++) {
       this.cpuUsageHistory.push(0.0);
       this.memoryUsageHistory.push(0);
       this.networkSentHistory.push(0);
       this.networkReceiveHistory.push(0);
       this.xAxisScale.push((recordedTime - i) / 5);
     }
+    this.xAxisScale[recordedTime - 1] = 0;
 
     this.metrics = {
       cpuUsage: 0.0,
@@ -47,32 +48,12 @@ class MetricGrapher {
             label: "CPU Usage",
             borderColor: "#3cba9f",
             pointBackgroundColor: "#3cba9f",
-            fill: true
+            fill: true,
+            cubicInterpolationMode: "default",
           },
         ]
       },
-      options: {
-        legend: {
-            display: false
-         },
-         scales:
-        {
-            xAxes: [{
-                display: true,
-                ticks: {
-                  autoSkip: true,
-                  maxTicksLimit: 10
-              }
-            }],
-            yAxes: [{
-            display: true,
-            ticks: {
-                suggestedMax: 100,    // minimum will be 0, unless there is a lower value.
-                beginAtZero: true   // minimum value will be 0.
-            }
-        }]
-        },
-      }
+      options: this.getOptions(100)
     });
 
     this.memoryGraph = new Chart(memoryGraphCanvas, {
@@ -87,29 +68,7 @@ class MetricGrapher {
           },
         ]
       },
-      options: {
-
-          legend: {
-              display: false
-           },
-           scales:
-          {
-              xAxes: [{
-                  display: true,
-                  ticks: {
-                    autoSkip: true,
-                    maxTicksLimit: 10
-                }
-              }],
-              yAxes: [{
-              display: true,
-              ticks: {
-                  suggestedMax: 100,    // minimum will be 0, unless there is a lower value.
-                  beginAtZero: true   // minimum value will be 0.
-              }
-          }]
-          },
-      }
+      options: this.getOptions(1024)
     });
 
     this.networkGraph = new Chart(networkGraphCanvas, {
@@ -130,37 +89,15 @@ class MetricGrapher {
           },
         ]
       },
-      options: {
-
-          legend: {
-              display: true
-           },
-           scales:
-          {
-              xAxes: [{
-                  display: true,
-                  ticks: {
-                    autoSkip: true,
-                    maxTicksLimit: 10
-                }
-              }],
-              yAxes: [{
-              display: true,
-              ticks: {
-                  suggestedMax: 1000,    // minimum will be 0, unless there is a lower value.
-                  beginAtZero: true   // minimum value will be 0.
-              }
-          }]
-          },
-      }
+      options: this.getOptions(1000)
     });
   }
 
-  setMetrics(metricsObject){
+  setMetrics(metricsObject) {
     this.metrics = metricsObject;
   }
 
-  render(){
+  render() {
     this.cpuUsageHistory.push(this.metrics.cpuUsage * 100);
     this.cpuUsageHistory.shift();
 
@@ -183,6 +120,37 @@ class MetricGrapher {
     this.cpuGraph.update();
     this.memoryGraph.update();
     this.networkGraph.update();
+  }
+
+  getOptions(suggestedMax) {
+    return {
+        legend: {
+          display: false
+         },
+         scales: {
+           xAxes: [{
+            display: true,
+            ticks: {
+              autoSkip: true,
+              maxTicksLimit: 10,
+              beginAtZero: true,
+            }
+          }],
+          yAxes: [{
+          display: true,
+          ticks: {
+            suggestedMax: suggestedMax,
+            beginAtZero: true
+          }
+          }]
+        },
+        tooltips: {
+          enabled: false,
+        },
+        hover: {
+          mode: null
+        },
+    }
   }
 
 }

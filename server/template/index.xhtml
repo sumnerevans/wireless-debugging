@@ -16,20 +16,33 @@
       </table>
     </div>
     <div class="col-md-4">
-    Device Metrics
     </div>
     <div class="col-md-4">
-      CPU Usage
-      <canvas class="metricsGraph" id="cpuUsageGraph">
-      </canvas>
-      <br/>
-      Memory Usage
-      <canvas class="row metricsGraph" id="memUsageGraph">
-      </canvas>
-      <br/>
-      Network Usage
-      <canvas class="row metricsGraph" id="netUsageGraph">
-      </canvas>
+
+      <div class="metricsGraph">
+        CPU Usage
+        <canvas id="cpuUsageGraph">
+        </canvas>
+      </div>
+
+      <div class="metricsGraph">
+        Memory Usage
+        <canvas id="memUsageGraph">
+        </canvas>
+      </div>
+
+      <div class="metricsGraph">
+        <div class="row">
+          <div class="col-md-8">
+            Network Usage
+          </div>
+          <div class="col-md-4">
+            <span id="send">Send</span><span id="receive">Receive</span>
+          </div>
+        </div>
+        <canvas class="metricsGraph" id="netUsageGraph">
+        </canvas>
+      </div>
     </div>
   </div>
 </body>
