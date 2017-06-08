@@ -17,6 +17,8 @@ class SystemMonitor {
     private static final String PROC_MEMINFO = PROC_ROOT + "meminfo";
     private static final String PROC_NET_DEV = PROC_ROOT + "net/dev";
     private static final String REGEX_WHITESPACE = "\\s+";
+    private static final int TOTAL_SYSTEM_TIME = 0;
+    private static final int TOTAL_TIME = 1;
 
     private int[] mPreviousCpuStats = new int[2];
     private long mLastBytesSentTime;
@@ -46,7 +48,6 @@ class SystemMonitor {
      */
     private ArrayList<String> getFileLines(String path) {
         ArrayList<String> fileLines = new ArrayList<>();
-
         try {
             BufferedReader reader = new BufferedReader(new FileReader(path));
 
@@ -58,7 +59,6 @@ class SystemMonitor {
         } catch (IOException e) {
             Log.e(TAG, e.toString());
         }
-
         return fileLines;
     }
 
@@ -68,7 +68,6 @@ class SystemMonitor {
      */
     public double getCpuUsage() {
         ArrayList<String> cpuStatLines = getFileLines(PROC_STAT);
-
         if (cpuStatLines.isEmpty()) {
             Log.d(TAG, "cpuStatLines is Empty");
             return 0.0;
@@ -76,8 +75,8 @@ class SystemMonitor {
 
         int[] currentCpuStats = parseCpuLine(cpuStatLines.get(0));
 
-        int systemUsage = currentCpuStats[0] - mPreviousCpuStats[0];
-        int totalUsage = currentCpuStats[1] - mPreviousCpuStats[1];
+        int systemUsage = currentCpuStats[TOTAL_SYSTEM_TIME] - mPreviousCpuStats[TOTAL_SYSTEM_TIME];
+        int totalUsage = currentCpuStats[TOTAL_TIME] - mPreviousCpuStats[TOTAL_TIME];
         // Clamped value taken because sometimes the the file is read from the past (what!)
         double cpuUsagePercent = Math.max(0, Math.min(1, (systemUsage / (double) totalUsage)));
         mPreviousCpuStats = currentCpuStats;
@@ -160,7 +159,6 @@ class SystemMonitor {
     private int[] parseCpuLine(String line) {
         String[] lineParts = line.split(REGEX_WHITESPACE);
         int[] times = new int[2];
-        //Log.e(TAG, "RawLine: " + line);
 
         int timeUser = Integer.parseInt(lineParts[1]);
         int timeNice = Integer.parseInt(lineParts[2]);
@@ -175,9 +173,8 @@ class SystemMonitor {
         int totalTime = totalIdleTime + timeIrq + timeSoftIrq + timeSystem + timeSteal + timeUser
                 + timeNice;
 
-        times[0] = totalTime - totalIdleTime;
-        times[1] = totalTime;
-
+        times[TOTAL_SYSTEM_TIME] = totalTime - totalIdleTime;
+        times[TOTAL_TIME] = totalTime;
         return times;
     }
 
@@ -188,7 +185,6 @@ class SystemMonitor {
      */
     private int getMemoryUsageStatFromLine(int line) {
         ArrayList<String> memInfoLines = getFileLines(PROC_MEMINFO);
-
         if (memInfoLines.isEmpty()){
             return 0;
         }
