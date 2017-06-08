@@ -121,8 +121,6 @@ def test_handle_returning_login():
     assert result == (True, '')
 
     os.remove(umi.user_key_table)
-
-
 def test_get_api_key():
     """ Verify that given an existing username, the corresponding API key is
         returned.
