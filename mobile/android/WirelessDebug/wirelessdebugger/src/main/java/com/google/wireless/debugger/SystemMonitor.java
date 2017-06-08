@@ -65,8 +65,8 @@ class SystemMonitor {
 
         int systemUsage = currentCpuStats[0] - mPreviousCpuStats[0];
         int totalUsage = currentCpuStats[1] - mPreviousCpuStats[1];
-        // Absolute value taken because sometimes the the file is read from the past (what!)
-        double cpuUsagePercent = Math.abs(systemUsage / (double) totalUsage);
+        // Clamped value taken because sometimes the the file is read from the past (what!)
+        double cpuUsagePercent = Math.max(0, Math.min(1, (systemUsage / (double) totalUsage)));
 
         /*
         Log.d(TAG, "SysUsage: " + systemUsage);
