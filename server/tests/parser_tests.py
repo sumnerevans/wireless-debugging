@@ -57,6 +57,18 @@ def test_parse():
 
         assert parsing_lib.LogParser.parse({}, 'Android') == []
 
+    with open('test_parse_ios.json') as test_case_file:
+        test_cases = json.load(test_case_file, object_hook=_test_case_parser)
+
+        for test_case in test_cases:
+            test_input = test_case['inputLines']
+            expected_result = test_case['expectedResult']
+            assert parsing_lib.LogParser.parse(test_input, 'iOS') == \
+                expected_result
+
+        assert parsing_lib.LogParser.parse({}, 'iOS') == []
+
+
 
 def test_parse_raw_log():
     """ Tests that the LogParser.parse_raw_log method works properly. """
@@ -68,6 +80,15 @@ def test_parse_raw_log():
             test = test_case['input']
             expected_result = test_case['expectedResult']
             assert parsing_lib.LogParser.parse_raw_log(test, 'Android') == expected_result
+
+    with open('test_parse_ios_raw.json') as test_case_file:
+        test_cases = json.load(test_case_file, object_hook=_test_case_parser)
+
+        for test_case in test_cases:
+            test = test_case['input']
+            expected_result = test_case['expectedResult']
+            assert parsing_lib.LogParser.parse_raw_log(test, 'iOS') == expected_result
+
 
 
 
