@@ -50,6 +50,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         if loggingAccelerometer {
             AccelerometerToggle.setTitle("Start Accelerometer Logging", for: .normal)
             manager.stopAccelerometerUpdates()
+            loggingAccelerometer = false
         } else {
             AccelerometerToggle.setTitle("Stop Accelerometer Logging", for: .normal)
             print(manager.isAccelerometerAvailable)
@@ -61,10 +62,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
                     }
                 }
             }
-
+            loggingAccelerometer = true
         }
-        
-        loggingAccelerometer = !loggingAccelerometer
     }
     
     /// Handle enter on the log text field.

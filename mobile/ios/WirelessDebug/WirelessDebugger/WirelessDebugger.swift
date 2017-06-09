@@ -21,7 +21,8 @@ class WirelessDebugger {
     ///   - apiKey: the API Key provided by the web interface
     ///   - timeInterval: the interval at which to send logs
     private init(_ hostname: String, apiKey: String, timeInterval: Int) {
-        self.webSocketMessenger = WebSocketMessenger("ws://\(hostname)/ws", apiKey: apiKey)
+        self.webSocketMessenger = WebSocketMessenger("ws://\(hostname)/ws",
+                                                     apiKey: apiKey)
         self.timeInterval = timeInterval
 
         // Create a Pipe and capture stderr.
@@ -35,7 +36,7 @@ class WirelessDebugger {
                 let data = stderrPipe.fileHandleForReading.availableData
                 DispatchQueue.main.async {
                     // Capture the log
-                    let logData = String(data: data, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue)) ?? ""
+                    let logData = String(data: data, encoding: .utf8) ?? ""
                     self.webSocketMessenger!.enqueueLog(logLine: logData)
                     print(logData)
                 }
@@ -56,10 +57,11 @@ class WirelessDebugger {
     /// - Parameters:
     ///   - hostname: root hostname to connect to
     ///   - apiKey: the API Key provided by the web interface
-    ///   - timeInterval: the interval at which to send logs
+    ///   - timeInterval: the interval at which to send logs (in milliseconds)
     static func start(hostname: String, apiKey: String, timeInterval: Int = 100) {
         if wirelessDebugger == nil {
-            wirelessDebugger = WirelessDebugger(hostname, apiKey: apiKey, timeInterval: timeInterval)
+            wirelessDebugger = WirelessDebugger(hostname, apiKey: apiKey,
+                                                timeInterval: timeInterval)
         }
     }
 

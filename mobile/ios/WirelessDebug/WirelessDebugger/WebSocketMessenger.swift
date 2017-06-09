@@ -29,6 +29,7 @@ class WebSocketMessenger {
                 "deviceName": UIDevice.current.name,
                 "appName": Bundle.main.infoDictionary!["CFBundleName"] as! String,
             ])
+            self.connectionRetries = 0
         }
 
         // If the connection closes, try to reconnect 10 times.
@@ -38,7 +39,6 @@ class WebSocketMessenger {
             // Retry the connection 10 times with 2 seconds inbetween retries.
             if self.connectionRetries < 10 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                    print("got here")
                     self.webSocket.open(socketAddress)
                 }
                 self.connectionRetries += 1
@@ -64,6 +64,8 @@ class WebSocketMessenger {
         let logsToSendCopy = logsToSend
         logsToSend.removeAll()
 
+        print("sleeping")
+        sleep(10)
         self.send("logDump", data: [
             "rawLogData": logsToSendCopy.joined(),
         ])

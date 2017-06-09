@@ -18,6 +18,7 @@
 		445BBC5C1EE8A11800085B83 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445BBC5B1EE8A11800085B83 /* WebSocket.swift */; };
 		449FFF121EE8A4D000074409 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 449FFF111EE8A4D000074409 /* libz.tbd */; };
 		449FFF161EE8AC7600074409 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449FFF151EE8AC7600074409 /* SwiftyJSON.swift */; };
+		44E35A7A1EEAFBB000DDDAEF /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 44E35A791EEAFBB000DDDAEF /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,7 @@
 		445BBC5B1EE8A11800085B83 /* WebSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebSocket.swift; path = WirelessDebugger/WebSocket.swift; sourceTree = "<group>"; };
 		449FFF111EE8A4D000074409 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		449FFF151EE8AC7600074409 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftyJSON.swift; path = WirelessDebugger/SwiftyJSON.swift; sourceTree = "<group>"; };
+		44E35A791EEAFBB000DDDAEF /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 				445BBC321EE89AC700085B83 /* Assets.xcassets */,
 				445BBC341EE89AC700085B83 /* LaunchScreen.storyboard */,
 				445BBC371EE89AC700085B83 /* Info.plist */,
+				44E35A791EEAFBB000DDDAEF /* Localizable.strings */,
 			);
 			path = WirelessDebug;
 			sourceTree = "<group>";
@@ -214,6 +217,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				445BBC361EE89AC700085B83 /* LaunchScreen.storyboard in Resources */,
+				44E35A7A1EEAFBB000DDDAEF /* Localizable.strings in Resources */,
 				445BBC331EE89AC700085B83 /* Assets.xcassets in Resources */,
 				445BBC311EE89AC700085B83 /* Main.storyboard in Resources */,
 			);
