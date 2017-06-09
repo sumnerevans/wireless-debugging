@@ -17,10 +17,10 @@ class MetricGrapher {
     this.xAxisScale = [];
 
     for (let i = 0; i < recordedTime + 1; i++) {
-      this.cpuUsageHistory.push(20);
-      this.memoryUsageHistory.push(20);
-      this.networkSentHistory.push(20);
-      this.networkReceiveHistory.push(20);
+      this.cpuUsageHistory.push(null);
+      this.memoryUsageHistory.push(null);
+      this.networkSentHistory.push(null);
+      this.networkReceiveHistory.push(null);
       this.xAxisScale.push((recordedTime - i) / 5);
     }
     this.xAxisScale[recordedTime] = 0;
