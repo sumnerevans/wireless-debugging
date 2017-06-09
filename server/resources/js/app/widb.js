@@ -13,6 +13,7 @@ class WirelessDebug {
     /** @private @const {!jQuery} */
     this.logTable_ = $('.log-table');
 
+
     /** @private @const {?WebSocket} */
     this.ws_ = null;
   }
@@ -30,6 +31,14 @@ class WirelessDebug {
   websocketOnOpen() {
     let payload = {
       messageType: 'associateUser',
+      apiKey: 'tikalin',
+    };
+
+    this.ws_.send(JSON.stringify(payload));
+
+    payload = {
+      messageType: 'logDump',
+      rawLogData: "--------- beginning of /dev/log/system \n05-22 11:44:31.180 7080 7080 I WiDB Example: aX: 3.0262709 aY: 2.0685902 \n05-22 11:44:32.191 7080 7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection",
     };
 
     this.ws_.send(JSON.stringify(payload));
@@ -42,6 +51,7 @@ class WirelessDebug {
       for (let entry of messageData.logEntries) {
         this.logTable_.append(this.renderLog(entry));
       }
+      $('#log-table').DataTable();
     }
   }
 

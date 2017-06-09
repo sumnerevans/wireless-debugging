@@ -96,7 +96,7 @@ def log_dump(message, websocket, metadata):
     # At first glance this looks like a copy, but this is actually grabbing the
     # keys from a dict.
     web_ws_connections = [ws for ws in _web_interface_ws_connections]
-    associated_websockets = ( 
+    associated_websockets = (
         controller.user_management_interface.find_associated_websockets(api_key,
             web_ws_connections))
 
@@ -107,7 +107,7 @@ def log_dump(message, websocket, metadata):
 @ws_router('endSession')
 def end_session(message, websocket, metadata):
     # TODO: Accept an end session message and notify the database to stop adding
-    #       entries to the current log. 
+    #       entries to the current log.
     print("currently defunct")
 
 

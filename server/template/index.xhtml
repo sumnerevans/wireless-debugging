@@ -6,13 +6,17 @@
 <body py:block="body" py:strip="True">
   <div class="row">
     <div class="col-md-12">
-      <table class="table table-hover table-condensed table-bordered log-table">
-        <tr>
-          <th>Time</th>
-          <th>Tag</th>
-          <th>Type</th>
-          <th>Log Text</th>
-        </tr>
+      <table class="table table-hover table-condensed table-bordered log-table" id ="log-table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Tag</th>
+            <th>Type</th>
+            <th>Log Text</th>
+          </tr>
+        </thead>
+        <tbody id="log-table-body">
+        </tbody>
       </table>
     </div>
   </div>
