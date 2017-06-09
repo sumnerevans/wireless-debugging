@@ -82,7 +82,7 @@ class SystemMonitor {
         int totalUsage = currentCpuStats[TOTAL_TIME] - mPreviousCpuStats[TOTAL_TIME];
         // Clamped value taken because sometimes the the file is read from the past (what!)
         double cpuUsagePercent = Math.abs(systemUsage / (double) totalUsage);
-        cpuUsagePercent = Math.max(0, Math.min(1, cpuUsagePercent));
+        cpuUsagePercent = Math.min(1, cpuUsagePercent);
         mPreviousCpuStats = currentCpuStats;
 
         return cpuUsagePercent;
