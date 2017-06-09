@@ -98,32 +98,28 @@ def log_dump(message, websocket, metadata):
     log data, parses it and sends the parsed data to all connected web clients.
 
     Args:
-        message: The decoded JSON message from the Mobile API.
-        websocket: The WebSocket connection object where the log is being
-            received.
+        message: the decoded JSON message from the Mobile API
+        websocket: the full websocket connection
+        metadata: the metadata object for the WebSocket connection
     """
-    print('logs sent')
+    log_entries = LogParser.parse(message['rawLogData'], metadata['osType'])
 
-    # TODO: (Sumner) fix when implementing the iOS parsing component.
-    if metadata['osType'] == 'iOS':
-        return
-
-    parsed_logs = LogParser.parse(message)
     api_key = metadata.get('apiKey', '')
 
     # Send to database.
-    ConfigManager.datastore_interface.store_logs(
-        api_key, metadata['deviceName'], metadata['appName'],
-        metadata['startTime'], metadata['osType'], parsed_logs)
+    controller.datastore_interface.store_logs(
+        metadata['apiKey'], metadata['deviceName'], metadata['appName'],
+        metadata['start_time'], metadata['osType'], log_entries)
 
     # Convert to html by creaing an array of all the converted rows.
-    html_logs = [LogParser.convert_line_to_html(log)
+    html_logs = [LogParser.convert_line_to_html(log) for log in
                  for log in parsed_logs['logEntries']]
 
+    # Create a message to send to the web clients.
     send_logs = {
         'messageType': 'logData',
-        'osType': 'Android',
-        'logEntries': html_logs,
+        'osType': metadata['osType'],
+        'logEntries': LogParser.convert_to_html(log_entries),
     }
 
     for connection in _get_associated_websockets(api_key):
