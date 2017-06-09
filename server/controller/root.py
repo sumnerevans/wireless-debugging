@@ -34,7 +34,6 @@ def index():
     if not controller.user_management_interface.is_user_logged_in(request):
         redirect('/login_page')
 
-    # TODO: Probably a proper way to give the API key back, like AJAX
     api_key = controller.user_management_interface.get_api_key_for_user(request)
 
     return {
@@ -69,15 +68,10 @@ def login():
         defines the format of the login page, which is specified in the user
         management interface. 
     """
-    hostname = from_config_yaml('hostname')
-    port = from_config_yaml('port') or 80
-
-    # TODO: Change base_url to be relative URL
-    url = "http://%s:%s" % (hostname, str(port))
     
     return {
         'login_fields': Markup(
-            controller.user_management_interface.get_login_ui(url)),
+            controller.user_management_interface.get_login_ui()),
         'logged_in': controller.user_management_interface.is_user_logged_in(
             request),
     }

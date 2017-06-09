@@ -19,7 +19,7 @@ class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
         self.user_key_table = 'key_table.txt'
         self.login_fields_path = 'user_management_interfaces/email_login.xhtml'
 
-    def get_login_ui(self, base_url):
+    def get_login_ui(self):
         """ Returns XHTML containing a login form. 
 
         class members used:

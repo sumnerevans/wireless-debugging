@@ -13,9 +13,8 @@ from bottle import request, response
 def test_get_login():
     """ Checks if the function is not implemented. """
     umi = user_management_interface_base.UserManagementInterfaceBase()
-    base_url = "http://0.0.0.0:80"
     with pytest.raises(NotImplementedError):
-        umi.get_login_ui(base_url)
+        umi.get_login_ui()
 
 
 def test_user_logged_in():

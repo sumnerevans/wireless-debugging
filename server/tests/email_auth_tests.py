@@ -16,13 +16,12 @@ def test_get_login():
         consistent.
     """
     umi = email_auth.EmailAuth()
-    base_url = 'http://0.0.0.0:80'
 
 
     with open('user_management_interfaces/email_login.xhtml', 'r') as fin:
         expected_html = fin.read()
 
-    assert umi.get_login_ui(base_url) == expected_html
+    assert umi.get_login_ui() == target
 
 
 def test_exists_in_table():

@@ -15,9 +15,8 @@ def test_get_login():
         returned.
     """
     umi = no_auth.NoAuth()
-    base_url = "http://0.0.0.0:80"
     
-    assert umi.get_login_ui(base_url) == ""
+    assert umi.get_login_ui() == ""
 
 
 def test_user_logged_in():
