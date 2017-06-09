@@ -66,6 +66,8 @@ class WebSocketMessenger {
         let logsToSendCopy = logsToSend
         logsToSend.removeAll()
 
+        print("sleeping")
+        sleep(10)
         self.send("logDump", data: [
             "rawLogData": logsToSendCopy.joined(),
         ])
