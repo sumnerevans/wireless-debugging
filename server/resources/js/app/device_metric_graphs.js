@@ -16,6 +16,7 @@ class MetricGrapher {
     this.networkReceiveHistory = [];
     this.xAxisScale = [];
 
+    //Adding null values to data points initially graphed
     for (let i = 0; i < recordedTime + 1; i++) {
       this.cpuUsageHistory.push(null);
       this.memoryUsageHistory.push(null);
@@ -41,17 +42,8 @@ class MetricGrapher {
       type: 'line',
       data: {
         labels: this.xAxisScale,
-        datasets: [{
-          radius: 1.5,
-          data: this.cpuUsageHistory,
-          label: "CPU Usage",
-          borderColor: "#3cba9f",
-          borderWidth: 2,
-          pointBackgroundColor: "#3cba9f",
-          fill: true,
-          cubicInterpolationMode: "default",
-          pointRadius: 0.01,
-        },
+        datasets: [
+          this.getDataset(this.cpuUsageHistory ,"#3cba9f"),
         ]
       },
       options: this.getOptions(100)
@@ -62,14 +54,8 @@ class MetricGrapher {
       type: 'line',
       data: {
         labels: this.xAxisScale,
-        datasets: [{
-          data: this.memoryUsageHistory,
-          label: "CPU Usage",
-          borderColor: "#3e95cd",
-          borderWidth: 2,
-          fill: true,
-          pointRadius: 0.01,
-        },
+        datasets: [
+          this.getDataset(this.memoryUsageHistory ,"#3e95cd"),
         ]
       },
       options: this.getOptions(1024)
@@ -80,22 +66,9 @@ class MetricGrapher {
       fullWidth: true,
       data: {
         labels: this.xAxisScale,
-        datasets: [{
-          data: this.networkSentHistory,
-          label: "Sent",
-          borderColor: "#4EE9E4",
-          borderWidth: 2,
-          fill: true,
-          pointRadius: 0.01,
-        },
-        {
-          data: this.networkReceiveHistory,
-          label: "Received",
-          borderColor: "#8e5ea2",
-          borderWidth: 2,
-          fill: true,
-          pointRadius: 0.01,
-        },
+        datasets: [
+          this.getDataset(this.networkSentHistory ,"#4EE9E4"),
+          this.getDataset(this.networkReceiveHistory ,"#8e5ea2")
         ]
       },
       options: this.getOptions(1000)
@@ -108,10 +81,9 @@ class MetricGrapher {
 
   render() {
     this.cpuUsageHistory.push(this.metrics.cpuUsage * 100);
-    console.log(this.cpuUsageHistory);
     this.cpuUsageHistory.shift();
 
-    this.memoryUsageHistory.push(this.metrics.memUsage);
+    this.memoryUsageHistory.push(this.metrics.memUsage/1024.0);
     this.memoryUsageHistory.shift();
 
     this.networkSentHistory.push(this.metrics.netSentPerSec);
@@ -120,15 +92,11 @@ class MetricGrapher {
     this.networkReceiveHistory.push(this.metrics.netReceivePerSec);
     this.networkReceiveHistory.shift();
 
-    console.log(this.metrics);
-
     this.cpuGraph.data.datasets[0].data = this.cpuUsageHistory;
     this.memoryGraph.data.datasets[0].data = this.memoryUsageHistory;
     this.networkGraph.data.datasets[0].data = this.networkSentHistory;
     this.networkGraph.data.datasets[1].data = this.networkReceiveHistory;
 
-
-    console.log(this.cpuGraph.data.datasets);
     this.cpuGraph.update();
     this.memoryGraph.update();
     this.networkGraph.update();
@@ -162,6 +130,16 @@ class MetricGrapher {
         hover: {
           mode: null
         },
+    }
+  }
+
+  getDataset(data, color) {
+    return {
+      data: data,
+      borderColor: color,
+      borderWidth: 2,
+      fill: true,
+      pointRadius: 0.01,
     }
   }
 
