@@ -5,10 +5,12 @@ values are returned.
 
 These are pretty trivial tests.
 """
+import itertools
 
 from user_management_interfaces import no_auth
 from bottle import request, response
 from tests.test_classes import DummySocket
+
 
 def test_get_login():
     """ Verify that the login UI doesn't exist, and that a blank HTML page is
@@ -57,8 +59,12 @@ def test_find_websockets():
     }
 
     # The expected result is the concatenation of the above lists
-    desired_result = []
-    for api_keys, ws_lists in websockets.items():
-        desired_result += ws_lists
+    expected_result = itertools.chain(*[websocket for api_keys, websocket in 
+                                        websockets.items()])
     
-    assert umi.find_associated_websockets(api_key, websockets) == desired_result
+    destination_websockets = umi.find_associated_websockets(api_key, websockets)
+
+    comparisons = zip(destination_websockets, expected_result)
+
+    for websocket, excpected_websocket in comparisons:
+        assert websocket == excpected_websocket

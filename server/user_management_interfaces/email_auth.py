@@ -26,8 +26,7 @@ class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
             login_fields_path: String, contains the path to the file that 
                 contains the XHTML.
         Args:
-            base_url: String, contains the url to get to the index page of the 
-                app. 
+            None.
         Returns:
             An XHTML fragment containing the login form.
         """
