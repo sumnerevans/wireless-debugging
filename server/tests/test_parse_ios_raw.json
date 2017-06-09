@@ -1,0 +1,21 @@
+[{
+  "input": "2017-06-09 13:49:34.990 WirelessDebug[6526:264294] WebSocket Connection Closed",
+  "expectedResult": {
+    "logType": null,
+    "time": "06-09 13:49:34.990000",
+    "processId": "6526",
+    "threadId": "264294",
+    "tag": "WirelessDebug",
+    "text": "WebSocket Connection Closed"
+  }
+}, {
+  "input": "2017-06-09 13:49:37.199 WirelessDebug[6526:264294] WebSocket Connection to ws://138.67.193.0/ws Opened",
+  "expectedResult": {
+    "logType": null,
+    "time": "06-09 13:49:37.199000",
+    "processId": "6526",
+    "threadId": "264294",
+    "tag": "WirelessDebug",
+    "text": "WebSocket Connection to ws://138.67.193.0/ws Opened"
+  }
+}]

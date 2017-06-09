@@ -17,7 +17,7 @@ class LogParser(object):
         'Android': {
             'logLineRegex': 
                 '(.*)\\s+(\\d*)\\s+(\\d*) ([IWVEDAF]) (.*?): ((?:.*\\n*)*)',
-            'datetimeFormat': '%Y-%m-%d %H:%M:%S.%f',
+            'datetimeFormat': ['%Y-%m-%d %H:%M:%S.%f'],
             'filterLineRegex': '-* beginning of',
             'groupNums': {
                 'time': 1,
@@ -39,15 +39,20 @@ class LogParser(object):
         },
         'iOS': {
             'logLineRegex': '(.*) (.*)\\[(\\d+):(\\d+)\\] (.*)',
-            'datetimeFormat': '%Y-%m-%d %H:%M:%S.%f',
+            'datetimeFormat': [
+                '%Y-%m-%d %H:%M:%S.%f',
+                '%Y-%m-%d %H:%M:%S.%f%z',
+                '%Y-%m-%d %H:%M:%S %z'
+            ],
+            'exceptionRegex': '(.*?)-{2,} BEGIN UNHANDLED EXCEPTION',
             'groupNums': {
                 'time': 1,
                 'tag': 2,
                 'processId': 3,
                 'threadId': 4,
                 'text': 5,
-            }
-        }
+            },
+        },
     }
 
 
@@ -67,7 +72,12 @@ class LogParser(object):
         if not raw_log_lines or raw_log_lines.isspace():
             return []
 
-        filter_regex = LogParser.parser_info[os_type].get('filterLineRegex', None)
+        # Grab the regexes from the config.
+        filter_regex = LogParser.parser_info[os_type]\
+            .get('filterLineRegex', None)
+        exception_regex = LogParser.parser_info[os_type]\
+            .get('exceptionRegex', None)
+
         raw_data = raw_log_lines.splitlines()
         log_entries = []
 
@@ -75,23 +85,41 @@ class LogParser(object):
         while filter_regex and re.search(filter_regex, raw_data[0]) is not None:
             raw_data = raw_data[1:]
 
-        # Parse the first log line to have context for futher log lines if an
-        # event was split across multiple lines.
-        old_log = LogParser.parse_raw_log(raw_data[0], os_type)
-        log_entries.append(LogParser.parse_entries(old_log))
+        old_log = None
         current_log = None
+        in_unhandled_exception = False
 
-        # Since we've already parsed the first line, start at index 1.
-        for line in raw_data[1:]:
+        # Parse each of the log lines.
+        for line in raw_data:
             # Skip lines that are not log lines. There may be cases when these
             # appear in a log line that is not at the beginning of the raw
             # data.
             if filter_regex and re.search(filter_regex, line) is not None:
                 continue
 
+            # If an iOS unhandled exception is starting it the middle of the
+            # logs, handle it here.
+            if exception_regex:
+                exception_groups = re.search(exception_regex, line)
+                if exception_groups is not None:
+                    in_unhandled_exception = True
+                    exception_time_string = exception_groups.group(1)
+                    log_entries.append({
+                        'time': LogParser._parse_datetime(exception_time_string,
+                            'iOS'),
+                        'logType': 'Error',
+                        'tag': '',
+                        'text': line,
+                    })
+                    continue
+
+            if in_unhandled_exception:
+                log_entries[-1]['text'] += ('\n%s' % line)
+                continue
+
             # Check if current log is like the previous log parsed
             current_log = LogParser.parse_raw_log(line, os_type)
-            if current_log['time'] != old_log['time']:
+            if not old_log or current_log['time'] != old_log['time']:
                 log_entries.append(LogParser.parse_entries(current_log))
             else:
                 # If part of the same event, add the log's text to the previous
@@ -139,17 +167,9 @@ class LogParser(object):
 
         # Parse the Time
         time_field = group_from_log(parsed_log, 'time', os_type)
+        log_time = LogParser._parse_datetime(time_field, os_type)
 
-        # On Android, we have to add the year to the string so that it parses
-        # correctly.
-        if os_type == 'Android':
-            current_year = datetime.now().year
-            time_field = '%s-%s' % (str(current_year), time_field)
-
-        datetime_format = LogParser.parser_info[os_type]['datetimeFormat']
-        log_time = datetime.strptime(time_field, datetime_format)
-
-        # Determine the log type if the OS supports that.
+        # Determine the log type if the OS supports it.
         log_type = None
         if 'logTypes' in LogParser.parser_info[os_type]:
             type_group = group_from_log(parsed_log, 'logType', os_type)
@@ -218,3 +238,34 @@ class LogParser(object):
             return None
 
         return parsed_log.group(group_nums[group_name])
+
+    @staticmethod
+    def _parse_datetime(date_string, os_type):
+        """ Parses a datetime string into a datetime Python object.
+
+        Args:
+            date_string: the date string to parse
+            os_type: the type of OS from which the logs came
+
+        Returns:
+            datetime: the parsed datetime object
+        """
+        # On Android, we have to add the year to the string so that it parses
+        # correctly.
+        if os_type == 'Android':
+            current_year = datetime.now().year
+            date_string = '%s-%s' % (str(current_year), date_string)
+
+        # Try to parse the datetime using all of the formats provided.
+        datetime_formats = LogParser.parser_info[os_type]['datetimeFormat']
+        for datetime_format in datetime_formats:
+            try:
+                date_time = datetime.strptime(date_string, datetime_format)\
+                    .replace(tzinfo=None)
+                return date_time
+            except:
+                # If we got here, it means that that format didn't work, just
+                # allow it to fall through.
+                continue
+
+        return None
