@@ -30,7 +30,7 @@ class WirelessDebug {
   websocketOnOpen() {
     // Extract the api key from the cookies on the web page.
     let cookieStrings = document.cookie.replace(/['"]+/g, '').split("; ");
-    let apiKey = "";
+    let apiKey = '';
     for(let i = 0; i < cookieStrings.length; i++) {
       let [cookieKey, cookieVal] = cookieStrings[i].split("=");
       if (cookieKey == 'api_key') {
@@ -41,7 +41,7 @@ class WirelessDebug {
 
     let payload = {
       messageType: 'associateUser',
-      apiKey: apiKey || "",
+      apiKey: apiKey || '',
     };
 
     this.ws_.send(JSON.stringify(payload));
