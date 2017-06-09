@@ -30,9 +30,8 @@ class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
         Returns:
             An XHTML fragment containing the login form.
         """
-        login_fields_file = open(self.login_fields_path, 'r')
-        login_fields = login_fields_file.read()
-        login_fields_file.close()
+        with open(self.login_fields_path, 'r') as login_fields_file:
+            login_fields = login_fields_file.read()
 
         return login_fields
 

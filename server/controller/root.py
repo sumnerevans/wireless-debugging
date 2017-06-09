@@ -63,10 +63,10 @@ def login():
         None
     Returns:
         An HTML webpage containing a UI for the user to log into the website.
-        This function *will* return a webpage specified by the kajiki view
-        decorator. This function also returns a subcomponent of a webpage that
-        defines the format of the login page, which is specified in the user
-        management interface. 
+        This function returns a webpage specified by the kajiki view decorator. 
+        This function also returns a subcomponent of a webpage that defines the
+        format of the login page, which is specified in the user management 
+        interface. 
     """
     
     return {
@@ -74,6 +74,7 @@ def login():
             controller.user_management_interface.get_login_ui()),
         'logged_in': controller.user_management_interface.is_user_logged_in(
             request),
+        'login_failed': bool(request.query.login_failed),
     }
 
 @post('/login')
@@ -89,6 +90,7 @@ def handle_login():
         # TODO: Make better error handling
         print("Something went wrong!:", error_message)
         abort(403, "Login failed, error: %s" % error_message)
+        #redirect('/login_page?login_failed=true')
     else:
         redirect('/')
 
