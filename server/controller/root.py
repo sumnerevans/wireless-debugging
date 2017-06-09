@@ -30,6 +30,7 @@ def index():
         api_key: The Web UI user's API key. 
 
     """
+
     if not controller.user_management_interface.is_user_logged_in(request):
         redirect('/login_page')
 
@@ -39,6 +40,8 @@ def index():
     return {
         'page': 'index', 
         'api_key': api_key,
+        # If you've made it here, you have to be successfully logged in
+        'logged_in': True,
     }
 
 
@@ -73,8 +76,10 @@ def login():
     url = "http://%s:%s" % (hostname, str(port))
     
     return {
-        "login_fields": Markup(
-            controller.user_management_interface.get_login_ui(url))
+        'login_fields': Markup(
+            controller.user_management_interface.get_login_ui(url)),
+        'logged_in': controller.user_management_interface.is_user_logged_in(
+            request),
     }
 
 @post('/login')

@@ -32,6 +32,12 @@
           <ul class="nav navbar-nav">
             <li class="${('', 'active')[self.defined('page') and page=='index']}"><a href="/">Home</a></li>
           </ul>
+          <ul class="nav navbar-nav navbar-right" py:if="logged_in">
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout</a>
+            </li>
+          </ul>
+
         </div>
       </div>
     </nav>
