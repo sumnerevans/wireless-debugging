@@ -19,6 +19,10 @@ class SystemMonitor {
     private static final String REGEX_WHITESPACE = "\\s+";
     private static final int TOTAL_SYSTEM_TIME = 0;
     private static final int TOTAL_TIME = 1;
+    private static final int NETWORK_BYTES_SENT_COLUMN = 9;
+    private static final int NETWORK_BYTES_RECEIVED_COLUMN = 1;
+    private static final int MEMORY_TOTAL_LINE = 0;
+    private static final int MEMORY_USED_LINE = 5;
 
     private int[] mPreviousCpuStats = new int[2];
     private long mLastBytesSentTime;
@@ -55,7 +59,6 @@ class SystemMonitor {
             while ((line = reader.readLine()) != null) {
                 fileLines.add(line);
             }
-
         } catch (IOException e) {
             Log.e(TAG, e.toString());
         }
@@ -64,7 +67,7 @@ class SystemMonitor {
 
     /**
      * Returns the CPU Usage as a decimal.
-     * @return CPU usage (multiply by 100 to get %).
+     * @return CPU usage as decimal (must multiply by 100 to get it as a percentage).
      */
     public double getCpuUsage() {
         ArrayList<String> cpuStatLines = getFileLines(PROC_STAT);
@@ -89,7 +92,7 @@ class SystemMonitor {
      * @return Memory used in kilobytes.
      */
     public int getMemoryUsage() {
-        return getMemoryUsageStatFromLine(5);
+        return getMemoryUsageStatFromLine(MEMORY_USED_LINE);
     }
 
     /**
@@ -97,7 +100,7 @@ class SystemMonitor {
      * @return Total system memory in kilobytes.
      */
     public int getTotalMemory() {
-        return getMemoryUsageStatFromLine(0);
+        return getMemoryUsageStatFromLine(MEMORY_TOTAL_LINE);
     }
 
     /**
@@ -139,7 +142,7 @@ class SystemMonitor {
      * @return Bytes sent.
      */
     private int getSentBytes() {
-        return sumNetworkUsageColumn(9);
+        return sumNetworkUsageColumn(NETWORK_BYTES_SENT_COLUMN);
     }
 
     /**
@@ -147,7 +150,7 @@ class SystemMonitor {
      * @return Bytes received.
      */
     private int getReceivedBytes() {
-        return sumNetworkUsageColumn(1);
+        return sumNetworkUsageColumn(NETWORK_BYTES_RECEIVED_COLUMN);
     }
 
     /**

@@ -81,6 +81,7 @@ class WebSocketMessenger extends WebSocketClient {
         } catch (JSONException e) {
             Log.e(TAG, e.toString());
         }
+        // TODO Reece: Handle WebsocketNotConnectedException
         send(payload.toString());
     }
 
@@ -139,7 +140,7 @@ class WebSocketMessenger extends WebSocketClient {
             Log.e(TAG, e.toString());
         }
 
-        // TODO: Handle WebsocketNotConnectedException
+        // TODO Reece: Handle WebsocketNotConnectedException
         send(payload.toString());
     }
 
@@ -168,7 +169,7 @@ class WebSocketMessenger extends WebSocketClient {
             Log.e(TAG, e.toString());
         }
 
-        // TODO: Handle WebsocketNotConnectedException
+        // TODO Reece: Handle WebsocketNotConnectedException
         send(payload.toString());
     }
 
