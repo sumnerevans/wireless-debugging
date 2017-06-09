@@ -34,8 +34,9 @@ def _test_case_parser(test_case):
             test_case['inputLines'] = '\n'.join(test_case['inputLines'])
 
     # Parse log entry text into one string
-    if 'logEntries' in test_case:
-        for log_entry in test_case['logEntries']:
+    if 'expectedResult' in test_case and \
+        isinstance(test_case['expectedResult'], list):
+        for log_entry in test_case['expectedResult']:
             if 'text' in log_entry and isinstance(log_entry['text'], list):
                 log_entry['text'] = '\n'.join(log_entry['text'])
 
@@ -49,17 +50,12 @@ def test_parse():
         test_cases = json.load(test_case_file, object_hook=_test_case_parser)
 
         for test_case in test_cases:
-            test_input = {
-                'rawLogData': test_case['inputLines'],
-            }
+            test_input = test_case['inputLines']
             expected_result = test_case['expectedResult']
-            assert parsing_lib.LogParser.parse(test_input) == expected_result
+            assert parsing_lib.LogParser.parse(test_input, 'Android') == \
+                expected_result
 
-        assert parsing_lib.LogParser.parse({}) == {
-            'messageType': 'logData',
-            'osType': 'Android',
-            'logEntries': [],
-        }
+        assert parsing_lib.LogParser.parse({}, 'Android') == []
 
 
 def test_parse_raw_log():
@@ -71,7 +67,8 @@ def test_parse_raw_log():
         for test_case in test_cases:
             test = test_case['input']
             expected_result = test_case['expectedResult']
-            assert parsing_lib.LogParser.parse_raw_log(test) == expected_result
+            assert parsing_lib.LogParser.parse_raw_log(test, 'Android') == expected_result
+
 
 
 def test_convert_line_to_html():
@@ -97,8 +94,7 @@ def test_convert_line_to_html():
     ]
 
     expected_results = [
-
-        '<tr class="">' +
+        '<tr class="info">' +
         '<td>' + str(datetime(current_year, 5, 22, 11, 44, 31, 180000)) + '</td>' +
         '<td>WiDB Example</td>' +
         '<td>Info</td>' +
@@ -114,8 +110,11 @@ def test_convert_line_to_html():
     ]
 
     for test, expected_result in zip(tests, expected_results):
-        assert parsing_lib.LogParser.convert_line_to_html(
-            test) == expected_result
+        html = parsing_lib.LogParser.convert_line_to_html(test)
+        html = html.replace(' ', '').replace('\n', '')
+        expected_result = expected_result.replace(' ', '').replace('\n', '')
+        assert html == expected_result
+
 
 
 def test_convert_to_html():
@@ -138,8 +137,8 @@ def test_convert_to_html():
         },
     ]
 
-    expected_result = (
-        '<tr class="">' +
+    expected_results = [
+        '<tr class="info">' +
         '<td>' + str(datetime(current_year, 5, 22, 11, 44, 31, 180000)) + '</td>' +
         '<td>WiDB Example</td>' +
         '<td>Info</td>' +
@@ -151,5 +150,9 @@ def test_convert_to_html():
         '<td>Warning</td>' +
         '<td>getTextBeforeCursor on inactive InputConnection</td>' +
         '</tr>'
-    )
-    assert parsing_lib.LogParser.convert_to_html(test) == expected_result
+    ]
+    for test, expected_result in zip(tests, expected_results):
+        html = parsing_lib.LogParser.convert_to_html(test)
+        html = html.replace(' ', '').replace('\n', '')
+        expected_result = expected_result.replace(' ', '').replace('\n', '')
+        assert html == expected_result

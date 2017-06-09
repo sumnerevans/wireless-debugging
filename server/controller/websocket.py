@@ -98,18 +98,11 @@ def log_dump(message, websocket, metadata):
     log data, parses it and sends the parsed data to all connected web clients.
 
     Args:
-        message: The decoded JSON message from the Mobile API.
-        websocket: The WebSocket connection object where the log is being
-            received.
+        message: the decoded JSON message from the Mobile API
+        websocket: the full websocket connection
+        metadata: the metadata object for the WebSocket connection
     """
-    print('logs sent')
-    print(message)
-
-    # TODO: (Sumner) fix when implementing the iOS parsing component.
-    if metadata['osType'] == 'iOS':
-        return
-
-    parsed_logs = LogParser.parse(message)
+    log_entries = LogParser.parse(message['rawLogData'], metadata['osType'])
 
     api_key = metadata.get('apiKey', '')
 
@@ -117,17 +110,21 @@ def log_dump(message, websocket, metadata):
         controller.user_management_interface.find_associated_websockets(api_key,
             _web_ui_ws_connections))
 
-    # Send to database and convert to html.
-    html_logs = LogParser.convert_to_html(parsed_logs['logEntries'])
+    # Send to database and convert to HTML.
     controller.datastore_interface.store_logs(
         metadata['apiKey'], metadata['deviceName'], metadata['appName'],
-        metadata['startTime'], metadata['osType'], parsed_logs)
+        metadata['start_time'], metadata['osType'], log_entries)
 
+    # Create a message to send to the web clients.
     send_logs = {
         'messageType': 'logData',
-        'osType': 'Android',
-        'logEntries': html_logs,
+        'osType': metadata['osType'],
+        'logEntries': LogParser.convert_to_html(log_entries),
     }
+
+    # Determine wich WebSocket connections to send the logs to
+    associated_websockets = controller.user_management_interface \
+        .find_associated_websockets(api_key, browser_websocket_connections)
 
     for connection in associated_websockets:
         connection.send(util.serialize_to_json(send_logs))
