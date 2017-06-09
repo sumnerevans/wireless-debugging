@@ -29,6 +29,7 @@ class WirelessDebug {
 
   /** Handles WebSocket opening */
   websocketOnOpen() {
+    //TODO: remove, for testing purposes only
     let payload = {
       messageType: 'associateUser',
       apiKey: 'tikalin',
@@ -36,6 +37,7 @@ class WirelessDebug {
 
     this.ws_.send(JSON.stringify(payload));
 
+    //TODO: remove, for testing purposes only
     payload = {
       messageType: 'logDump',
       rawLogData: "--------- beginning of /dev/log/system \n05-22 11:44:31.180 7080 7080 I WiDB Example: aX: 3.0262709 aY: 2.0685902 \n05-22 11:44:32.191 7080 7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection",
