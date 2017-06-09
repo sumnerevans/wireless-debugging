@@ -9,7 +9,7 @@ class DummySocket:
 
         Acts as a placeholder for websockets for functions that require
         websockets. Contains the necessary methods, but provides no actual
-        websocket functionality. 
+        websocket functionality.
     """
 
     def __init__(self):
@@ -47,7 +47,7 @@ def test_start_session():
     assert message == _metadata
 
 def test_associate_user():
-    """ Verifies that when a user connects the server on a web UI their 
+    """ Verifies that when a user connects the server on a web UI their
         connection is tied to some metadata stored in a private array,
         specifically their API key
     """
@@ -62,3 +62,4 @@ def test_associate_user():
 
     assert socket in websocket._web_interface_ws_connections
     assert websocket._web_interface_ws_connections[socket] == message['apiKey']
+    

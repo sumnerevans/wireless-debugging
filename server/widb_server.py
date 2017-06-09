@@ -17,8 +17,9 @@ import controller
 import parsing_lib
 
 def main():
-    hostname = from_config_yaml("hostname")
-    port = from_config_yaml("port")
+    hostname = from_config_yaml('hostname')
+    port = from_config_yaml('port') or 80
+
     server = WSGIServer((hostname, port), bottle.default_app(),
                         handler_class=WebSocketHandler)
     server.serve_forever()

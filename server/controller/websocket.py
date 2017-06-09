@@ -14,8 +14,9 @@ from parsing_lib import LogParser, MetricsHTML
 from helpers import util
 
 # Store a dictionary of string -> function
-_ws_routes = {}  # pylint: disable=invalid-name
-_web_interface_ws_connections = {}  # pylint: disable=invalid-name
+_ws_routes = {}
+# TODO: Reverse map to go API key -> websocket, rather than websocket -> API key
+_web_interface_ws_connections = {}
 
 
 @route('/ws')
@@ -31,7 +32,7 @@ def handle_websocket():
     if not websocket:
         abort(400, 'Expected WebSocket request.')
 
-    websocket_metadata = {}
+    _websocket_metadata = {}
 
     print('connection received')
 
@@ -47,12 +48,8 @@ def handle_websocket():
                 # TODO: blow up
                 pass
 
-            new_metadata = _ws_routes[message_type](decoded_message, websocket,
-                                                    websocket_metadata)
-
-            if new_metadata is not None:
-                websocket_metadata = {**websocket_metadata, **new_metadata}
-
+            _ws_routes[message_type](decoded_message, websocket,
+                                     _websocket_metadata)
         except WebSocketError:
             break
 
@@ -71,17 +68,13 @@ def ws_router(message_type):
 
 @ws_router('startSession')
 def start_session(message, websocket, metadata):
-    """ Marks the start of a logging session,
-        and attaches metadata to the websocket receiving the raw logs
+    """ Marks the start of a logging session, and attaches metadata to the
+        websocket receiving the raw logs.
     """
 
-    metadata = {**metadata, **message}
-
-    for key in ('apiKey', 'osType', 'deviceName', 'appName'):
-        if key not in metadata:
-            raise KeyError('startSession message requires %s parameter.' % key)
-
-    return metadata
+    # There's probably a better way to do this and it should be refactored
+    for attribute, value in message.items():
+        metadata[attribute] = value
 
 
 @ws_router('logDump')
@@ -95,10 +88,20 @@ def log_dump(message, websocket, metadata):
         message: the decoded JSON message from the Mobile API
         websocket: the full websocket connection
     """
-    """ TEMPORARY
+
     parsed_logs = LogParser.parse(message)
 
-    api_key = metadata["apiKey"]
+    api_key = metadata.get('apiKey', '')
+
+    # At first glance this looks like a copy, but this is actually grabbing the
+    # keys from a dict.
+    web_ws_connections = [ws for ws in _web_interface_ws_connections]
+    associated_websockets = (
+        controller.user_management_interface.find_associated_websockets(api_key,
+            web_ws_connections))
+
+    for connection in associated_websockets:
+        connection.send(util.serialize_to_json(parsed_logs))
 
     # At first glance this looks like a copy,
     # but this is actually grabbing the keys from a dict
@@ -107,12 +110,10 @@ def log_dump(message, websocket, metadata):
         controller.user_management_interface.find_associated_websockets(
             api_key, web_ws_connections))
 
-    for connection in associated_websockets:
-        connection.send(util.serialize_json(parsed_logs))
-    """
-
 @ws_router('endSession')
 def end_session(message, websocket, metadata):
+    # TODO: Accept an end session message and notify the database to stop adding
+    #       entries to the current log.
     print("currently defunct")
 
 
@@ -143,3 +144,4 @@ def associate_user(message, websocket, metadata):
 
     for connection in associated_websockets:
         connection.send(json.dumps(MetricsHTML.to_html(message)))
+        
