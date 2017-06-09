@@ -10,7 +10,7 @@ import controller
 from bottle import route, request, abort
 from geventwebsocket import WebSocketError
 
-from parsing_lib import LogParser, MetricsHTML
+from parsing_lib import LogParser
 from helpers import util
 
 # Store a dictionary of string -> function
@@ -143,5 +143,4 @@ def associate_user(message, websocket, metadata):
             metadata["apiKey"], web_ws_connections))
 
     for connection in associated_websockets:
-        connection.send(json.dumps(MetricsHTML.to_html(message)))
-        
+        connection.send(json.dumps(message))
