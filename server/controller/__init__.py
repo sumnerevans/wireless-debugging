@@ -15,4 +15,3 @@ from user_management_interfaces import no_auth
 # above.
 # Also replace no_auth.NoAuth() with your desired user management interface.
 user_management_interface = no_auth.NoAuth()
->>>>>>> master
