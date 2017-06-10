@@ -52,10 +52,10 @@ def test_parse():
         for test_case in test_cases:
             test_input = test_case['inputLines']
             expected_result = test_case['expectedResult']
-            assert parsing_lib.LogParser.parse(test_input, 'Android') == \
+            assert list(parsing_lib.LogParser.parse(test_input, 'Android')) == \
                 expected_result
 
-        assert parsing_lib.LogParser.parse({}, 'Android') == []
+        assert list(parsing_lib.LogParser.parse({}, 'Android')) == []
 
     with open('test_parse_ios.json') as test_case_file:
         test_cases = json.load(test_case_file, object_hook=_test_case_parser)
@@ -63,11 +63,10 @@ def test_parse():
         for test_case in test_cases:
             test_input = test_case['inputLines']
             expected_result = test_case['expectedResult']
-            assert parsing_lib.LogParser.parse(test_input, 'iOS') == \
+            assert list(parsing_lib.LogParser.parse(test_input, 'iOS')) == \
                 expected_result
 
-        assert parsing_lib.LogParser.parse({}, 'iOS') == []
-
+        assert list(parsing_lib.LogParser.parse({}, 'iOS')) == []
 
 
 def test_parse_raw_log():

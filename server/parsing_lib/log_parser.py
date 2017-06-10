@@ -78,53 +78,56 @@ class LogParser(object):
         exception_regex = LogParser.parser_info[os_type]\
             .get('exceptionRegex', None)
 
-        raw_data = raw_log_lines.splitlines()
-        log_entries = []
-
-        old_log = None
         current_log = None
         in_unhandled_exception = False
+        multiline = False
 
-        # Parse each of the log lines.
-        for line in raw_data:
+        for line in raw_log_lines.splitlines():
             # Skip lines that are not log lines. There may be cases when these
             # appear in a log line that is not at the beginning of the raw
             # data.
             if filter_regex and filter_regex.match(line):
                 continue
 
-            # If an iOS unhandled exception is starting it the middle of the
-            # logs, handle it here.
+            # Check to see if an iOS unhandled exception is starting.
             if exception_regex:
                 exception_groups = exception_regex.match(line)
                 if exception_groups:
                     in_unhandled_exception = True
+                    multiline = True
                     exception_time_string = exception_groups.group(1)
-                    log_entries.append({
+                    current_log = {
                         'time': LogParser._parse_datetime(exception_time_string,
                             os_type),
                         'logType': 'Error',
                         'tag': '',
                         'text': line,
-                    })
+                    }
                     continue
 
+            # If we are in an unhandled exception, just add the line to the
+            # current log.
             if in_unhandled_exception:
-                log_entries[-1]['text'] += ('\n%s' % line)
-                continue
-
-            # Check if current log is like the previous log parsed
-            current_log = LogParser.parse_raw_log(line, os_type)
-            if not old_log or current_log['time'] != old_log['time']:
-                log_entries.append(LogParser.parse_entries(current_log))
+                current_log['text'] += '\n%s' % line
+                multiline = True
             else:
-                # If part of the same event, add the log's text to the previous
-                # parsed log
-                log_entries[-1]['text'] += ('\n%s' % current_log['text'])
-            old_log = current_log
+                # Check if current log is like the previous log parsed.
+                new_log = LogParser.parse_raw_log(line, os_type)
+                if not current_log or current_log['time'] != new_log['time']:
+                    current_log = LogParser.parse_entries(new_log)
+                    multiline = False
+                else:
+                    # If part of the same event, add the log's text to the
+                    # previous parsed log.
+                    current_log['text'] += '\n%s' % new_log['text']
+                    multiline = True
 
-        return log_entries
+            if not multiline:
+                yield current_log
 
+        # Send any leftover unhandled exception logs.
+        if in_unhandled_exception:
+            yield current_log
 
     @staticmethod
     def parse_entries(log_entry):
