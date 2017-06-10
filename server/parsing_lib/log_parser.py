@@ -15,10 +15,10 @@ class LogParser(object):
     """
     parser_info = {
         'Android': {
-            'logLineRegex': 
-                '(.*)\\s+(\\d*)\\s+(\\d*) ([IWVEDAF]) (.*?): ((?:.*\\n*)*)',
+            'logLineRegex': re.compile(
+                '(.*)\\s+(\\d*)\\s+(\\d*) ([IWVEDAF]) (.*?): ((?:.*\\n*)*)'),
             'datetimeFormat': ['%Y-%m-%d %H:%M:%S.%f'],
-            'filterLineRegex': '-* beginning of',
+            'filterLineRegex': re.compile('-* beginning of'),
             'groupNums': {
                 'time': 1,
                 'processId': 2,
@@ -38,13 +38,13 @@ class LogParser(object):
             },
         },
         'iOS': {
-            'logLineRegex': '(.*) (.*)\\[(\\d+):(\\d+)\\] (.*)',
+            'logLineRegex': re.compile('(.*) (.*)\\[(\\d+):(\\d+)\\] (.*)'),
             'datetimeFormat': [
                 '%Y-%m-%d %H:%M:%S.%f',
                 '%Y-%m-%d %H:%M:%S.%f%z',
                 '%Y-%m-%d %H:%M:%S %z'
             ],
-            'exceptionRegex': '(.*?)-{2,} BEGIN UNHANDLED EXCEPTION',
+            'exceptionRegex': re.compile('(.*?)-{2,} BEGIN UNHANDLED EXCEPTION'),
             'groupNums': {
                 'time': 1,
                 'tag': 2,
@@ -82,7 +82,7 @@ class LogParser(object):
         log_entries = []
 
         # Filter out any lines that are not log lines.
-        while filter_regex and re.search(filter_regex, raw_data[0]) is not None:
+        while filter_regex and filter_regex.match(raw_data[0]):
             raw_data = raw_data[1:]
 
         old_log = None
@@ -94,13 +94,13 @@ class LogParser(object):
             # Skip lines that are not log lines. There may be cases when these
             # appear in a log line that is not at the beginning of the raw
             # data.
-            if filter_regex and re.search(filter_regex, line) is not None:
+            if filter_regex and filter_regex.match(line) is not None:
                 continue
 
             # If an iOS unhandled exception is starting it the middle of the
             # logs, handle it here.
             if exception_regex:
-                exception_groups = re.search(exception_regex, line)
+                exception_groups = exception_regex.match(line)
                 if exception_groups is not None:
                     in_unhandled_exception = True
                     exception_time_string = exception_groups.group(1)
@@ -162,7 +162,7 @@ class LogParser(object):
             dict: the log entry from the log line
         """
         log_line_regex = LogParser.parser_info[os_type]['logLineRegex']
-        parsed_log = re.search(log_line_regex, log_data)
+        parsed_log = log_line_regex.match(log_data)
         group_from_log = LogParser._group_from_log
 
         # Parse the Time
