@@ -188,7 +188,7 @@ class LogParser(object):
         """ Takes a parsed_line and converts it to HTML.
 
         Args:
-            log_entry: the log entry
+            log_entry: the log entry dictionary
 
         Returns:
             string: formatted HTML
