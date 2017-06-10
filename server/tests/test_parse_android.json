@@ -75,7 +75,9 @@
     "05-24 12:12:49.247 23930 23930 E AndroidRuntime: \tat java.lang.reflect.Method.invoke(Method.java:515)",
     "05-24 12:12:49.247 23930 23930 E AndroidRuntime: \tat com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:796)",
     "05-24 12:12:49.247 23930 23930 E AndroidRuntime: \tat com.android.internal.os.ZygoteInit.main(ZygoteInit.java:612)",
-    "05-24 12:12:49.247 23930 23930 E AndroidRuntime: \tat dalvik.system.NativeStart.main(Native Method)"
+    "05-24 12:12:49.247 23930 23930 E AndroidRuntime: \tat dalvik.system.NativeStart.main(Native Method)",
+    "--------- beginning of /dev/log/system",
+    "05-22 11:44:31.180 7080 7080 I WiDB Example: aX: 3.0262709 aY: 2.0685902"
   ],
   "expectedResult": [{
       "time": "05-22 11:44:31.180000",
@@ -108,6 +110,11 @@
         "\tat com.android.internal.os.ZygoteInit.main(ZygoteInit.java:612)",
         "\tat dalvik.system.NativeStart.main(Native Method)"
       ]
+  }, {
+    "time": "05-22 11:44:31.180000",
+    "logType": "Info",
+    "tag": "WiDB Example",
+    "text": "aX: 3.0262709 aY: 2.0685902"
   }]
 }, {
   "inputLines": [
@@ -116,14 +123,14 @@
     "05-24 12:12:49.247 23930 23930 E AndroidRuntime: FATAL EXCEPTION: main"
   ],
   "expectedResult": [{
-      "time": "05-22 11:44:32.191000",
-      "logType": "Warning",
-      "tag": "IInputConnectionWrapper",
-      "text": "getTextBeforeCursor on inactive InputConnection"
-    }, {
-      "time": "5-24 12:12:49.247000",
-      "logType": "Error",
-      "tag": "AndroidRuntime",
-      "text": "FATAL EXCEPTION: main"
-    }]
+    "time": "05-22 11:44:32.191000",
+    "logType": "Warning",
+    "tag": "IInputConnectionWrapper",
+    "text": "getTextBeforeCursor on inactive InputConnection"
+  }, {
+    "time": "5-24 12:12:49.247000",
+    "logType": "Error",
+    "tag": "AndroidRuntime",
+    "text": "FATAL EXCEPTION: main"
+  }]
 }]
