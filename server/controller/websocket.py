@@ -102,7 +102,9 @@ def log_dump(message, websocket, metadata):
         websocket: the full websocket connection
         metadata: the metadata object for the WebSocket connection
     """
-    log_entries = LogParser.parse(message['rawLogData'], metadata['osType'])
+    log_entries = list(
+        LogParser.parse(message['rawLogData'], metadata['osType'])
+    )
 
     api_key = metadata.get('apiKey', '')
 
