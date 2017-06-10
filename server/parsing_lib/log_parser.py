@@ -81,10 +81,6 @@ class LogParser(object):
         raw_data = raw_log_lines.splitlines()
         log_entries = []
 
-        # Filter out any lines that are not log lines.
-        while filter_regex and filter_regex.match(raw_data[0]):
-            raw_data = raw_data[1:]
-
         old_log = None
         current_log = None
         in_unhandled_exception = False
@@ -94,19 +90,19 @@ class LogParser(object):
             # Skip lines that are not log lines. There may be cases when these
             # appear in a log line that is not at the beginning of the raw
             # data.
-            if filter_regex and filter_regex.match(line) is not None:
+            if filter_regex and filter_regex.match(line):
                 continue
 
             # If an iOS unhandled exception is starting it the middle of the
             # logs, handle it here.
             if exception_regex:
                 exception_groups = exception_regex.match(line)
-                if exception_groups is not None:
+                if exception_groups:
                     in_unhandled_exception = True
                     exception_time_string = exception_groups.group(1)
                     log_entries.append({
                         'time': LogParser._parse_datetime(exception_time_string,
-                            'iOS'),
+                            os_type),
                         'logType': 'Error',
                         'tag': '',
                         'text': line,
