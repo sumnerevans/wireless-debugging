@@ -63,8 +63,8 @@ def handle_websocket():
                 websockets_for_api_key.remove(websocket)
                 break
 
-    for api_key in list(_web_ui_ws_connections):
-        if not _web_ui_ws_connections[api_key]:
+    for api_key, websockets in list(_web_ui_ws_connections.items()): 
+        if not websockets:
             del _web_ui_ws_connections[api_key]
 
 
@@ -84,7 +84,6 @@ def start_session(message, websocket, metadata):
         WebSocket receiving the raw logs.
     """
 
-    # There's probably a better way to do this and it should be refactored.
     for attribute, value in message.items():
         metadata[attribute] = value
 
@@ -140,4 +139,4 @@ def associate_user(message, websocket, metadata):
     if api_key not in _web_ui_ws_connections:
         _web_ui_ws_connections[api_key] = []
 
-    _web_ui_ws_connections.get(api_key, '').append(websocket)
+    _web_ui_ws_connections.get(api_key, []).append(websocket)

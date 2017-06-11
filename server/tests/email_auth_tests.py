@@ -18,21 +18,9 @@ def test_get_login():
     umi = email_auth.EmailAuth()
     base_url = 'http://0.0.0.0:80'
 
-    # Ugly format because we can't have any changes in whitespace so that the 
-    # test works properly.
-    expected_html = '''<form action="/login" method="post" accept-charset="UTF-8" class="form-horizontal">
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Email:</label>
-        <div class="col-sm-10">
-            <input class="form-control" type="text" name="username" placeholder="Enter your email here..."/>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-sm-10 col-sm-offset-2">
-            <button type="submit" class="btn btn-default">Submit</button>
-        </div>
-    </div>
-</form>'''
+
+    with open('user_management_interfaces/email_login.xhtml', 'r') as fin:
+        expected_html = fin.read()
 
     assert umi.get_login_ui(base_url) == expected_html
 

@@ -9,6 +9,7 @@ import os.path
 
 from user_management_interfaces import user_management_interface_base
 
+
 class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
     """ A User Management Interface that uses emails to direct logs to
         the appropriate Web UI.
@@ -116,7 +117,7 @@ class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
         api_key_cookie = request.get_cookie('api_key')
         return (api_key_cookie if self._exists_in_table(api_key_cookie, 'api_key') 
                 else [table_row[1] for table_row in user_key_table if
-                table_row[0] == request.forms.get('username')][0])
+                      table_row[0] == request.forms.get('username')][0])
 
     def find_associated_websockets(self, api_key, websocket_connections):
         """ Returns a list of websockets that correspond to the given api key.
