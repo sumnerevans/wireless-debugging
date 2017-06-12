@@ -20,7 +20,7 @@ def test_get_login():
     with open('user_management_interfaces/email_login.xhtml', 'r') as fin:
         expected_html = fin.read()
 
-    assert umi.get_login_ui() == expected_html
+    assert umi.get_login_ui() == expected_html % '/login'
 
 
 def test_exists_in_table():
