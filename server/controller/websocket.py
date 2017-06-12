@@ -117,6 +117,7 @@ def log_dump(message, websocket, metadata):
         metadata["apiKey"], metadata["deviceName"], metadata["appName"],
         metadata["start_time"], metadata["osType"], parsed_logs)
 
+
     send_logs = {
         'messageType': 'logData',
         'osType': 'Android',

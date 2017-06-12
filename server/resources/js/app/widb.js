@@ -69,9 +69,14 @@ class WirelessDebug {
       dataType: "json",
       cache: false,
       success: function(data) {
-        $('#device').append('<option value="None"></option>');
-        for (let i of data.devices) {
-          $('#device').append(`<option value="${i}">${i}</option>`);
+        if (data.success) {
+          $('#device').append('<option value="None"></option>');
+          for (let i of data.devices) {
+            $('#device').append(`<option value="${i}">${i}</option>`);
+          }
+        }
+        else {
+          $('#main-page').html('<p>No Datastore</p>');
         }
       }
     });

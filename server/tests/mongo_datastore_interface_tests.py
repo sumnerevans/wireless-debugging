@@ -1,8 +1,5 @@
 """
-Tests the base datastore interface class.
-This is an abstract class so it just verifies everything is unimplemented
-
-These tests are pretty trivial.
+Tests the mongo datastore interface class.
 """
 
 import pytest
@@ -147,7 +144,7 @@ def test_add_device_app():
     assert log_app['app_alias'] == app_name
     di.clear_datastore()
 
-def test_alias_device():
+def test_update_alias_device():
     """This function checks if class aliases device as expected including ensuring uniqueness."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
     di.add_device_app(api_key, device_name, app_name)
@@ -160,7 +157,7 @@ def test_alias_device():
     assert not di.update_alias_device("23", "dev", "Alias")
     di.clear_datastore()
 
-def test_alias_app():
+def test_update_alias_app():
     """This function checks if class aliases apps expected including ensuring uniqueness."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
     di.add_device_app(api_key, device_name, app_name)
