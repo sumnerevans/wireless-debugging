@@ -128,7 +128,7 @@ class SystemMonitor {
     public double getReceivedBytesPerSecond() {
         int currentBytesReceived = getReceivedBytes();
         long currentTime = System.currentTimeMillis();
-        long elapsedMilliseconds = System.currentTimeMillis() - mLastBytesReceivedTime;
+        long elapsedMilliseconds = currentTime - mLastBytesReceivedTime;
         mLastBytesReceivedTime = currentTime;
         double bytesPerMillisecond  = (currentBytesReceived - mPreviousBytesReceived) /
                 (double) elapsedMilliseconds;
