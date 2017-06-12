@@ -2,6 +2,7 @@
 """
 WiDb Server Main Function
 """
+import os
 
 from gevent.pywsgi import WSGIServer
 from geventwebsocket import WebSocketError
@@ -14,6 +15,7 @@ import controller
 import parsing_lib
 
 def main():
+    os.chdir(os.path.dirname(__file__))
     hostname = from_config_yaml('hostname')
     port = from_config_yaml('port') or 80
 
