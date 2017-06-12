@@ -11,8 +11,7 @@ class LogStreamer {
     private static var logStreamer: LogStreamer?
 
     private var webSocketMessenger: WebSocketMessenger?
-    private var lastSendTime: UInt64 = 0
-    private var timeInterval: Int
+    private var timeInterval: UInt32
 
     /// Initialise the Wireless Debugger library.
     ///
@@ -23,7 +22,7 @@ class LogStreamer {
     private init(_ hostname: String, apiKey: String, timeInterval: Int) {
         self.webSocketMessenger = WebSocketMessenger("ws://\(hostname)/ws",
                                                      apiKey: apiKey)
-        self.timeInterval = timeInterval
+        self.timeInterval = UInt32(timeInterval)
 
         // Create a Pipe and capture stderr.
         let stderrPipe = Pipe()
@@ -46,13 +45,15 @@ class LogStreamer {
         // Every 10ms, send the logs if enough time has elapsed.
         DispatchQueue.global().async {
             while true {
-                self.sendLogsIfReady()
-                usleep(10000) // sleep for 10 ms, usleep accepts microseconds
+                self.webSocketMessenger?.sendLogDump()
+                usleep(self.timeInterval * 1000)
             }
         }
     }
 
     /// Start the wireless debugger.
+    ///
+    /// **Example:** `LogStreamer.start("localhost", "API-KEY")`
     ///
     /// - Parameters:
     ///   - hostname: root hostname to connect to
@@ -67,14 +68,5 @@ class LogStreamer {
  
     static func handleUncaughtException(_ exception: NSException) {
         logStreamer?.webSocketMessenger?.sendUnhandledException(exception: exception)
-    }
-
-    /// Sends logs if enough time has elapsed.
-    private func sendLogsIfReady() {
-        let currentTime = UInt64(Date().timeIntervalSince1970 * 1000)
-        if Int(currentTime - self.lastSendTime) > self.timeInterval {
-            webSocketMessenger?.sendLogDump()
-            self.lastSendTime = currentTime
-        }
     }
 }

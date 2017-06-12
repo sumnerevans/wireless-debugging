@@ -14,7 +14,7 @@
 		445BBC361EE89AC700085B83 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 445BBC341EE89AC700085B83 /* LaunchScreen.storyboard */; };
 		445BBC411EE89AC700085B83 /* WirelessDebugTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445BBC401EE89AC700085B83 /* WirelessDebugTests.swift */; };
 		445BBC511EE89B4800085B83 /* WebSocketMessenger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445BBC4F1EE89B4800085B83 /* WebSocketMessenger.swift */; };
-		445BBC521EE89B4800085B83 /* WirelessDebugger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445BBC501EE89B4800085B83 /* WirelessDebugger.swift */; };
+		445BBC521EE89B4800085B83 /* LogStreamer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445BBC501EE89B4800085B83 /* LogStreamer.swift */; };
 		445BBC5C1EE8A11800085B83 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445BBC5B1EE8A11800085B83 /* WebSocket.swift */; };
 		449FFF121EE8A4D000074409 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 449FFF111EE8A4D000074409 /* libz.tbd */; };
 		449FFF161EE8AC7600074409 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449FFF151EE8AC7600074409 /* SwiftyJSON.swift */; };
@@ -43,7 +43,7 @@
 		445BBC401EE89AC700085B83 /* WirelessDebugTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WirelessDebugTests.swift; sourceTree = "<group>"; };
 		445BBC421EE89AC700085B83 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		445BBC4F1EE89B4800085B83 /* WebSocketMessenger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebSocketMessenger.swift; path = WirelessDebugger/WebSocketMessenger.swift; sourceTree = "<group>"; };
-		445BBC501EE89B4800085B83 /* WirelessDebugger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WirelessDebugger.swift; path = WirelessDebugger/WirelessDebugger.swift; sourceTree = "<group>"; };
+		445BBC501EE89B4800085B83 /* LogStreamer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogStreamer.swift; path = WirelessDebugger/LogStreamer.swift; sourceTree = "<group>"; };
 		445BBC5B1EE8A11800085B83 /* WebSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebSocket.swift; path = WirelessDebugger/WebSocket.swift; sourceTree = "<group>"; };
 		449FFF111EE8A4D000074409 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		449FFF151EE8AC7600074409 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftyJSON.swift; path = WirelessDebugger/SwiftyJSON.swift; sourceTree = "<group>"; };
@@ -118,7 +118,7 @@
 				449FFF151EE8AC7600074409 /* SwiftyJSON.swift */,
 				445BBC5B1EE8A11800085B83 /* WebSocket.swift */,
 				445BBC4F1EE89B4800085B83 /* WebSocketMessenger.swift */,
-				445BBC501EE89B4800085B83 /* WirelessDebugger.swift */,
+				445BBC501EE89B4800085B83 /* LogStreamer.swift */,
 			);
 			name = WirelessDebugger;
 			sourceTree = "<group>";
@@ -237,7 +237,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				445BBC521EE89B4800085B83 /* WirelessDebugger.swift in Sources */,
+				445BBC521EE89B4800085B83 /* LogStreamer.swift in Sources */,
 				445BBC2E1EE89AC700085B83 /* ViewController.swift in Sources */,
 				445BBC2C1EE89AC700085B83 /* AppDelegate.swift in Sources */,
 				449FFF161EE8AC7600074409 /* SwiftyJSON.swift in Sources */,
