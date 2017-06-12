@@ -3,6 +3,7 @@ package com.google.wireless.debugger;
 import android.os.Build;
 import android.util.Log;
 import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +22,7 @@ class WebSocketMessenger extends WebSocketClient {
     private final ArrayList<String> mLogsToSend;
     private final String mApiKey;
     private boolean mRunning;
+    private int mFailedSendsRemaining;
 
     /**
      * Creates a new WebSocketMessenger using the specified address.
@@ -50,6 +52,7 @@ class WebSocketMessenger extends WebSocketClient {
         super(uri);
         mLogsToSend = new ArrayList<>();
         mApiKey = apiKey;
+        mFailedSendsRemaining = 10;
         connect();
         mRunning = true;
     }
@@ -80,7 +83,13 @@ class WebSocketMessenger extends WebSocketClient {
         } catch (JSONException e) {
             Log.e(TAG, e.toString());
         }
-        send(payload.toString());
+
+        try {
+            send(payload.toString());
+        } catch (WebsocketNotConnectedException wse) {
+            Log.e(TAG, wse.toString());
+            mRunning = false;
+        }
     }
 
     /**
@@ -119,16 +128,16 @@ class WebSocketMessenger extends WebSocketClient {
             return;
         }
 
+        // Copy the array list to prevent possible race conditions when sending/enqueuing logs
+        ArrayList<String> logsToSendCopy = new ArrayList<>(mLogsToSend);
+        mLogsToSend.clear();
+
         JSONObject payload = new JSONObject();
         try {
             payload.put("messageType", "logDump");
             payload.put("osType", "Android");
 
             String queuedLogs = "";
-
-            // Copy the array list to prevent possible race conditions when sending/enqueuing logs
-            ArrayList<String> logsToSendCopy = new ArrayList<>(mLogsToSend);
-            mLogsToSend.clear();
 
             for (String logLine : logsToSendCopy) {
                 queuedLogs += logLine + "\n";
@@ -138,7 +147,17 @@ class WebSocketMessenger extends WebSocketClient {
             Log.e(TAG, e.toString());
         }
 
-        send(payload.toString());
+        try {
+            send(payload.toString());
+        } catch (WebsocketNotConnectedException wse) {
+            Log.e(TAG, wse.toString());
+            if (mFailedSendsRemaining > 0) {
+                mLogsToSend.addAll(logsToSendCopy);
+                mFailedSendsRemaining--;
+            } else {
+                mRunning = false;
+            }
+        }
     }
 
     /**
