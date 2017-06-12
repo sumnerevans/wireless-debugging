@@ -169,6 +169,28 @@ class WebSocketMessenger extends WebSocketClient {
     }
 
     /**
+     * Sends a message to server indicating all logs have been send and the session is over.
+     * Also checks to see if all the logs queued have been sent by calling sendLogDump().
+     */
+    public void sendEndSessionMessage() {
+        sendLogDump();
+
+        JSONObject payload = new JSONObject();
+        try {
+            payload.put("messageType", "endSession");
+        } catch (JSONException e) {
+            Log.e(TAG, e.toString());
+        }
+
+        try {
+            send(payload.toString());
+        } catch (WebsocketNotConnectedException wse) {
+            Log.e(TAG, wse.toString());
+            mRunning = false;
+        }
+    }
+
+    /**
      * Returns weather or not the connection is mRunning.
      * @return True if there is a connection, false otherwise.
      */

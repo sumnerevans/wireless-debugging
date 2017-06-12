@@ -84,7 +84,7 @@ class LogReader implements Runnable {
                 mLogs.add(logLine);
             }
 
-            // TODO (Reece): Replace with a send finished signal to the web socket messenger
+            mWebSocketMessenger.sendEndSessionMessage();
             outputLogs();
         } catch (IOException ioe) {
             Log.e(TAG, "IO Exception Occurred in run() thread " + ioe.toString());
