@@ -54,8 +54,8 @@ def handle_websocket():
     # WebSocket.
     ws_api_key = _websocket_metadata.get('apiKey', '')
     if (ws_api_key and ws_api_key in _web_ui_ws_connections and websocket in 
-            _web_ui_ws_connections[_websocket_metadata['apiKey']]):
-        _web_ui_ws_connections[_websocket_metadata['apiKey']].remove(websocket)
+            _web_ui_ws_connections[ws_api_key]):
+        _web_ui_ws_connections[ws_api_key].remove(websocket)
     # ... Otherwise we have to search everywhere to find and delete it.
     else:
         for api_key, websockets_for_api_key in _web_ui_ws_connections.items():
@@ -136,7 +136,4 @@ def associate_user(message, websocket, metadata):
 
     api_key = message['apiKey']
 
-    if api_key not in _web_ui_ws_connections:
-        _web_ui_ws_connections[api_key] = []
-
-    _web_ui_ws_connections.get(api_key, []).append(websocket)
+    _web_ui_ws_connections.setdefault(api_key, []).append(websocket)
