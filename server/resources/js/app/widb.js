@@ -54,6 +54,7 @@ class WirelessDebug {
       for (let entry of messageData.logEntries) {
         this.logTable_.append(this.renderLog(entry));
       }
+      $('#log-table').DataTable();
     }
   }
 
