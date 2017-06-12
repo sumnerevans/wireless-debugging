@@ -15,17 +15,17 @@ public class WebSocketConnectionTest {
     public void testConnection(){
 
         WebSocketMessenger wsmNull = WebSocketMessenger
-                .buildNewConnection("local host", 500);
+                .buildNewConnection("local host", "none");
 
         WebSocketMessenger wsmNotRunning = WebSocketMessenger
-                .buildNewConnection(TEST_IP, 500);
+                .buildNewConnection(TEST_IP, "none");
 
         WebSocketMessenger wsmCorrect = WebSocketMessenger
-                .buildNewConnection(TEST_IP, 500);
+                .buildNewConnection(TEST_IP, "none");
 
         // Sleep to give time to try to connect
         try {
-            Thread.sleep(5000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
