@@ -74,7 +74,6 @@ def login():
             controller.user_management_interface.get_login_ui()),
         'logged_in': controller.user_management_interface.is_user_logged_in(
             request),
-        'login_failed': bool(request.query.login_failed),
     }
 
 @post('/login')
@@ -90,7 +89,6 @@ def handle_login():
         # TODO: Make better error handling
         print("Something went wrong!:", error_message)
         abort(403, "Login failed, error: %s" % error_message)
-        #redirect('/login_page?login_failed=true')
     else:
         redirect('/')
 
