@@ -14,7 +14,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Start the Wireless Debugger
-        WirelessDebugger.start(hostname: self.hostname, apiKey: "test")
+        LogStreamer.start(hostname: self.hostname, apiKey: "test")
+
+        NSSetUncaughtExceptionHandler { exception in
+            LogStreamer.handleUncaughtException(exception)
+        }
+
         return true
     }
 }

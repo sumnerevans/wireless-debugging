@@ -13,7 +13,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Wireless_Debug_iOS_Test_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="WirelessDebug" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -32,29 +32,26 @@
                                 <rect key="frame" x="279" y="40" width="65" height="30"/>
                                 <state key="normal" title="Send Log"/>
                                 <connections>
-                                    <action selector="logButton_pressed" destination="BYZ-38-t0r" eventType="touchUpInside" id="WM7-5J-G9B"/>
+                                    <action selector="logButtonPressed" destination="BYZ-38-t0r" eventType="touchUpInside" id="Jj4-FM-OBp"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="77K-tq-MZs">
                                 <rect key="frame" x="130" y="90" width="115" height="30"/>
                                 <state key="normal" title="Throw Exception"/>
                                 <connections>
-                                    <action selector="exception_pressed" destination="BYZ-38-t0r" eventType="touchUpInside" id="msf-sj-OcL"/>
+                                    <action selector="exceptionPressed" destination="BYZ-38-t0r" eventType="touchUpInside" id="p3N-Z3-r8O"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yU6-WI-Xzw">
                                 <rect key="frame" x="151.5" y="140" width="72" height="30"/>
                                 <state key="normal" title="Crash App"/>
                                 <connections>
-                                    <action selector="crash_pressed" destination="BYZ-38-t0r" eventType="touchUpInside" id="J8i-0a-bvN"/>
+                                    <action selector="crashPressed" destination="BYZ-38-t0r" eventType="touchUpInside" id="4Vk-G2-UWh"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="19d-ua-Nyk">
                                 <rect key="frame" x="89" y="190" width="197" height="30"/>
                                 <state key="normal" title="Start Accelerometer Logging"/>
-                                <connections>
-                                    <action selector="accelerometerToggle_pressed" destination="BYZ-38-t0r" eventType="touchUpInside" id="EAd-bn-W8z"/>
-                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

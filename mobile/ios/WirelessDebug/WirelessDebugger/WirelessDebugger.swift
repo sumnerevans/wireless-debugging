@@ -7,8 +7,8 @@ import Foundation
 
 /// Main class for the Wireless Debugger library. This class handles capturing
 /// logs and sends them to the WebSocketMessenger.
-class WirelessDebugger {
-    private static var wirelessDebugger: WirelessDebugger?
+class LogStreamer {
+    private static var logStreamer: LogStreamer?
 
     private var webSocketMessenger: WebSocketMessenger?
     private var lastSendTime: UInt64 = 0
@@ -59,10 +59,14 @@ class WirelessDebugger {
     ///   - apiKey: the API Key provided by the web interface
     ///   - timeInterval: the interval at which to send logs (in milliseconds)
     static func start(hostname: String, apiKey: String, timeInterval: Int = 100) {
-        if wirelessDebugger == nil {
-            wirelessDebugger = WirelessDebugger(hostname, apiKey: apiKey,
+        if logStreamer == nil {
+            logStreamer = LogStreamer(hostname, apiKey: apiKey,
                                                 timeInterval: timeInterval)
         }
+    }
+ 
+    static func handleUncaughtException(_ exception: NSException) {
+        logStreamer?.webSocketMessenger?.sendUnhandledException(exception: exception)
     }
 
     /// Sends logs if enough time has elapsed.

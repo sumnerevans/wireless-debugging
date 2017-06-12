@@ -27,12 +27,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     
     // Log the text in the LogText box.
-    @IBAction func logButton_pressed() {
+    @IBAction func logButtonPressed() {
         NSLog(LogText.text ?? "")
     }
     
     /// Log an exception.
-    @IBAction func exception_pressed() {
+    @IBAction func exceptionPressed() {
         do {
             try raiseException();
         } catch let err {
@@ -41,12 +41,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     /// Crash the application
-    @IBAction func crash_pressed() throws {
-        NSException(name:NSExceptionName(rawValue: "ForcedException"), reason:"You pressed the crash button", userInfo:nil).raise()
+    @IBAction func crashPressed() throws {
+        let name = NSExceptionName(rawValue: "ForcedException")
+        NSException(name:name, reason:"You pressed the crash button").raise()
     }
     
     /// Toggle logging of accelerometer data.
-    @IBAction func accelerometerToggle_pressed() {
+    @IBAction func accelerometerTogglePressed() {
         if loggingAccelerometer {
             AccelerometerToggle.setTitle("Start Accelerometer Logging", for: .normal)
             manager.stopAccelerometerUpdates()
@@ -73,7 +74,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     ///
     /// - returns: true if the text field should implement its default behavior for the return button; otherwise, false.
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.logButton_pressed()
+        self.logButtonPressed()
         return true
     }
     
