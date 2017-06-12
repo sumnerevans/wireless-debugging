@@ -32,20 +32,19 @@ class LogStreamer {
         // for sending to the server and re-output them on stdout.
         DispatchQueue.global().async {
             while true {
+                // Wait until data is available in the pipe and grab it.
                 let data = stderrPipe.fileHandleForReading.availableData
-                DispatchQueue.main.async {
-                    // Capture the log
-                    let logData = String(data: data, encoding: .utf8) ?? ""
-                    self.webSocketMessenger!.enqueueLog(logLine: logData)
-                    print(logData)
-                }
+                let logData = String(data: data, encoding: .utf8) ?? ""
+                self.webSocketMessenger?.enqueueLog(logLine: logData)
+                print(logData)
             }
         }
 
-        // Every 10ms, send the logs if enough time has elapsed.
+        // Every time interval, send the logs if enough time has elapsed.
         DispatchQueue.global().async {
             while true {
                 self.webSocketMessenger?.sendLogDump()
+                // usleep requires nanoseconds, so multiply ms by 1000.
                 usleep(self.timeInterval * 1000)
             }
         }
