@@ -17,6 +17,8 @@ class LogReader implements Runnable {
     private Boolean mHostAppRunning = true;
     private Boolean mThreadRunning = true;
     private final WebSocketMessenger mWebSocketMessenger;
+    private final int mUpdateTimeInterval;
+    private long mLastSendTime = 0;
 
     /**
      * Creates LogReader instance if none exists.
@@ -24,11 +26,12 @@ class LogReader implements Runnable {
      * @param hostname Server's IP/Host address
      * @param timeInterval Time interval between log sends
      */
-    LogReader(String hostname, int timeInterval) {
-        mWebSocketMessenger = WebSocketMessenger.buildNewConnection(hostname, timeInterval);
+    LogReader(String hostname, String apiKey, int timeInterval) {
+        mWebSocketMessenger = WebSocketMessenger.buildNewConnection(hostname, apiKey);
         if (mWebSocketMessenger == null) {
-           Log.e(TAG, "Failed to create WebSocketMessenger Object");
+            Log.e(TAG, "Failed to create WebSocketMessenger Object");
         }
+        mUpdateTimeInterval = timeInterval;
     }
 
     /**
@@ -37,7 +40,7 @@ class LogReader implements Runnable {
      */
     @Override
     public void run() {
-        if (mWebSocketMessenger == null){
+        if (mWebSocketMessenger == null) {
             Log.e(TAG, "No WebSocketMessengerObject, exiting.");
             mThreadRunning = false;
             return;
@@ -56,9 +59,15 @@ class LogReader implements Runnable {
 
             Log.d(TAG, "Begin Read line in buffer");
             while (mHostAppRunning && mWebSocketMessenger.isRunning()) {
-                logLine = bufferedReader.readLine();
+                sendLogsIfReady();
 
-                if (logLine == null) {
+                /* If bufferReader is ready to be read from, read the line then proceed with the
+                   remainder of the loop.
+                   If not, sleep the thread for 10ms and continue the loop.
+                 */
+                if (bufferedReader.ready()) {
+                    logLine = bufferedReader.readLine();
+                } else {
                     try {
                         /* This is mostly a test.  With high accelerometer logging this value
                            the difference between mLogs is about 20 ms, so hopefully a
@@ -74,15 +83,25 @@ class LogReader implements Runnable {
                 mLogs.add(logLine);
             }
 
-            // TODO (Reece): Replace with a send finished signal to the web socket messenger
+            mWebSocketMessenger.sendEndSessionMessage();
             outputLogs();
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             Log.e(TAG, "IO Exception Occurred in run() thread " + ioe.toString());
         }
 
         // Signals to owning service that thread operations are complete
         mThreadRunning = false;
+    }
+
+    /**
+     * Checks if enough time has passed to send logs through the WebSocketManager.
+     */
+    private void sendLogsIfReady() {
+        long timeDifference = System.currentTimeMillis() - mLastSendTime;
+        if (timeDifference > mUpdateTimeInterval && mWebSocketMessenger.isOpen()) {
+            mWebSocketMessenger.sendLogDump();
+            mLastSendTime = System.currentTimeMillis();
+        }
     }
 
     /**
@@ -111,5 +130,4 @@ class LogReader implements Runnable {
     boolean isThreadRunning() {
         return mThreadRunning;
     }
-
 }
