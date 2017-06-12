@@ -109,3 +109,4 @@ def logout():
 
     response.set_cookie("api_key", "", expires=0)
     redirect('/')
+    
