@@ -7,10 +7,10 @@ to all web UI websockets.
 
 import os.path
 
-from user_management_interfaces import user_management_interface_base
+from user_management_interfaces.user_management_interface_base import UserManagementInterfaceBase
 
 
-class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
+class EmailAuth(UserManagementInterfaceBase):
     """ A User Management Interface that uses emails to direct logs to
         the appropriate Web UI.
     """
@@ -33,7 +33,7 @@ class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
         with open(self.login_fields_path, 'r') as login_fields_file:
             login_fields = login_fields_file.read()
 
-        return login_fields
+        return login_fields % UserManagementInterfaceBase.LOGIN_UI_POST_LOCATION
 
     def is_user_logged_in(self, request):
         """ If a stashed cookie is found indicating that the user has logged in,

@@ -9,6 +9,9 @@ class UserManagementInterfaceBase:
         user authentication on their server.
     """
 
+    # This determines where the login ui will post to.
+    LOGIN_UI_POST_LOCATION = '/login'
+
     def get_login_ui(self):
         """ Generates an HTML UI to show on the login page.
 
