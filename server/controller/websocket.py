@@ -103,12 +103,6 @@ def log_dump(message, websocket, metadata):
     for connection in associated_websockets:
         connection.send(util.serialize_to_json(parsed_logs))
 
-    # At first glance this looks like a copy,
-    # but this is actually grabbing the keys from a dict
-    web_ws_connections = [ws for ws in _web_interface_ws_connections]
-    associated_websockets = (
-        controller.user_management_interface.find_associated_websockets(
-            api_key, web_ws_connections))
 
 @ws_router('endSession')
 def end_session(message, websocket, metadata):
@@ -135,8 +129,16 @@ def associate_user(message, websocket, metadata):
 
 
 @ws_router('deviceMetrics')
-def associate_user(message, websocket, metadata):
+def device_metrics(message, websocket, metadata):
+    """ Handles Device Metrics sent from Mobile API
 
+    When device metrics come in from the Mobile API, this function takes the
+    device metrics and sends it to all connect web clients.
+
+    Args:
+        message: the device metrics in a JSON object
+        websocket: the full websocket connection
+    """
     web_ws_connections = [ws for ws in _web_interface_ws_connections]
     associated_websockets = (
         controller.user_management_interface.find_associated_websockets(

@@ -1,3 +1,5 @@
+@import '_widb-variables.scss';
+
 // Correct the weird issues with the navbar styling
 .navbar-default {
   .navbar-right {
@@ -32,20 +34,20 @@ span.dot-sep {
 }
 
 .metricsGraph {
-    font-weight: 700;
-    font-size: 16px;
-}
-
-.metricsGraph span{
   font-weight: 700;
-  font-size: 14px;
-}
+  font-size: 16px;
 
-.metricsGraph #send {
-    color: #4EE9E4;
+  span {
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  #send {
+    color: $sent-network-usage;
     margin-right: 15px;
-}
+  }
 
-.metricsGraph #receive {
-    color: #8e5ea2;
+  #receive {
+    color: $received-network-usage;
+  }
 }

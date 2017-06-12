@@ -4,6 +4,7 @@ Defines the interface for user management interfaces.
 
 class UserManagementInterfaceBase:
     """The user management inferface definition.
+    
         The set of necessary functions a user needs to implement in order
         to use user authentication on their server.
     """
@@ -17,7 +18,7 @@ class UserManagementInterfaceBase:
         Returns:
             String, contains the HTML for the login UI. This HTML should inlude
             an HTML form which posts to the login URL.
-        """ 
+        """
         raise NotImplementedError
 
     def is_user_logged_in(self, request):

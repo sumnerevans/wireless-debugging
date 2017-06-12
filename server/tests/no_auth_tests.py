@@ -15,6 +15,7 @@ def test_get_login():
     """
     umi = no_auth.NoAuth()
     base_url = "http://0.0.0.0:80"
+
     assert umi.get_login_ui(base_url) == ""
 
 
@@ -52,4 +53,5 @@ def test_find_websockets():
     websockets = []
     for i in range(5):
         websockets.append(request.environ.get("wsgi.websocket"))
+        
     assert umi.find_associated_websockets(api_key, websockets) == websockets

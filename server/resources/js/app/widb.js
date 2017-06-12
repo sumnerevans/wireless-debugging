@@ -45,13 +45,14 @@ class WirelessDebug {
   /** Decodes the WebSocket message and adds to table */
   websocketOnMessage(message) {
     let messageData = JSON.parse(message.data);
+
     if (messageData.messageType === 'logData') {
       for (let entry of messageData.logEntries) {
         this.logTable_.append(this.renderLog(entry));
       }
     }
+
     if (messageData.messageType === 'deviceMetrics') {
-      //this.metricsTable_.append(this.renderMetrics(messageData))
       this.metricGrapher.setMetrics(messageData);
       this.metricGrapher.render();
     }
