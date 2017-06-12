@@ -109,4 +109,3 @@ class DummyRequest:
             Nothing.
         """
         self.cookies[cookie_name] = cookie_value
-

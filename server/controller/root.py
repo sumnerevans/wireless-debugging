@@ -30,7 +30,6 @@ def index():
         api_key: The Web UI user's API key. 
 
     """
-
     if not controller.user_management_interface.is_user_logged_in(request):
         redirect('/login_page')
 
