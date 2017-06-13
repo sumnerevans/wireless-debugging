@@ -56,6 +56,7 @@ class WebSocketMessenger extends WebSocketClient {
         mLogsToSend = new ArrayList<>();
         mApiKey = apiKey;
         mHostAppName = appName;
+        mFailedSendsRemaining = 10;
         connect();
         mRunning = true;
     }
@@ -82,7 +83,7 @@ class WebSocketMessenger extends WebSocketClient {
             payload.put("osType", "Android");
             payload.put("apiKey", mApiKey);
             payload.put("deviceName", deviceNameBuilder.toString());
-            payload.put("appName", R.string.app_name);
+            payload.put("appName", mHostAppName);
         } catch (JSONException e) {
             Log.e(TAG, e.toString());
         }
