@@ -15,6 +15,8 @@ class WirelessDebug {
 
     /** @private @const {?WebSocket} */
     this.ws_ = null;
+
+    this.dataTable = $('#log-table').DataTable();
   }
 
   /**
@@ -44,6 +46,7 @@ class WirelessDebug {
       apiKey: apiKey || '',
     };
 
+    this.data_table = $('#log-table').DataTable();
     this.ws_.send(JSON.stringify(payload));
   }
 
@@ -51,10 +54,13 @@ class WirelessDebug {
   websocketOnMessage(message) {
     let messageData = JSON.parse(message.data);
     if (messageData.messageType === 'logData') {
+      //if(this.data_table) {
+        this.data_table.destroy();
+      //}
       for (let entry of messageData.logEntries) {
         this.logTable_.append(this.renderLog(entry));
       }
-      $('#log-table').DataTable();
+      this.data_table = $('#log-table').DataTable();
     }
   }
 
