@@ -44,7 +44,7 @@ def check_login():
 
             webpage_arguments = function(*args, **kwargs)
 
-            if type(webpage_arguments) is dict:
+            if isinstance(webpage_arguments) is dict:
                 webpage_arguments['logged_in'] = is_user_logged_in
 
             return webpage_arguments
