@@ -4,13 +4,14 @@
 */
 
 class MetricGrapher {
-  /** @param {string=} cpuCanvasId
+  /** Initializes the graphs for device metrics using chart.js.
+   * @param {string=} cpuCanvasId
    * @param {string=} memoryCanvasId
    * @param {string=} networkCanvasId
    */
   constructor(cpuCanvasId, memoryCanvasId, networkCanvasId) {
     let timeInterval = 0.2;
-    // 30 seconds times sample rate gives number of metrics recorded
+    // 30 seconds times sample rate gives number of metrics recorded.
     let recordedTime = 30 * (1 / timeInterval);
 
     /** @private @const {Array<number>} */
