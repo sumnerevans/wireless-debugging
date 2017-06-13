@@ -21,8 +21,8 @@ public class WirelessDebugger extends Service {
     private static final String HOSTNAME_EXTRA = "hostname";
     private static final String TIME_INTERVAL_EXTRA = "time_interval";
     private static final String API_KEY_EXTRA = "api_key";
+    private static final String HOST_APP_NAME_EXTRA = "host_app_name";
 
-    private Context mHostAppContext;
     private LogReader mLogReader;
 
     /**
@@ -90,7 +90,7 @@ public class WirelessDebugger extends Service {
         startIntent.putExtra(HOSTNAME_EXTRA, hostname);
         startIntent.putExtra(TIME_INTERVAL_EXTRA, timeInterval);
         startIntent.putExtra(API_KEY_EXTRA, apiKey);
-        mHostAppContext = appContext;
+        startIntent.putExtra(HOST_APP_NAME_EXTRA, appContext.getPackageName());
         appContext.startService(startIntent);
     }
 
@@ -115,7 +115,7 @@ public class WirelessDebugger extends Service {
         String hostname = intent.getStringExtra(HOSTNAME_EXTRA);
         int timeInterval = intent.getIntExtra(TIME_INTERVAL_EXTRA, 200);
         String apiKey = intent.getStringExtra(API_KEY_EXTRA);
-        String hostAppName = mHostAppContext.getPackageName();
+        String hostAppName = intent.getStringExtra(HOST_APP_NAME_EXTRA);
         mLogReader = new LogReader(hostname, apiKey, hostAppName, timeInterval);
         Thread logThread = new Thread(mLogReader);
         logThread.start();
