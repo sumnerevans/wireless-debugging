@@ -34,13 +34,13 @@ def index():
     if not controller.user_management_interface.is_user_logged_in(request):
         redirect('/login_page')
 
-    # TODO: Probably a proper way to give the API key back, like AJAX
-    api_key = controller.user_management_interface.get_api_key_for_user(
-        request)
+    api_key = controller.user_management_interface.get_api_key_for_user(request)
 
     return {
         'page': 'index',
         'api_key': api_key,
+        # If you've made it here, you have to be successfully logged in
+        'logged_in': True,
     }
 
 
@@ -92,20 +92,17 @@ def login():
         None
     Returns:
         An HTML webpage containing a UI for the user to log into the website.
-        This function *will* return a webpage specified by the kajiki view
-        decorator. This function also returns a subcomponent of a webpage that
-        defines the format of the login page, which is specified in the user
-        management interface.
+        This function returns a webpage specified by the kajiki view decorator. 
+        This function also returns a subcomponent of a webpage that defines the
+        format of the login page, which is specified in the user management 
+        interface. 
     """
-    hostname = from_config_yaml('hostname')
-    port = from_config_yaml('port') or 80
-
-    # TODO: Change base_url to be relative URL
-    url = "http://%s:%s" % (hostname, str(port))
-
+    
     return {
-        "login_fields": Markup(
-            controller.user_management_interface.get_login_ui(url))
+        'login_fields': Markup(
+            controller.user_management_interface.get_login_ui()),
+        'logged_in': controller.user_management_interface.is_user_logged_in(
+            request),
     }
 
 @post('/login')
@@ -119,7 +116,7 @@ def handle_login():
     # error message.
     if not login_successful:
         # TODO: Make better error handling
-        print("Something went wrong!:", error_message)
+        print('Something went wrong!:', error_message)
         abort(403, "Login failed, error: %s" % error_message)
     else:
         redirect('/')
@@ -139,5 +136,5 @@ def logout():
     the login page.
     """
 
-    response.set_cookie("api_key", "", expires=0)
+    response.set_cookie('api_key', '', expires=0)
     redirect('/')
