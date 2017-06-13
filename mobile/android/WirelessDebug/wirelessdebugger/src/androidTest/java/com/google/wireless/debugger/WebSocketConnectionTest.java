@@ -15,13 +15,13 @@ public class WebSocketConnectionTest {
     public void testConnection(){
 
         WebSocketMessenger wsmNull = WebSocketMessenger
-                .buildNewConnection("local host", "none");
+                .buildNewConnection("local host", "none", "app");
 
         WebSocketMessenger wsmNotRunning = WebSocketMessenger
-                .buildNewConnection(TEST_IP, "none");
+                .buildNewConnection(TEST_IP, "none", "app");
 
         WebSocketMessenger wsmCorrect = WebSocketMessenger
-                .buildNewConnection(TEST_IP, "none");
+                .buildNewConnection(TEST_IP, "none", "app");
 
         // Sleep to give time to try to connect
         try {
