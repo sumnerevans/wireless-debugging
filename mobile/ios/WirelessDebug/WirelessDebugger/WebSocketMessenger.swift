@@ -12,16 +12,18 @@ class WebSocketMessenger {
     var webSocket = WebSocket()
     var logsToSend: [String] = []
     var connectionRetries = 0
+    var verbose: Bool
 
     /// Create a WebSocket connection to the given socket address and API Key.
     ///
     /// - Parameters:
     ///   - socketAddress: the WebSocket address to connect to
     ///   - apiKey: the API Key provided by the web interface
-    init(_ socketAddress: String, apiKey: String) {
+    init(_ socketAddress: String, apiKey: String, verbose: Bool) {
+        self.verbose = verbose
         // When the WebSocket connection opens, send a startSession message.
         self.webSocket.event.open = {
-            NSLog("WebSocket Connection to \(socketAddress) Opened")
+            self.log("WebSocket Connection to \(socketAddress) Opened")
 
             self.send("startSession", data: [
                 "osType": "iOS",
@@ -34,7 +36,7 @@ class WebSocketMessenger {
 
         // If the connection closes, try to reconnect 10 times.
         self.webSocket.event.close = { code, reason, clean in
-            NSLog("WebSocket Connection Closed \(reason)")
+            self.log("WebSocket Connection Closed \(reason)")
 
             // Retry the connection 10 times with 2 seconds inbetween retries.
             if self.connectionRetries < 10 {
@@ -46,7 +48,7 @@ class WebSocketMessenger {
         }
 
         self.webSocket.event.error = { error in
-            NSLog("Error on WebSocket Connection \(error)")
+            self.log("Error on WebSocket Connection \(error)")
         }
 
         // Now actually try to open the WebSocket connection.
@@ -101,5 +103,11 @@ class WebSocketMessenger {
         var newData = data
         newData["messageType"] = messageType
         self.webSocket.send(JSON(newData))
+    }
+    
+    private func log(_ message: String) {
+        if self.verbose {
+            NSLog(message)
+        }
     }
 }
