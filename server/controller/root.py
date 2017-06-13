@@ -10,9 +10,33 @@ from markupsafe import Markup
 
 import controller
 
+import functools
+
+def check_login():
+
+    def decorator(function):
+
+        @functools.wraps(function)
+        def wrapper(*args, **kwargs):
+            is_user_logged_in = (
+                controller.user_management_interface.is_user_logged_in(request))
+            if not is_user_logged_in:
+                redirect('/login_page')
+
+            webpage_arguments = function(*args, **kwargs)
+
+            webpage_arguments['logged_in'] = is_user_logged_in
+
+            return webpage_arguments
+
+        return wrapper
+
+    return decorator
+
 
 @route('/')
 @kajiki_view('index')
+@check_login()
 def index():
     """ The log streaming dashboard, this is where logs go when they're
         streamed.
@@ -31,22 +55,20 @@ def index():
         api_key: The Web UI user's API key.
 
     """
-    if not controller.user_management_interface.is_user_logged_in(request):
-        redirect('/login_page')
-
     api_key = controller.user_management_interface.get_api_key_for_user(request)
 
     return {
         'page': 'index',
         'api_key': api_key,
         # If you've made it here, you have to be successfully logged in
-        'logged_in': True,
+        #'logged_in': True,
     }
 
 
 # Placeholder
 @route('/current')
 @kajiki_view('current')
+@check_login()
 def current():
     """Show current streaming logs."""
     if not controller.user_management_interface.is_user_logged_in(request):
@@ -58,6 +80,7 @@ def current():
 # Placeholder
 @route('/historical')
 @kajiki_view('historical')
+@check_login()
 def historical():
     """"Retrieve stored data from datastore."""
     if not controller.user_management_interface.is_user_logged_in(request):
