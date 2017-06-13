@@ -22,7 +22,7 @@ class WirelessDebug {
     this.ws_ = null;
 
     /** @private @const {!MetricGrapher} */
-    this.metricGrapher = new MetricGrapher("cpuUsageGraph", "memUsageGraph", "netUsageGraph");
+    this.metricGrapher = new MetricGrapher("cpu-usage-graph", "mem-usage-graph", "net-usage-graph");
     this.metricGrapher.render();
 
     /** @private @const {!DataTable} */
@@ -115,14 +115,6 @@ class WirelessDebug {
     <td>${logEntry.tag}</td>
     <td>${logEntry.logType}</td>
     <td>${logEntry.text}</td>
-    </tr>`;
-  }
-
-  renderMetrics(metrics) {
-    return `<tr>
-    <td>${metrics.cpuUsage}</td>
-    <td>${metrics.timeStamp}</td>
-    <td>${metrics.memUsage}</td>
     </tr>`;
   }
 }
