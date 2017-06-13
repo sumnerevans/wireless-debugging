@@ -2,17 +2,36 @@
 """
 Root Controller
 """
+import functools
+import controller
 
 from bottle import abort, post, redirect, request, response, route, static_file
-from helpers.util import from_config_yaml
 from kajiki_view import kajiki_view
 from markupsafe import Markup
 
-import controller
-
-import functools
 
 def check_login():
+    """ Defines a check_login decorator, which verifies that the user is logged
+        in.
+
+        When a function is associated with this decorator, if the function
+        returns a dict this function will append a bool indicating whether or
+        not the user is logged in. 
+
+        Args:
+            None, but calls the user management interface to determine if the
+            user is logged in.
+        Returns:
+            The dictionary the contained function returns, with an additional
+            entry named 'logged_in' that maps to a boolean that indicates 
+            whether or not the user is logged in.
+
+            If the contained function does not return a dict, then this function
+            returns nothing.
+
+            This function will also redirect the user to the login page if the
+            user is not logged in.
+    """
 
     def decorator(function):
 
@@ -25,9 +44,10 @@ def check_login():
 
             webpage_arguments = function(*args, **kwargs)
 
-            webpage_arguments['logged_in'] = is_user_logged_in
+            if type(webpage_arguments) is dict:
+                webpage_arguments['logged_in'] = is_user_logged_in
 
-            return webpage_arguments
+                return webpage_arguments
 
         return wrapper
 
