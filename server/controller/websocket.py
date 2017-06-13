@@ -86,7 +86,7 @@ def start_session(message, websocket, metadata):
 
     for attribute, value in message.items():
         metadata[attribute] = value
-    metadata['start_time'] = str(datetime.datetime.now())
+    metadata['startTime'] = str(datetime.datetime.now())
 
 
 @ws_router('logDump')
@@ -115,7 +115,7 @@ def log_dump(message, websocket, metadata):
     html_logs = LogParser.convert_to_html(parsed_logs['logEntries'])
     controller.datastore_interface.store_logs(
         metadata['apiKey'], metadata['deviceName'], metadata['appName'],
-        metadata['start_time'], metadata['osType'], parsed_logs)
+        metadata['startTime'], metadata['osType'], parsed_logs)
 
     send_logs = {
         'messageType': 'logData',
@@ -134,7 +134,7 @@ def end_session(message, websocket, metadata):
         metadata['apiKey'],
         metadata['deviceName'],
         metadata['appName'],
-        metadata['start_time'])
+        metadata['startTime'])
     controller.datastore_interface.add_device_app(
         metadata['apiKey'], metadata['deviceName'], metadata['appName'])
 
