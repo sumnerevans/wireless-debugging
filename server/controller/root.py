@@ -27,7 +27,7 @@ def check_login():
             whether or not the user is logged in.
 
             If the contained function does not return a dict, then this function
-            returns nothing.
+            returns whatever the contained function returns.
 
             This function will also redirect the user to the login page if the
             user is not logged in.
@@ -47,7 +47,7 @@ def check_login():
             if type(webpage_arguments) is dict:
                 webpage_arguments['logged_in'] = is_user_logged_in
 
-                return webpage_arguments
+            return webpage_arguments
 
         return wrapper
 
