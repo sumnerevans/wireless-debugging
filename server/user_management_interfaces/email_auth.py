@@ -7,10 +7,10 @@ to all web UI websockets.
 
 import os.path
 
-from user_management_interfaces import user_management_interface_base
+from user_management_interfaces.user_management_interface_base import UserManagementInterfaceBase
+from kajiki import FileLoader, XMLTemplate
 
-
-class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
+class EmailAuth(UserManagementInterfaceBase):
     """ A User Management Interface that uses emails to direct logs to
         the appropriate Web UI.
     """
@@ -19,23 +19,29 @@ class EmailAuth(user_management_interface_base.UserManagementInterfaceBase):
         self.user_key_table = 'key_table.txt'
         self.login_fields_path = 'user_management_interfaces/email_login.xhtml'
 
-    def get_login_ui(self, base_url):
+    def get_login_ui(self):
         """ Returns XHTML containing a login form. 
 
         class members used:
             login_fields_path: String, contains the path to the file that 
                 contains the XHTML.
         Args:
-            base_url: String, contains the url to get to the index page of the 
-                app. 
+            None.
         Returns:
             An XHTML fragment containing the login form.
         """
-        login_fields_file = open(self.login_fields_path, 'r')
-        login_fields = login_fields_file.read()
-        login_fields_file.close()
+        
+        # Empty quotes need to be there to specify that this loader searches
+        # from the program root
+        loader = FileLoader('')
+        loader.extension_map['xhtml'] = XMLTemplate
 
-        return login_fields
+        page_template = loader.load(self.login_fields_path)
+        page_fragment = page_template({
+            'post_location': UserManagementInterfaceBase.LOGIN_UI_POST_LOCATION,
+        })
+
+        return page_fragment.render()
 
     def is_user_logged_in(self, request):
         """ If a stashed cookie is found indicating that the user has logged in,

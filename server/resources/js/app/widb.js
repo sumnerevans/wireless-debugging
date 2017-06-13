@@ -21,8 +21,12 @@ class WirelessDebug {
     /** @private @const {?WebSocket} */
     this.ws_ = null;
 
+    /** @private @const {!MetricGrapher} */
     this.metricGrapher = new MetricGrapher("cpuUsageGraph", "memUsageGraph", "netUsageGraph");
     this.metricGrapher.render();
+
+    /** @private @const {!DataTable} */
+    this.dataTable = $('#log-table').DataTable();
   }
 
   /**
@@ -52,6 +56,7 @@ class WirelessDebug {
       apiKey: apiKey || '',
     };
 
+    this.data_table = $('#log-table').DataTable();
     this.ws_.send(JSON.stringify(payload));
 
     // Get all the devices for historical sessions.
@@ -82,8 +87,11 @@ class WirelessDebug {
     let messageData = JSON.parse(message.data);
 
     if (messageData.messageType === 'logData') {
-      this.logTable_.append(messageData.logEntries);
-      $('#log-table').DataTable();
+      this.data_table.destroy();
+      for (let entry of messageData.logEntries) {
+        this.logTable_.append(this.renderLog(entry));
+      }
+      this.data_table = $('#log-table').DataTable();
     }
     if (messageData.messageType === 'apiKey') {
       this.apiKey_.append(messageData.user);

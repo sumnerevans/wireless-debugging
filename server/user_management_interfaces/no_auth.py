@@ -11,7 +11,7 @@ class NoAuth(user_management_interface_base.UserManagementInterfaceBase):
         open Web UI WebSockets.
     """
 
-    def get_login_ui(self, base_url):
+    def get_login_ui(self):
         """ Unused, but abstract so needs an implementation. """
         return ""
 
