@@ -51,3 +51,8 @@ span.dot-sep {
     color: $received-network-usage;
   }
 }
+
+/* Historical Table is padded */
+#historical-choices td {
+  padding: 10px;
+}

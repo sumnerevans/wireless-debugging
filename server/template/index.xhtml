@@ -5,39 +5,10 @@
 
 <body py:block="body" py:strip="True">
   <div class="row">
-    <div class="col-md-8">
-      <table class="table table-hover table-condensed table-bordered log-table">
-        <tr>
-          <th>Time</th>
-          <th>Tag</th>
-          <th>Type</th>
-          <th>Log Text</th>
-        </tr>
-      </table>
-    </div>
-    <div class="col-md-4">
-      <div class="metricsGraph">
-        <h4>CPU Usage</h4>
-        <canvas id="cpuUsageGraph">
-        </canvas>
-      </div>
-
-      <div class="metricsGraph">
-        <h4>Memory Usage</h4>
-        <canvas id="memUsageGraph"></canvas>
-      </div>
-
-      <div class="metricsGraph">
-        <div class="row">
-          <div class="col-md-8">
-            <h4>Network Usage</h4>
-          </div>
-          <div class="col-md-4">
-            <span id="send">Sent</span><span id="receive">Received</span>
-          </div>
-        </div>
-        <canvas class="metricsGraph" id="netUsageGraph"></canvas>
-      </div>
+    <div class="col-md-12">
+      <p>Select <strong>Current Session</strong> to see currently streaming logs.</p>
+      <p>Select <strong>Historical Sessions</strong> to see historical logs if applicable</p>
+      <p>Your Api Key is: <p class="api-key"></p></p>
     </div>
   </div>
 </body>
