@@ -8,7 +8,7 @@ to all web UI websockets.
 import os.path
 
 from user_management_interfaces.user_management_interface_base import UserManagementInterfaceBase
-
+from kajiki import FileLoader, XMLTemplate
 
 class EmailAuth(UserManagementInterfaceBase):
     """ A User Management Interface that uses emails to direct logs to
@@ -30,10 +30,18 @@ class EmailAuth(UserManagementInterfaceBase):
         Returns:
             An XHTML fragment containing the login form.
         """
-        with open(self.login_fields_path, 'r') as login_fields_file:
-            login_fields = login_fields_file.read()
+        
+        # Empty quotes need to be there to specify that this loader searches
+        # from the program root
+        loader = FileLoader('')
+        loader.extension_map['xhtml'] = XMLTemplate
 
-        return login_fields % UserManagementInterfaceBase.LOGIN_UI_POST_LOCATION
+        page_template = loader.load(self.login_fields_path)
+        page_fragment = page_template({
+            'post_location': UserManagementInterfaceBase.LOGIN_UI_POST_LOCATION,
+        })
+
+        return page_fragment.render()
 
     def is_user_logged_in(self, request):
         """ If a stashed cookie is found indicating that the user has logged in,

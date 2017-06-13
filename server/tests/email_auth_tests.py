@@ -56,7 +56,7 @@ def test_user_not_logged_in():
 
     assert not umi.is_user_logged_in(request)
 
-    
+
 def test_user_logged_in():
     """ Verify that if the API cookie is is in the user's browser that the login
         check returns true.
@@ -136,7 +136,6 @@ def test_get_api_key():
         'username': test_username,
     })
     request.add_form(form)
-    
 
     with open('temp_file.txt', 'w') as user_table:
         user_table.write('%s,%s\n' % (test_username, test_api_key))

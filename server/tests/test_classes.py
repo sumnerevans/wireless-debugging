@@ -70,8 +70,6 @@ class DummyRequest:
 
         self.forms = DummyForm()
 
-
-
     def add_form(self, form):
         """ Appends a form to a request object.
 
