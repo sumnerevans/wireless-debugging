@@ -79,7 +79,6 @@ class WebSocketMessenger extends WebSocketClient {
             payload.put("apiKey", mApiKey);
             payload.put("deviceName", deviceNameBuilder.toString());
             payload.put("appName", mHostAppName);
-
         } catch (JSONException e) {
             Log.e(TAG, e.toString());
         }
