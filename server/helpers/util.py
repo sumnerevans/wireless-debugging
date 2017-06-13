@@ -2,14 +2,14 @@
 """
 Utility Functions
 """
+import json
+import yaml
+import helpers
 
 from datetime import datetime
-import json
-
-import yaml
 from markupsafe import Markup
 
-import helpers
+
 
 
 def serialize_to_json(data):
@@ -24,8 +24,7 @@ def serialize_to_json(data):
     # See: https://stackoverflow.com/questions/8556398/generate-rfc-3339-timestamp-in-python#8556555
     def datetime_serializer(element):
         if isinstance(element, datetime):
-            date = datetime.utcnow()  # get time in UTC
-            return date.isoformat("T") + "Z"
+            return element.isoformat("T") + "Z"
 
     return json.dumps(data, default=datetime_serializer)
 

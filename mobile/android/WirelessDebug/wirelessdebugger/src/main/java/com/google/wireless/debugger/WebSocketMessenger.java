@@ -22,15 +22,19 @@ class WebSocketMessenger extends WebSocketClient {
     private final String mApiKey;
     private boolean mRunning;
     private int mFailedSendsRemaining;
+    private String mHostAppName;
 
     /**
      * Creates a new WebSocketMessenger using the specified address.
      * If the address is invalid this function will return null.
      * @param socketAddress: The address (hostname or IP) of the WebSocket connection.
+     * @param apiKey: User's API key.
+     * @param appName: Name of the application being debugged.
      * @return A new WebSocket messenger object, or null if the URI is invalid.
      */
     @CheckForNull
-    public static WebSocketMessenger buildNewConnection(String socketAddress, String apiKey) {
+    public static WebSocketMessenger buildNewConnection(String socketAddress, String apiKey,
+                                                        String appName) {
         URI uri;
         Log.i(TAG, "URI: " + socketAddress);
         try {
@@ -40,18 +44,18 @@ class WebSocketMessenger extends WebSocketClient {
             return null;
         }
 
-        return new WebSocketMessenger(uri, apiKey);
+        return new WebSocketMessenger(uri, apiKey, appName);
     }
 
     /**
      * Constructs a new WebSocketMessenger object and attempts to establish a connection.
      * @param uri: Specifies address of the WebSocket connection.
      */
-    private WebSocketMessenger(URI uri, String apiKey) {
+    private WebSocketMessenger(URI uri, String apiKey, String appName) {
         super(uri);
         mLogsToSend = new ArrayList<>();
         mApiKey = apiKey;
-        mFailedSendsRemaining = 10;
+        mHostAppName = appName;
         connect();
         mRunning = true;
     }
@@ -174,6 +178,26 @@ class WebSocketMessenger extends WebSocketClient {
         JSONObject payload = new JSONObject();
         try {
             payload.put("messageType", "endSession");
+        } catch (JSONException e) {
+            Log.e(TAG, e.toString());
+        }
+
+        sendAndCatch(payload.toString());
+    }
+
+    public void sendSystemMetrics(int memUsed, int memTotal, double cpuUsage, double
+            bytesSentPerSec, double
+            bytesReceivedPerSec, long timeStamp) {
+        JSONObject payload = new JSONObject();
+        try {
+            payload.put("messageType", "deviceMetrics");
+            payload.put("osType", "Android");
+            payload.put("timeStamp", timeStamp);
+            payload.put("cpuUsage", cpuUsage);
+            payload.put("memUsage", memUsed);
+            payload.put("memTotal", memTotal);
+            payload.put("netSentPerSec", bytesSentPerSec);
+            payload.put("netReceivePerSec", bytesReceivedPerSec);
         } catch (JSONException e) {
             Log.e(TAG, e.toString());
         }

@@ -1,0 +1,73 @@
+<html py:extends="master.xhtml" py:strip="True">
+
+<head py:block="head" py:strip="True">
+  <title py:block="master_title">Historical Sessions</title>
+</head>
+
+<body py:block="body" py:strip="True">
+  <div class="row">
+    <div class="col-md-12" id="main-page">
+      <form class="form-horizontal" id="historical-choices">
+        <div class="form-group">
+          <label class="col-md-2">
+            <p>User API Key: </p>
+          </label>
+          <div class="col-md-5">
+            <p class="api-key" id="api-key"></p>
+          </div>
+          <div class="col-md-5">
+            <button id="clear-datastore">Clear Datastore</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-2">
+            <p>Select a device:</p>
+          </label>
+          <div class="col-md-5">
+            <select name="device" id="device">
+            </select>
+          </div>
+          <div class="col-md-5" style="display:none" id="hidden-dev-alias">
+            <input type="text" name="dev-alias" id="dev-alias" />
+            <button type="submit" id="device-alias" value="device-alias">Alias a Device</button>
+          </div>
+        </div>
+        <div class="form-group" id="hidden-app" style="display:none">
+          <label class="col-md-2">
+            <p>Select an app:</p>
+          </label>
+          <div class="col-md-5">
+            <select name="app" id="app">
+            </select>
+          </div>
+          <div class="col-md-5" style="display:none" id="hidden-app-alias">
+            <input type="text" name="app-alias" id="app-alias" />
+            <button id="appname-alias">Alias an app</button>
+          </div>
+        </div>
+        <div class="form-group" id="hidden-start" style="display:none">
+          <label class="col-md-2">
+            <p>Select a start time for session:</p>
+          </label>
+          <div class="col-md-5">
+            <select name="start-time" id="start-time">
+            </select>
+          </div>
+        </div>
+      </form>
+      <table class="table table-hover table-condensed table-bordered historical-log-table" id="historical-log-table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Tag</th>
+            <th>Type</th>
+            <th>Log Text</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

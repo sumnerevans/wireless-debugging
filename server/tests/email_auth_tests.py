@@ -1,0 +1,175 @@
+"""
+Tests the email authorization implementation of the user management interface.
+"""
+
+import os
+import pytest
+
+from user_management_interfaces import email_auth
+from bottle import response
+from tests.test_classes import DummySocket, DummyForm, DummyRequest
+
+# This file is used instead of the default table for tests
+TEST_TABLE = 'temp_file.txt'
+
+@pytest.yield_fixture(autouse=True)
+def cleanup_tests():
+    """ Clean up after each test.
+
+    If the test table exists, delete it.
+
+    Args:
+        None.
+    Returns:
+        None.
+    """
+    yield
+    if os.path.isfile(TEST_TABLE):
+        os.remove(TEST_TABLE)
+
+def test_get_login():
+    """ Verify that the login UI is read from fie and returned properly.
+
+        This test needs to run from the server folder so that the pathing is
+        consistent.
+    """
+    umi = email_auth.EmailAuth()
+
+    with open('user_management_interfaces/email_login.xhtml', 'r') as fin:
+        expected_html = fin.read()
+
+    expected_html = expected_html.replace('$', '').format(
+        post_location='/login')
+    assert umi.get_login_ui() == expected_html
+
+
+def test_exists_in_table():
+    """ Tests that the checking if a user or an API key exists in the table
+        works. Also verifies that if they don't exist that this function returns
+        false. This is higher up because later functions rely on 
+        _exists_in_table().
+    """
+    umi = email_auth.EmailAuth()
+    # This overrides the default table file
+    umi.user_key_table = TEST_TABLE
+
+    test_username = 'hi@gmail.com'
+
+    assert not umi._exists_in_table(test_username, 'user')
+    assert not umi._exists_in_table(test_username, 'api_key')
+
+    with open(TEST_TABLE, 'w') as user_table:
+        user_table.write('%s,%s\n' % (test_username, test_username))
+        
+    assert umi._exists_in_table(test_username, 'user')
+    assert umi._exists_in_table(test_username, 'api_key')
+
+
+def test_user_not_logged_in():
+    """ Verify that if the API cookie is not in the user's browswer that the
+        login check returns false.
+    """
+    umi = email_auth.EmailAuth()
+    request = DummyRequest()
+
+    assert not umi.is_user_logged_in(request)
+
+
+def test_user_logged_in():
+    """ Verify that if the API cookie is is in the user's browser that the login
+        check returns true.
+    """
+    umi = email_auth.EmailAuth()
+    request = DummyRequest()
+    request.set_cookie('api_key', 'hello_world')
+
+    assert request.get_cookie('api_key') is not None
+    assert not umi.is_user_logged_in(request)
+
+
+def test_handle_new_login():
+    """ Verify that when a new user logs in they'll be added to the user-API key
+        table, and verify that they successfully log in.
+    """
+    umi = email_auth.EmailAuth()
+    # It'd be nice to actualy make this a temp file.
+    # This overrides the default table file
+    umi.user_key_table = TEST_TABLE 
+
+    form = DummyForm({
+        'username': 'test@test.com',
+    })
+    request = DummyRequest()
+    request.add_form(form)
+
+    result = umi.handle_login(form, request, response)
+
+    assert result == (True, 'New user! Adding to users table.')
+
+
+def test_handle_returning_login():
+    """ Verify that when a user returns and logs in again, they are accepted
+        without any diagnostic messages.
+    """
+    umi = email_auth.EmailAuth()
+    # It'd be nice to actualy make this a temp file.
+    # This overrides the default table file
+    umi.user_key_table = TEST_TABLE
+
+    form = DummyForm({
+        'username': 'test@test.com',
+    })
+    request = DummyRequest()
+    request.add_form(form)
+
+    test_username = 'test@test.com'
+
+    with open(TEST_TABLE, 'w') as user_table:
+        user_table.write('%s,%s\n' % (test_username, test_username))
+    
+    result = umi.handle_login(form, request, response)
+
+    assert result == (True, '')
+
+    
+def test_get_api_key():
+    """ Verify that when the user logs in with an existing username, the 
+        corresponding API key is returned.
+    """
+    umi = email_auth.EmailAuth()
+    # It'd be nice to actualy make this a temp file
+    # This overrides the default table file
+    umi.user_key_table = TEST_TABLE
+
+    request = DummyRequest()
+
+    test_username = 'test@test.com'
+    test_api_key = 'TestAPIKEY'
+
+    form = DummyForm({
+        'username': test_username,
+    })
+    request.add_form(form)
+
+    with open('temp_file.txt', 'w') as user_table:
+        user_table.write('%s,%s\n' % (test_username, test_api_key))
+
+    assert umi.get_api_key_for_user(request) == test_api_key
+
+
+def test_find_websockets():
+    """ Verify that given an API key and a set of websocket connections, a list
+        of websocket connections corresponding to the API key are returned.
+    """
+
+    umi = email_auth.EmailAuth()
+
+    websockets = {
+        'a': [DummySocket() for i in range(5)],
+        'b': [DummySocket() for i in range(3)],
+        'c': [DummySocket() for i in range(7)],
+    }
+
+    for api_key in ('a', 'b', 'c'):
+        assert umi.find_associated_websockets(api_key, 
+                                              websockets) == websockets[api_key]
