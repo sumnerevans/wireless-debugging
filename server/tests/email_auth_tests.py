@@ -9,7 +9,7 @@ from user_management_interfaces import email_auth
 from bottle import response
 from tests.test_classes import DummySocket, DummyForm, DummyRequest
 
-# This file tests the file 
+# This file is used instead of the default table for tests
 TEST_TABLE = 'temp_file.txt'
 
 @pytest.yield_fixture(autouse=True)
