@@ -1,5 +1,6 @@
 /**
  * Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+ *
  * @fileoverview This contains the main app logic
  */
 
@@ -12,6 +13,7 @@ class WirelessDebug {
   constructor() {
     /** @private @const {!jQuery} */
     this.logTable_ = $('.log-table');
+    this.apiKey_ = $('.api-key');
 
     /** @private @const {?WebSocket} */
     this.ws_ = null;
@@ -33,7 +35,7 @@ class WirelessDebug {
     let apiKey = '';
     for(let i = 0; i < cookieStrings.length; i++) {
       let [cookieKey, cookieVal] = cookieStrings[i].trim().split('=');
-      if (cookieKey == 'api_key') {
+      if (cookieKey === 'api_key') {
         apiKey = cookieVal;
         break;
       }
@@ -45,16 +47,39 @@ class WirelessDebug {
     };
 
     this.ws_.send(JSON.stringify(payload));
+
+    // Get all the devices for historical sessions.
+    let data = {
+      'apiKey': payload.apiKey,
+    };
+    $.ajax({
+      url: '/deviceList',
+      data: data,
+      dataType: 'json',
+      cache: false,
+      success: function(data) {
+        if (data.success) {
+          $('#device').append('<option value="None"></option>');
+          for (let i of data.devices) {
+            $('#device').append(`<option value="${i}">${i}</option>`);
+          }
+        }
+        else {
+          $('#main-page').html('<p>No Datastore</p>');
+        }
+      }
+    });
   }
 
   /** Decodes the WebSocket message and adds to table */
   websocketOnMessage(message) {
     let messageData = JSON.parse(message.data);
     if (messageData.messageType === 'logData') {
-      for (let entry of messageData.logEntries) {
-        this.logTable_.append(this.renderLog(entry));
-      }
+      this.logTable_.append(messageData.logEntries);
       $('#log-table').DataTable();
+    }
+    if (messageData.messageType === 'apiKey') {
+      this.apiKey_.append(messageData.user);
     }
   }
 
@@ -77,4 +102,151 @@ class WirelessDebug {
 /** When the document has been loaded, start Widb */
 $(document).ready(() => {
   new WirelessDebug().start();
+  let api_key = $('#api-key');
+  let device = $('#device');
+  let app = $('#app');
+  let time = $('#start-time');
+  device.on('change', () => {
+    let chosen_device = device.val();
+    // Gets rid of old data but keeps table structure.
+    let data_table = $('#historical-log-table').DataTable();
+    data_table.destroy();
+    if (chosen_device !== 'None') {
+      $('#hidden-dev-alias').css('display', 'block');
+      $('#hidden-app').css('display', 'block');
+      $('#hidden-app-alias').css('display', 'none');
+      $('#dev-alias').val('');
+      $('#hidden-start').css('display', 'none');
+      let data = {
+        'apiKey': api_key.html(),
+        'device': chosen_device,
+      };
+      $.ajax({
+        url: '/appList',
+        data: data,
+        cache: false,
+        success: function(data) {
+          app.empty();
+          time.empty();
+          $('#historical-log-table tbody tr').remove();
+          app.append('<option value="None"></option>');
+          for (let i of data.apps) {
+            app.append(`<option value="${i}">${i}</option>`);
+          }
+        },
+      });
+    } else {
+      $('#hidden-dev-alias').css('display', 'none');
+      $('#hidden-app').css('display', 'none');
+      $('#hidden-start').css('display', 'none');
+      $('#historical-log-table tbody tr').remove();
+    }
+  });
+  app.on('change', () => {
+    let chosen_app = app.val();
+    // Gets rid of old data but keeps table structure.
+    data_table = $('#historical-log-table').DataTable();
+    data_table.destroy();
+    if (chosen_app !== 'None') {
+      $('#hidden-app-alias').css('display', 'block');
+      $('#hidden-start').css('display', 'block');
+      $('#app-alias').val('');
+      let data = {
+        'apiKey': api_key.html(),
+        'device': device.val(),
+        'app': chosen_app,
+      };
+      $.ajax({
+        url: '/sessionList',
+        data: data,
+        cache: false,
+        success: function(data) {
+          time.empty();
+          $('#historical-log-table tbody tr').remove();
+          time.append('<option value="None"></option>');
+          for (let i of data.starttimes) {
+            time.append(`<option value="${i}">${i}</option>`);
+          }
+        },
+      });
+    } else {
+      $('#hidden-app-alias').css('display', 'none');
+      $('#hidden-start').css('display', 'none');
+      $('#historical-log-table tbody tr').remove();
+    }
+  });
+
+  time.on('change', () => {
+    let chosen_starttime = time.val();
+    // Gets rid of old data but keeps table structure.
+    data_table = $('#historical-log-table').DataTable();
+    data_table.destroy();
+    $('#historical-log-table tbody tr').remove();
+    if (chosen_starttime !== 'None') {
+      let data = {
+        'apiKey': api_key.html(),
+        'device': device.val(),
+        'app': app.val(),
+        'starttime': chosen_starttime,
+      };
+      $.ajax({
+        url: '/logs',
+        data: data,
+        cache: false,
+        success: function(data) {
+          $('#historical-log-table').append(data.logs);
+          data_table = $('#historical-log-table').DataTable();
+        },
+      });
+    }
+  });
+
+  $('#device-alias').click(function(e) {
+    e.preventDefault();
+    let data = {
+      'apiKey': api_key.html(),
+      'device': device.val(),
+      'alias': $('#dev-alias').val(),
+    };
+    $.ajax({
+      url: '/aliasDevice',
+      data: data,
+      success: function(data) {
+        if (data.dev_success) {
+          window.location.reload();
+        } else {
+          alert('Device Alias needs to be unique');
+        }
+      },
+    });
+  });
+
+  $('#appname-alias').click(function(e) {
+    e.preventDefault();
+    let data = {
+      'apiKey': api_key.html(),
+      'device': device.val(),
+      'app': app.val(),
+      'alias': $('#app-alias').val(),
+    };
+    $.ajax({
+      url: '/aliasApp',
+      data: data,
+      success: function(data) {
+        if (data.app_success) {
+          window.location.reload();
+        } else {
+          alert('App Alias needs to be unique');
+        }
+      },
+    });
+  });
+
+  $('#clear-datastore').click(function(e) {
+    e.preventDefault();
+    $.ajax({
+      url: '/clearDatastore',
+      success: window.location.reload()
+    });
+  });
 });

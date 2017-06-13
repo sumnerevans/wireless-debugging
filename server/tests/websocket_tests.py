@@ -24,7 +24,7 @@ def test_start_session():
 
 
 def test_associate_user():
-    """ Verifies that when a user connects the server on a web UI their 
+    """ Verifies that when a user connects the server on a web UI their
         connection is tied to some metadata stored in a private array,
         specifically their API key.
     """
