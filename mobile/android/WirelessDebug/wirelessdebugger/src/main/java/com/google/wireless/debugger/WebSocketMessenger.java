@@ -186,9 +186,8 @@ class WebSocketMessenger extends WebSocketClient {
         sendAndCatch(payload.toString());
     }
 
-    public void sendSystemMetrics(int memUsed, int memTotal, double cpuUsage, double
-            bytesSentPerSec, double
-            bytesReceivedPerSec, long timeStamp) {
+    public void sendSystemMetrics(int memUsed, int memTotal, double cpuUsage,
+            double bytesSentPerSec, double bytesReceivedPerSec, long timeStamp) {
         JSONObject payload = new JSONObject();
         try {
             payload.put("messageType", "deviceMetrics");
