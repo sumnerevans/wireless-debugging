@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-
 import javax.annotation.CheckForNull;
 
 /**
@@ -84,12 +83,7 @@ class WebSocketMessenger extends WebSocketClient {
             Log.e(TAG, e.toString());
         }
 
-        try {
-            send(payload.toString());
-        } catch (WebsocketNotConnectedException wse) {
-            Log.e(TAG, wse.toString());
-            mRunning = false;
-        }
+        sendAndCatch(payload.toString());
     }
 
     /**
@@ -151,10 +145,12 @@ class WebSocketMessenger extends WebSocketClient {
             send(payload.toString());
         } catch (WebsocketNotConnectedException wse) {
             Log.e(TAG, wse.toString());
+
             if (mFailedSendsRemaining > 0) {
                 mLogsToSend.addAll(logsToSendCopy);
                 mFailedSendsRemaining--;
             } else {
+                Log.e(TAG, "Failed to send data, stopping.");
                 mRunning = false;
             }
         }
@@ -182,12 +178,7 @@ class WebSocketMessenger extends WebSocketClient {
             Log.e(TAG, e.toString());
         }
 
-        try {
-            send(payload.toString());
-        } catch (WebsocketNotConnectedException wse) {
-            Log.e(TAG, wse.toString());
-            mRunning = false;
-        }
+        sendAndCatch(payload.toString());
     }
 
     /**
@@ -196,5 +187,18 @@ class WebSocketMessenger extends WebSocketClient {
      */
     public boolean isRunning() {
         return mRunning;
+    }
+
+    /**
+     * Sends data across the websocket and catches a WebsocketNotConnected exception if thrown.
+     * @param message Message to be sent to the server.
+     */
+    private void sendAndCatch(String message) {
+        try {
+            send(message);
+        } catch (WebsocketNotConnectedException wse) {
+            Log.e(TAG, wse.toString());
+            mRunning = false;
+        }
     }
 }
