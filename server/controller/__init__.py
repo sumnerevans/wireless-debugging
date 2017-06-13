@@ -9,7 +9,6 @@ import controller.websocket
 
 # Replace MongoDataStoreInterface with your desired datastore interface.
 from datastore_interfaces.mongo_datastore_interface import MongoDatastoreInterface
-#from datastore_interfaces.no_datastore_interface import NoDatastoreInterface #TODO: Remove NoDataStore lines
 
 # Replace email_auth with your desired user management interface
 from user_management_interfaces import email_auth
@@ -21,4 +20,3 @@ from user_management_interfaces import email_auth
 # Also replace MongoDataStoreInterface() with your desired datastore interface.
 user_management_interface = email_auth.EmailAuth()
 datastore_interface = MongoDatastoreInterface()
-#datastore_interface = NoDatastoreInterface() #TODO: Remove NoDataStore lines

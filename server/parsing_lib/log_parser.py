@@ -156,7 +156,7 @@ class LogParser(object):
         Returns:
             string: formatted HTML
         """
-        html = ""
+        html = ''
         for line in parsed_log_dict:
             html += LogParser.convert_line_to_html(line)
         return html

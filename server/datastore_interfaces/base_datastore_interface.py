@@ -9,9 +9,10 @@ class DatastoreInterface(object):
         """
 
     def store_logs(self, api_key, device_name, app_name, start_time, os_type, log_entries):
-        """This function stores a set of log entries to the datastore. This function may
-           be called multiple times per session, so it must append the log entries in
-           the storage mechanism.
+        """This function stores a set of log entries to the datastore.
+
+           This function may be called multiple times per session, so it must
+           append the log entries in the storage mechanism.
 
         Args
             api_key: the API Key associated with the logs
@@ -25,6 +26,7 @@ class DatastoreInterface(object):
 
     def set_session_over(self, api_key, device_name, app_name, start_time):
         """This function is called to indicate to the datastore that the session is over.
+
            This can set a flag on the session in the datastore indicating that it
            should not be modified, for example.
 

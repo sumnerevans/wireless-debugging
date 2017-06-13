@@ -48,6 +48,7 @@ def index():
 @route('/current')
 @kajiki_view('current')
 def current():
+    """Show current streaming logs."""
     if not controller.user_management_interface.is_user_logged_in(request):
         redirect('/login_page')
 
@@ -58,6 +59,7 @@ def current():
 @route('/historical')
 @kajiki_view('historical')
 def historical():
+    """"Retrieve stored data from datastore."""
     if not controller.user_management_interface.is_user_logged_in(request):
         redirect('/login_page')
 
@@ -67,6 +69,7 @@ def historical():
 @route('/new_login')
 @kajiki_view('new_login')
 def new_login():
+    """Shows new login page."""
     return {'page': 'new_login'}
 
 

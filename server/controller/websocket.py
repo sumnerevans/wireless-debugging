@@ -86,7 +86,7 @@ def start_session(message, websocket, metadata):
 
     for attribute, value in message.items():
         metadata[attribute] = value
-    metadata["start_time"] = str(datetime.datetime.now())
+    metadata['start_time'] = str(datetime.datetime.now())
 
 
 @ws_router('logDump')
@@ -114,9 +114,8 @@ def log_dump(message, websocket, metadata):
     # Send to database and convert to html.
     html_logs = LogParser.convert_to_html(parsed_logs['logEntries'])
     controller.datastore_interface.store_logs(
-        metadata["apiKey"], metadata["deviceName"], metadata["appName"],
-        metadata["start_time"], metadata["osType"], parsed_logs)
-
+        metadata['apiKey'], metadata['deviceName'], metadata['appName'],
+        metadata['start_time'], metadata['osType'], parsed_logs)
 
     send_logs = {
         'messageType': 'logData',
@@ -132,12 +131,12 @@ def log_dump(message, websocket, metadata):
 def end_session(message, websocket, metadata):
     """Set session is over and add to the device/app collection."""
     controller.datastore_interface.set_session_over(
-        metadata["apiKey"],
-        metadata["deviceName"],
-        metadata["appName"],
-        metadata["start_time"])
+        metadata['apiKey'],
+        metadata['deviceName'],
+        metadata['appName'],
+        metadata['start_time'])
     controller.datastore_interface.add_device_app(
-        metadata["apiKey"], metadata["deviceName"], metadata["appName"])
+        metadata['apiKey'], metadata['deviceName'], metadata['appName'])
 
 
 @ws_router('associateUser')
@@ -159,8 +158,8 @@ def associate_user(message, websocket, metadata):
     _web_ui_ws_connections.setdefault(api_key, []).append(websocket)
 
     # give out API key as user
-    guid = {
-        'messageType': 'guid',
+    web_api_key = {
+        'messageType': 'apiKey',
         'user': message['apiKey'],
     }
 
@@ -169,4 +168,4 @@ def associate_user(message, websocket, metadata):
             _web_ui_ws_connections))
 
     for connection in associated_websockets:
-        connection.send(util.serialize_to_json(guid))
+        connection.send(util.serialize_to_json(web_api_key))

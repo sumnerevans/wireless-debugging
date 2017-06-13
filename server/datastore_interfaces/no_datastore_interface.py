@@ -24,7 +24,7 @@ class NoDatastoreInterface(DatastoreInterface):
             os_type: the OS type (iOS or Android)
             log_entries: the log entries to store
         """
-        return ''
+        pass
 
     def set_session_over(self, api_key, device_name, app_name, start_time):
         """This function is called to indicate to the datastore that the session is over.
@@ -37,7 +37,7 @@ class NoDatastoreInterface(DatastoreInterface):
             app_name: the name of the app associated with the logs
             start_time: the time that the session started
         """
-        return ''
+        pass
 
     def retrieve_logs(self, api_key, device_name, app_name, start_time):
         """This function retrieves logs for the given session.
@@ -52,8 +52,7 @@ class NoDatastoreInterface(DatastoreInterface):
             osType: the OS type
             logEntries: a list of log entries as Python dictionaries
         """
-        return ''
-
+        return None
 
     def retrieve_devices(self, api_key):
         """This function retrieves a list of devices associated with the given API Key.
@@ -64,8 +63,7 @@ class NoDatastoreInterface(DatastoreInterface):
         Returns:
             array: array of names of device names
         """
-        return ''
-
+        return []
 
     def retrieve_apps(self, api_key, device_name):
         """This function retrieves apps given a device.
@@ -77,8 +75,7 @@ class NoDatastoreInterface(DatastoreInterface):
         Returns:
             array: array of the names of the apps on the given device
         """
-        return ''
-
+        return []
 
     def retrieve_sessions(self, api_key, device_name, app_name):
         """This function retrieves a list of sessions for a given API Key, device, and app.
@@ -92,8 +89,7 @@ class NoDatastoreInterface(DatastoreInterface):
             array: list of datetime objects, one for each of the session start
                    times associated with the given API Key, device, and app
         """
-        return ''
-
+        return []
 
     def add_device_app(self, api_key, device_name, app_name):
         """This function adds a device/app combination to the device/app collection.
@@ -103,7 +99,7 @@ class NoDatastoreInterface(DatastoreInterface):
             device_name: the name of the device
             app_name: the name of the app
         """
-        return ''
+        pass
 
     def update_alias_device(self, api_key, device_raw_name, device_alias):
         """This function updates alias for a device.
@@ -113,7 +109,7 @@ class NoDatastoreInterface(DatastoreInterface):
             device_raw_name: name being aliased
             device_alias: new alias for device
         """
-        return ''
+        pass
 
     def update_alias_app(self, api_key, device_name, app_raw_name, app_alias):
         """This function updates alias for an app.
@@ -124,7 +120,7 @@ class NoDatastoreInterface(DatastoreInterface):
             app_raw_name: name being aliased
             app_alias: new alias for app
         """
-        return ''
+        pass
 
     def get_raw_device_name_from_alias(self, api_key, device_alias):
         """This function returns the raw device name based on an alias.
@@ -153,4 +149,4 @@ class NoDatastoreInterface(DatastoreInterface):
 
     def clear_datastore(self):
         """This function clears datastore of records."""
-        return ''
+        pass

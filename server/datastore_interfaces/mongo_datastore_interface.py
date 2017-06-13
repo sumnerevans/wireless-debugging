@@ -145,28 +145,28 @@ class MongoDatastoreInterface(DatastoreInterface):
                                        'app_name': app_name, 'app_alias': app_name})
 
     def update_alias_device(self, api_key, device_raw_name, device_alias):
-        """This function updates alias for a device.
+        """This function updates the alias for a device.
 
         Args:
             api_key: the API key
             device_raw_name: name being aliased
-            device_alias: new alias for device. his is what shows in the web app dropboxes.
+            device_alias: new alias for device. This is what shows in the web app dropboxes.
         """
         find_dev_alias = self._device.find_one(
             {'api_key': api_key, 'device_alias': device_alias})
-        if not find_dev_alias:
-            find_device = self._device.find_one(
-                {'api_key': api_key,
-                 'device_name': self.get_raw_device_name_from_alias(api_key, device_raw_name)})
-            if find_device:
-                find_device['device_alias'] = device_alias
-                self._device.update_one(
-                    {'api_key': api_key,
-                     'device_name': self.get_raw_device_name_from_alias(api_key, device_raw_name)},
-                    {'$set': find_device}, upsert=True)
-            return True
-        else:
+        if find_dev_alias:
             return False
+        find_device = self._device.find_one(
+            {'api_key': api_key,
+             'device_name': self.get_raw_device_name_from_alias(api_key, device_raw_name)})
+        if find_device:
+            find_device['device_alias'] = device_alias
+            self._device.update_one(
+                {'api_key': api_key,
+                 'device_name': self.get_raw_device_name_from_alias(api_key, device_raw_name)},
+                {'$set': find_device}, upsert=True)
+        return True
+
 
     def update_alias_app(self, api_key, device_name, app_raw_name, app_alias):
         """This function updates alias for an app.
@@ -179,19 +179,19 @@ class MongoDatastoreInterface(DatastoreInterface):
         """
         find_app_alias = self._app_name.find_one(
             {'api_key': api_key, 'app_alias': app_alias})
-        if not find_app_alias:
-            app = self._app_name.find_one(
-                {'api_key': api_key, 'app_name': self.get_raw_app_name_from_alias(
-                    api_key, device_name, app_raw_name)})
-            if app:
-                app['app_alias'] = app_alias
-                self._app_name.update_one(
-                    {'api_key': api_key, 'app_name': self.get_raw_app_name_from_alias(
-                        api_key, device_name, app_raw_name)},
-                    {'$set': app}, upsert=True)
-            return True
-        else:
+        if find_app_alias:
             return False
+        app = self._app_name.find_one(
+            {'api_key': api_key, 'app_name': self.get_raw_app_name_from_alias(
+                api_key, device_name, app_raw_name)})
+        if app:
+            app['app_alias'] = app_alias
+            self._app_name.update_one(
+                {'api_key': api_key, 'app_name': self.get_raw_app_name_from_alias(
+                    api_key, device_name, app_raw_name)},
+                {'$set': app}, upsert=True)
+        return True
+
 
     def get_raw_device_name_from_alias(self, api_key, device_alias):
         """This function returns the raw device name based on an alias.

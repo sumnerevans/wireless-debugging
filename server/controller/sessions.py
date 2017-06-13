@@ -1,7 +1,7 @@
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
-'''
+"""
 Session Controller
-'''
+"""
 import controller
 
 from bottle import request, route
@@ -14,7 +14,7 @@ def get_device_list():
     api_key = request.query.get('apiKey').strip()
     devices = controller.datastore_interface.retrieve_devices(api_key)
     return {
-        'success': devices != '',
+        'success': devices != [],
         'devices': devices,
     }
 

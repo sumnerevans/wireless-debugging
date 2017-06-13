@@ -77,6 +77,7 @@ def test_store_logs():
     assert not log['ended']
     di.clear_datastore()
 
+
 def test_set_session_over():
     """This function checks if class sets session over as expected."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
@@ -93,6 +94,7 @@ def test_set_session_over():
     assert log['ended']
     di.clear_datastore()
 
+
 def test_retrieve_logs():
     """This function checks if class retrieves logs as expected."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
@@ -103,6 +105,7 @@ def test_retrieve_logs():
     assert log == logs
     di.clear_datastore()
 
+
 def test_retrieve_devices():
     """This function checks if class retrieves device list as expected."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
@@ -111,6 +114,7 @@ def test_retrieve_devices():
     assert devices == ['Pixel']
     di.clear_datastore()
 
+
 def test_retrieve_apps():
     """This function checks if class retrieves app list as expected."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
@@ -118,6 +122,7 @@ def test_retrieve_apps():
     apps = di.retrieve_apps(api_key, device_name)
     assert apps == ['Hangouts']
     di.clear_datastore()
+
 
 def test_retrieve_sessions():
     """This function checks if class retrieves start_times as expected."""
@@ -129,6 +134,7 @@ def test_retrieve_sessions():
     session = di.retrieve_sessions(api_key, device_name, app_name)
     assert session == [start_time]
     di.clear_datastore()
+
 
 def test_add_device_app():
     """This function checks if class adds device/app to historical databases as expected."""
@@ -145,6 +151,7 @@ def test_add_device_app():
     assert log_app['app_alias'] == app_name
     di.clear_datastore()
 
+
 def test_update_alias_device():
     """This function checks if class aliases device as expected including ensuring uniqueness."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
@@ -158,6 +165,7 @@ def test_update_alias_device():
     assert not di.update_alias_device("23", "dev", "Alias")
     di.clear_datastore()
 
+
 def test_update_alias_app():
     """This function checks if class aliases apps expected including ensuring uniqueness."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
@@ -169,8 +177,9 @@ def test_update_alias_app():
     assert log_app['app_name'] == app_name
     assert log_app['app_alias'] == "Alias"
     di.add_device_app("23", "dev", "app")
-    assert not di.update_alias_app("23", "dev", "app","Alias")
+    assert not di.update_alias_app("23", "dev", "app", "Alias")
     di.clear_datastore()
+
 
 def test_get_raw_device_name_from_alias():
     """This function checks if class retrieves raw device name given an alias as expected."""
@@ -181,14 +190,17 @@ def test_get_raw_device_name_from_alias():
     assert raw_dev_name == device_name
     di.clear_datastore()
 
+
 def test_get_raw_app_name_from_alias():
     """This function checks if class retrieves raw app name given an alias as expected."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
     di.add_device_app(api_key, device_name, app_name)
     di.update_alias_app(api_key, device_name, app_name, "Alias")
-    raw_app_name = di.get_raw_app_name_from_alias(api_key, device_name, "Alias")
+    raw_app_name = di.get_raw_app_name_from_alias(
+        api_key, device_name, "Alias")
     assert raw_app_name == app_name
     di.clear_datastore()
+
 
 def test_clear_datastore():
     """This function checks if class clears datastore of data as expected."""

@@ -43,6 +43,7 @@ def _test_case_parser(test_case):
 
     return test_case
 
+
 def test_parse():
     """ Tests that the LogParser.parse method works properly. """
 
@@ -73,6 +74,7 @@ def test_parse_raw_log():
             test = test_case['input']
             expected_result = test_case['expectedResult']
             assert parsing_lib.LogParser.parse_raw_log(test) == expected_result
+
 
 def test_convert_line_to_html():
     """Tests that the LogParser.convert_line_to_html works properly"""
@@ -116,6 +118,7 @@ def test_convert_line_to_html():
     for test, expected_result in zip(tests, expected_results):
         assert parsing_lib.LogParser.convert_line_to_html(
             test) == expected_result
+
 
 def test_convert_to_html():
     """Tests that LogParser.convert_to_html works properly"""
