@@ -1,5 +1,5 @@
 """
-Tests the base user management interface class. This is an abstract class so it 
+Tests the base user management interface class. This is an abstract class so it
 just verifies that everything is unimplemented.
 
 These tests are pretty trivial.

@@ -26,7 +26,7 @@ class NoAuth(user_management_interface_base.UserManagementInterfaceBase):
         return True
 
     def handle_login(self, form_data, request, response):
-        """ Function is unused, but is abstract so needs to be implemented. 
+        """ Function is unused, but is abstract so needs to be implemented.
 
             Returns:
                 A tuple containing true and a blank string. Normally, this

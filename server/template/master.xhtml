@@ -20,6 +20,7 @@
     <script src="/resources/js/lib/jquery.dataTables.min.js"></script>
     <script src="/resources/js/lib/dataTables.bootstrap.min.js"></script>
     <script src="/resources/js/app/widb.js"></script>
+    <script src="/resources/js/app/device_metric_graphs.js"></script>
     <py:block name="head"></py:block>
   </head>
   <body>
@@ -38,8 +39,8 @@
         <div class="collapse navbar-collapse" id="navbar-content">
           <ul class="nav navbar-nav">
             <li class="${('', 'active')[self.defined('page') and page=='index']}"><a href="/">Home</a></li>
-      	    <li class="${('', 'active')[self.defined('page') and page=='current']}"><a href="/current">Current Session</a></li>
-      	    <li class="${('', 'active')[self.defined('page') and page=='historical']}"><a href="/historical">Historical Session</a></li>
+            <li class="${('', 'active')[self.defined('page') and page=='current']}"><a href="/current">Current Session</a></li>
+            <li class="${('', 'active')[self.defined('page') and page=='historical']}"><a href="/historical">Historical Session</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right" py:if="logged_in">
             <li class="nav-item">
@@ -49,7 +50,7 @@
         </div>
       </div>
     </nav>
-    <div class="container">
+    <div class="container-fluid">
       <!-- Flash messages -->
       <div py:if="self.defined('flash') and len(flash) &gt; 0">
         <div class="row" id="flash">
