@@ -80,8 +80,6 @@ def index():
     return {
         'page': 'index',
         'api_key': api_key,
-        # If you've made it here, you have to be successfully logged in
-        #'logged_in': True,
     }
 
 
