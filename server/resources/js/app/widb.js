@@ -35,7 +35,7 @@ class WirelessDebug {
     let apiKey = '';
     for(let i = 0; i < cookieStrings.length; i++) {
       let [cookieKey, cookieVal] = cookieStrings[i].trim().split('=');
-      if (cookieKey == 'api_key') {
+      if (cookieKey === 'api_key') {
         apiKey = cookieVal;
         break;
       }
@@ -105,7 +105,7 @@ $(document).ready(() => {
   let api_key = $('#api-key');
   let device = $('#device');
   let app = $('#app');
-  let time = $('#starttime');
+  let time = $('#start-time');
   device.on('change', () => {
     let chosen_device = device.val();
     // Gets rid of old data but keeps table structure.
