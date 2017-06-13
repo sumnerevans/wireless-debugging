@@ -42,7 +42,7 @@ class DummyForm:
 class DummyRequest:
     """ A dummy Bottle request object class.
 
-        Acts as a placeholder for the request object fromthe bottle library,
+        Acts as a placeholder for the request object from the bottle library,
         whose functionality requires a web browser. Contains the necessary
         methods and variables to simulate cookies and forms.
 
