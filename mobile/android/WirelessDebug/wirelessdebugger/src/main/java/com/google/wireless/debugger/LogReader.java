@@ -28,8 +28,8 @@ class LogReader implements Runnable {
      * @param hostname Server's IP/Host address
      * @param timeInterval Time interval between log sends
      */
-    LogReader(String hostname, String apiKey, int timeInterval) {
-        mWebSocketMessenger = WebSocketMessenger.buildNewConnection(hostname, apiKey);
+    LogReader(String hostname, String apiKey, String appName, int timeInterval) {
+        mWebSocketMessenger = WebSocketMessenger.buildNewConnection(hostname, apiKey, appName);
         if (mWebSocketMessenger == null) {
             Log.e(TAG, "Failed to create WebSocketMessenger Object");
         }
@@ -88,6 +88,7 @@ class LogReader implements Runnable {
                 mLogs.add(logLine);
             }
 
+            bufferedReader.close();
             // TODO (Reece): Replace with a send finished signal to the web socket messenger
             outputLogs();
         } catch (IOException ioe) {
@@ -105,15 +106,17 @@ class LogReader implements Runnable {
         long currentTime = System.currentTimeMillis();
         long timeDifference = currentTime - mLastSendTime;
         if (timeDifference > mUpdateTimeInterval && mWebSocketMessenger.isOpen()) {
-            int currentMemUsage = systemMonitor.getMemoryUsage();
-            double networkBytesSentPerSec = systemMonitor.getSentBytesPerSecond();
-            double networkBytesReceivedPerSec = systemMonitor.getReceivedBytesPerSecond();
-            double cpuUsage = systemMonitor.getCpuUsage();
 
-            mWebSocketMessenger.sendSystemMetrics(currentMemUsage, totalSystemMemory, cpuUsage,
-                    networkBytesSentPerSec, networkBytesReceivedPerSec, currentTime);
+            mWebSocketMessenger.sendSystemMetrics(
+                    systemMonitor.getMemoryUsage(),
+                    totalSystemMemory,
+                    systemMonitor.getCpuUsage(),
+                    systemMonitor.getSentBytesPerSecond(),
+                    systemMonitor.getReceivedBytesPerSecond(),
+                    currentTime);
+
             mWebSocketMessenger.sendLogDump();
-            mLastSendTime = System.currentTimeMillis();
+            mLastSendTime = currentTime;
         }
     }
 

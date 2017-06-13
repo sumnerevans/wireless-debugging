@@ -21,6 +21,7 @@ class WebSocketMessenger extends WebSocketClient {
     private final ArrayList<String> mLogsToSend;
     private final String mApiKey;
     private boolean mRunning;
+    private String mHostAppName;
 
     /**
      * Creates a new WebSocketMessenger using the specified address.
@@ -29,7 +30,8 @@ class WebSocketMessenger extends WebSocketClient {
      * @return A new WebSocket messenger object, or null if the URI is invalid.
      */
     @CheckForNull
-    public static WebSocketMessenger buildNewConnection(String socketAddress, String apiKey) {
+    public static WebSocketMessenger buildNewConnection(String socketAddress, String apiKey,
+                                                        String appName) {
         URI uri;
         Log.i(TAG, "URI: " + socketAddress);
         try {
@@ -39,17 +41,18 @@ class WebSocketMessenger extends WebSocketClient {
             return null;
         }
 
-        return new WebSocketMessenger(uri, apiKey);
+        return new WebSocketMessenger(uri, apiKey, appName);
     }
 
     /**
      * Constructs a new WebSocketMessenger object and attempts to establish a connection.
      * @param uri: Specifies address of the WebSocket connection.
      */
-    private WebSocketMessenger(URI uri, String apiKey) {
+    private WebSocketMessenger(URI uri, String apiKey, String appName) {
         super(uri);
         mLogsToSend = new ArrayList<>();
         mApiKey = apiKey;
+        mHostAppName = appName;
         connect();
         mRunning = true;
     }
@@ -76,12 +79,12 @@ class WebSocketMessenger extends WebSocketClient {
             payload.put("osType", "Android");
             payload.put("apiKey", mApiKey);
             payload.put("deviceName", deviceNameBuilder.toString());
-            payload.put("appName", "NOT IMPLEMENTED");
+            payload.put("appName", mHostAppName);
 
         } catch (JSONException e) {
             Log.e(TAG, e.toString());
         }
-        // TODO Reece: Handle WebsocketNotConnectedException
+        // TODO(Reece): Handle WebsocketNotConnectedException
         send(payload.toString());
     }
 
@@ -140,7 +143,7 @@ class WebSocketMessenger extends WebSocketClient {
             Log.e(TAG, e.toString());
         }
 
-        // TODO Reece: Handle WebsocketNotConnectedException
+        // TODO(Reece): Handle WebsocketNotConnectedException
         send(payload.toString());
     }
 
@@ -169,7 +172,7 @@ class WebSocketMessenger extends WebSocketClient {
             Log.e(TAG, e.toString());
         }
 
-        // TODO Reece: Handle WebsocketNotConnectedException
+        // TODO(Reece): Handle WebsocketNotConnectedException
         send(payload.toString());
     }
 

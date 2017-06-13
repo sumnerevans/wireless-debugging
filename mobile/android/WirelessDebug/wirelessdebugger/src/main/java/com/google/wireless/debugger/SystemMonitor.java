@@ -31,7 +31,7 @@ class SystemMonitor {
     private int mPreviousBytesReceived;
 
     /**
-     * Creates a new System Monitor and reads initial system state
+     * Creates a new System Monitor and reads initial system state.
      */
     public SystemMonitor() {
         ArrayList<String> cpuStatLines = getFileLines(PROC_STAT);
@@ -59,9 +59,11 @@ class SystemMonitor {
             while ((line = reader.readLine()) != null) {
                 fileLines.add(line);
             }
+            reader.close();
         } catch (IOException e) {
             Log.e(TAG, e.toString());
         }
+
         return fileLines;
     }
 
@@ -82,14 +84,14 @@ class SystemMonitor {
         int totalUsage = currentCpuStats[TOTAL_TIME] - mPreviousCpuStats[TOTAL_TIME];
         // Clamped value taken because sometimes the the file is read from the past (what!)
         double cpuUsagePercent = Math.abs(systemUsage / (double) totalUsage);
-        cpuUsagePercent = Math.min(1, cpuUsagePercent);
+        cpuUsagePercent = Math.min(1.0, cpuUsagePercent);
         mPreviousCpuStats = currentCpuStats;
 
         return cpuUsagePercent;
     }
 
     /**
-     * Returns the amount of memory (in kilobytes used/active).
+     * Returns the amount of memory (KB) used/active.
      * @return Memory used in kilobytes.
      */
     public int getMemoryUsage() {
@@ -111,14 +113,14 @@ class SystemMonitor {
     public double getSentBytesPerSecond() {
         int currentBytesSent = getSentBytes();
         long currentTime = System.currentTimeMillis();
-        long elapsedMilliseconds = System.currentTimeMillis() - mLastBytesSentTime;
+        long elapsedMilliseconds = currentTime - mLastBytesSentTime;
         mLastBytesSentTime = currentTime;
         double bytesPerMillisecond  = (currentBytesSent - mPreviousBytesSent) /
                 (double) elapsedMilliseconds;
 
         mPreviousBytesSent = currentBytesSent;
 
-        return bytesPerMillisecond * (1000 / elapsedMilliseconds );
+        return bytesPerMillisecond * 1000;
     }
 
     /**
@@ -135,7 +137,7 @@ class SystemMonitor {
 
         mPreviousBytesReceived = currentBytesReceived;
 
-        return bytesPerMillisecond * (1000 / elapsedMilliseconds );
+        return bytesPerMillisecond * 1000;
     }
 
     /**
@@ -208,8 +210,13 @@ class SystemMonitor {
         int totalBytes = 0;
 
         // Remove first two lines from the /proc/net/dev file
-        networkFileLines.remove(0);
-        networkFileLines.remove(0);
+        if (networkFileLines.size() > 2) {
+            networkFileLines.remove(0);
+            networkFileLines.remove(0);
+        } else {
+            Log.e(TAG, PROC_NET_DEV + " file read incorrectly, cannot parse");
+            return 0;
+        }
 
         for (String networkLine : networkFileLines) {
             networkLine = networkLine.substring(networkLine.indexOf(":"));
