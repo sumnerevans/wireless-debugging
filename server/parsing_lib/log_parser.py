@@ -4,6 +4,7 @@ LogParser class
 """
 
 import re
+
 from datetime import datetime
 
 
@@ -11,7 +12,7 @@ class LogParser(object):
     """ Handles parsing of all logs from the Mobile API. """
 
     @staticmethod
-    def parse(message):
+    def parse(message, type_file='dict'):
         """ Parses a log message from the Mobile API.
 
         Args:
@@ -21,28 +22,35 @@ class LogParser(object):
             dict: the message data to be sent to the web browser
         """
         log_entries = []
+        if 'rawLogData' not in message:
+            return {
+                'messageType': 'logData',
+                'osType': 'Android',
+                'logEntries': [],
+            }
+
         raw_data = message['rawLogData'].splitlines()
 
         # Ensure that the first log is not a "beginning of /dev/log" line
-        while re.search('beginning of /dev/log/', raw_data[0]) is not None:
+        while re.search('beginning of', raw_data[0]) is not None:
             raw_data = raw_data[1:]
 
         # Parse the first log line to have context for futher log lines if an
-        # event was split across multiple lines
+        # event was split across multiple lines.
         old_log = LogParser.parse_raw_log(raw_data[0])
         log_entries.append(LogParser.parse_entries(old_log))
         current_log = None
 
-        # Since we've already parsed the first line, start at index 1
+        # Since we've already parsed the first line, start at index 1.
         for line in raw_data[1:]:
             # Skip "beginning of /dev/log" lines. There may be cases when these
             # appear in a log line that is not at the beginning of the raw data
-            if re.search('beginning of /dev/log/', line) is not None:
+            if re.search('beginning of', line) is not None:
                 continue
 
             # check if current log is like the previous log parsed
             current_log = LogParser.parse_raw_log(line)
-            if (current_log['time'] != old_log['time']):
+            if current_log['time'] != old_log['time']:
                 log_entries.append(LogParser.parse_entries(current_log))
             else:
                 # if part of the same event, add the log's text to the previous
@@ -84,9 +92,9 @@ class LogParser(object):
         Returns:
             dict: the log entry from the log line
         """
-        parsed_log = re.search('(.*) (\\d*) (\\d*) (.) (.*?): ((?:.*\\n*)*)',
-                               log_data)
-
+        parsed_log = re.search(
+            '(.*)\\s+(\\d+)\\s+(\\d+) ([IWVEDAF]) (.*?): ((?:.*\\n*)*)',
+            log_data)
         # Parse the Year, we have to add the year to the string so that it
         # parses correctly.
         current_year = datetime.now().year
@@ -102,6 +110,7 @@ class LogParser(object):
             'E': 'Error',
             'D': 'Debug',
             'A': 'WTF',
+            'F': 'Fatal',
         }
 
         return {
@@ -112,3 +121,42 @@ class LogParser(object):
             'tag': parsed_log.group(5),
             'text': parsed_log.group(6),
         }
+
+    @staticmethod
+    def convert_line_to_html(parsed_line):
+        """ Takes a parsed_line and converts it to HTML.
+
+        Args:
+            parsed_line: parsed line of log
+
+        Returns:
+            string: formatted HTML
+        """
+        color = ''
+        color_dict = {
+            'Warning': 'warning',
+            'Error': 'danger',
+        }
+        if parsed_line['logType'] in ['Warning', 'Error']:
+            color = color_dict[parsed_line['logType']]
+        return ('<tr class=\"' + color + '\">' +
+                '<td>' + str(parsed_line['time']) + '</td>' +
+                '<td>' + parsed_line['tag'] + '</td>' +
+                '<td>' + parsed_line['logType'] + '</td>' +
+                '<td>' + parsed_line['text'] + '</td>' +
+                '</tr>')
+
+    @staticmethod
+    def convert_to_html(parsed_log_dict):
+        """ Takes a parsed block and converts it to HTML.
+
+        Args:
+            parsed_log_dict: parsed block of logs
+
+        Returns:
+            string: formatted HTML
+        """
+        html = ''
+        for line in parsed_log_dict:
+            html += LogParser.convert_line_to_html(line)
+        return html

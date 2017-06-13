@@ -18,6 +18,8 @@ class LogReader implements Runnable {
     private Boolean mHostAppRunning = true;
     private Boolean mThreadRunning = true;
     private final WebSocketMessenger mWebSocketMessenger;
+    private final SystemMonitor systemMonitor;
+    private final int totalSystemMemory;
     private final int mUpdateTimeInterval;
     private long mLastSendTime = 0;
 
@@ -26,14 +28,17 @@ class LogReader implements Runnable {
      * Creates a new WebSocketMessenger also.
      * @param hostname Server's IP/Host address
      * @param apiKey User's API Key
+     * @param appName Name of the application being debugged.
      * @param timeInterval Time interval between log sends
      */
-    LogReader(String hostname, String apiKey, int timeInterval) {
-        mWebSocketMessenger = WebSocketMessenger.buildNewConnection(hostname, apiKey);
+    LogReader(String hostname, String apiKey, String appName, int timeInterval) {
+        mWebSocketMessenger = WebSocketMessenger.buildNewConnection(hostname, apiKey, appName);
         if (mWebSocketMessenger == null) {
             Log.e(TAG, "Failed to create WebSocketMessenger Object");
         }
         mUpdateTimeInterval = timeInterval;
+        systemMonitor = new SystemMonitor();
+        totalSystemMemory = systemMonitor.getTotalMemory();
     }
 
     /**
@@ -86,6 +91,7 @@ class LogReader implements Runnable {
                 mLogs.add(logLine);
             }
 
+            bufferedReader.close();
             mWebSocketMessenger.sendEndSessionMessage();
             outputLogs();
         } catch (IOException ioe) {
@@ -100,10 +106,20 @@ class LogReader implements Runnable {
      * Checks if enough time has passed to send logs through the WebSocketManager.
      */
     private void sendLogsIfReady() {
-        long timeDifference = System.currentTimeMillis() - mLastSendTime;
+        long currentTime = System.currentTimeMillis();
+        long timeDifference = currentTime - mLastSendTime;
         if (timeDifference > mUpdateTimeInterval && mWebSocketMessenger.isOpen()) {
+
+            mWebSocketMessenger.sendSystemMetrics(
+                    systemMonitor.getMemoryUsage(),
+                    totalSystemMemory,
+                    systemMonitor.getCpuUsage(),
+                    systemMonitor.getSentBytesPerSecond(),
+                    systemMonitor.getReceivedBytesPerSecond(),
+                    currentTime);
+
             mWebSocketMessenger.sendLogDump();
-            mLastSendTime = System.currentTimeMillis();
+            mLastSendTime = currentTime;
         }
     }
 

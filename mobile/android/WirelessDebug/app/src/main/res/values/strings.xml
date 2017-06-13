@@ -6,10 +6,4 @@
     <string name="exception_button_text">Exception</string>
     <string name="start_accel_data">Start Accelerometer Logging</string>
     <string name="stop_accel_data">Stop Accelerometer Logging</string>
-
-    <!-- Wireless Debug Information -->
-    <!-- Replace server and api_key with appropriate values -->
-    <string name="wireless_debug_server">NONE</string>
-    <string name="wireless_debug_api_key">NONE</string>
-
 </resources>

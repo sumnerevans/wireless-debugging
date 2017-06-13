@@ -22,15 +22,19 @@ class WebSocketMessenger extends WebSocketClient {
     private final String mApiKey;
     private boolean mRunning;
     private int mFailedSendsRemaining;
+    private String mHostAppName;
 
     /**
      * Creates a new WebSocketMessenger using the specified address.
      * If the address is invalid this function will return null.
      * @param socketAddress: The address (hostname or IP) of the WebSocket connection.
+     * @param apiKey: User's API key.
+     * @param appName: Name of the application being debugged.
      * @return A new WebSocket messenger object, or null if the URI is invalid.
      */
     @CheckForNull
-    public static WebSocketMessenger buildNewConnection(String socketAddress, String apiKey) {
+    public static WebSocketMessenger buildNewConnection(String socketAddress, String apiKey,
+                                                        String appName) {
         URI uri;
         Log.i(TAG, "URI: " + socketAddress);
         try {
@@ -40,17 +44,18 @@ class WebSocketMessenger extends WebSocketClient {
             return null;
         }
 
-        return new WebSocketMessenger(uri, apiKey);
+        return new WebSocketMessenger(uri, apiKey, appName);
     }
 
     /**
      * Constructs a new WebSocketMessenger object and attempts to establish a connection.
      * @param uri: Specifies address of the WebSocket connection.
      */
-    private WebSocketMessenger(URI uri, String apiKey) {
+    private WebSocketMessenger(URI uri, String apiKey, String appName) {
         super(uri);
         mLogsToSend = new ArrayList<>();
         mApiKey = apiKey;
+        mHostAppName = appName;
         mFailedSendsRemaining = 10;
         connect();
         mRunning = true;
@@ -78,17 +83,12 @@ class WebSocketMessenger extends WebSocketClient {
             payload.put("osType", "Android");
             payload.put("apiKey", mApiKey);
             payload.put("deviceName", deviceNameBuilder.toString());
-            payload.put("appName", R.string.app_name);
+            payload.put("appName", mHostAppName);
         } catch (JSONException e) {
             Log.e(TAG, e.toString());
         }
 
-        try {
-            send(payload.toString());
-        } catch (WebsocketNotConnectedException wse) {
-            Log.e(TAG, wse.toString());
-            mRunning = false;
-        }
+        sendAndCatch(payload.toString());
     }
 
     /**
@@ -150,10 +150,12 @@ class WebSocketMessenger extends WebSocketClient {
             send(payload.toString());
         } catch (WebsocketNotConnectedException wse) {
             Log.e(TAG, wse.toString());
+
             if (mFailedSendsRemaining > 0) {
                 mLogsToSend.addAll(logsToSendCopy);
                 mFailedSendsRemaining--;
             } else {
+                Log.e(TAG, "Failed to send data, stopping.");
                 mRunning = false;
             }
         }
@@ -181,12 +183,27 @@ class WebSocketMessenger extends WebSocketClient {
             Log.e(TAG, e.toString());
         }
 
+        sendAndCatch(payload.toString());
+    }
+
+    public void sendSystemMetrics(int memUsed, int memTotal, double cpuUsage, double
+            bytesSentPerSec, double
+            bytesReceivedPerSec, long timeStamp) {
+        JSONObject payload = new JSONObject();
         try {
-            send(payload.toString());
-        } catch (WebsocketNotConnectedException wse) {
-            Log.e(TAG, wse.toString());
-            mRunning = false;
+            payload.put("messageType", "deviceMetrics");
+            payload.put("osType", "Android");
+            payload.put("timeStamp", timeStamp);
+            payload.put("cpuUsage", cpuUsage);
+            payload.put("memUsage", memUsed);
+            payload.put("memTotal", memTotal);
+            payload.put("netSentPerSec", bytesSentPerSec);
+            payload.put("netReceivePerSec", bytesReceivedPerSec);
+        } catch (JSONException e) {
+            Log.e(TAG, e.toString());
         }
+
+        sendAndCatch(payload.toString());
     }
 
     /**
@@ -195,5 +212,18 @@ class WebSocketMessenger extends WebSocketClient {
      */
     public boolean isRunning() {
         return mRunning;
+    }
+
+    /**
+     * Sends data across the websocket and catches a WebsocketNotConnected exception if thrown.
+     * @param message Message to be sent to the server.
+     */
+    private void sendAndCatch(String message) {
+        try {
+            send(message);
+        } catch (WebsocketNotConnectedException wse) {
+            Log.e(TAG, wse.toString());
+            mRunning = false;
+        }
     }
 }
