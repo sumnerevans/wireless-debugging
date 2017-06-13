@@ -3,11 +3,29 @@ Tests the email authorization implementation of the user management interface.
 """
 
 import os
+import pytest
 
 from user_management_interfaces import email_auth
 from bottle import response
 from tests.test_classes import DummySocket, DummyForm, DummyRequest
 
+# This file tests the file 
+TEST_TABLE = 'temp_file.txt'
+
+@pytest.yield_fixture(autouse=True)
+def cleanup_tests():
+    """ Clean up after each test.
+
+    If the test table exists, delete it.
+
+    Args:
+        None.
+    Returns:
+        None.
+    """
+    yield
+    if os.path.isfile(TEST_TABLE):
+        os.remove(TEST_TABLE)
 
 def test_get_login():
     """ Verify that the login UI is read from fie and returned properly.
@@ -33,20 +51,18 @@ def test_exists_in_table():
     """
     umi = email_auth.EmailAuth()
     # This overrides the default table file
-    umi.user_key_table = 'temp_file.txt'
+    umi.user_key_table = TEST_TABLE
 
     test_username = 'hi@gmail.com'
 
     assert not umi._exists_in_table(test_username, 'user')
     assert not umi._exists_in_table(test_username, 'api_key')
 
-    with open('temp_file.txt', 'w') as user_table:
+    with open(TEST_TABLE, 'w') as user_table:
         user_table.write('%s,%s\n' % (test_username, test_username))
         
     assert umi._exists_in_table(test_username, 'user')
     assert umi._exists_in_table(test_username, 'api_key')
-
-    os.remove(umi.user_key_table)
 
 
 def test_user_not_logged_in():
@@ -78,7 +94,7 @@ def test_handle_new_login():
     umi = email_auth.EmailAuth()
     # It'd be nice to actualy make this a temp file.
     # This overrides the default table file
-    umi.user_key_table = 'temp_file.txt' 
+    umi.user_key_table = TEST_TABLE 
 
     form = DummyForm({
         'username': 'test@test.com',
@@ -90,8 +106,6 @@ def test_handle_new_login():
 
     assert result == (True, 'New user! Adding to users table.')
 
-    os.remove(umi.user_key_table)
-
 
 def test_handle_returning_login():
     """ Verify that when a user returns and logs in again, they are accepted
@@ -100,7 +114,7 @@ def test_handle_returning_login():
     umi = email_auth.EmailAuth()
     # It'd be nice to actualy make this a temp file.
     # This overrides the default table file
-    umi.user_key_table = 'temp_file.txt'
+    umi.user_key_table = TEST_TABLE
 
     form = DummyForm({
         'username': 'test@test.com',
@@ -110,14 +124,12 @@ def test_handle_returning_login():
 
     test_username = 'test@test.com'
 
-    with open('temp_file.txt', 'w') as user_table:
+    with open(TEST_TABLE, 'w') as user_table:
         user_table.write('%s,%s\n' % (test_username, test_username))
     
     result = umi.handle_login(form, request, response)
 
     assert result == (True, '')
-
-    os.remove(umi.user_key_table)
 
     
 def test_get_api_key():
@@ -127,7 +139,7 @@ def test_get_api_key():
     umi = email_auth.EmailAuth()
     # It'd be nice to actualy make this a temp file
     # This overrides the default table file
-    umi.user_key_table = 'temp_file.txt'
+    umi.user_key_table = TEST_TABLE
 
     request = DummyRequest()
 
@@ -143,8 +155,6 @@ def test_get_api_key():
         user_table.write('%s,%s\n' % (test_username, test_api_key))
 
     assert umi.get_api_key_for_user(request) == test_api_key
-
-    os.remove(umi.user_key_table)
 
 
 def test_find_websockets():
