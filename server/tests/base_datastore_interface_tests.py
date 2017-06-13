@@ -9,6 +9,7 @@ import pytest
 
 from datastore_interfaces import base_datastore_interface
 
+
 def test_store_logs():
     """Checks if the function is not implemented"""
     datastore_interface = base_datastore_interface.DatastoreInterface()

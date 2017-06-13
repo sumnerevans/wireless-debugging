@@ -48,6 +48,9 @@ def index():
 @route('/current')
 @kajiki_view('current')
 def current():
+    if not controller.user_management_interface.is_user_logged_in(request):
+        redirect('/login_page')
+
     return {'page': 'current'}
 
 
@@ -55,6 +58,9 @@ def current():
 @route('/historical')
 @kajiki_view('historical')
 def historical():
+    if not controller.user_management_interface.is_user_logged_in(request):
+        redirect('/login_page')
+
     return {'page': 'historical'}
 
 

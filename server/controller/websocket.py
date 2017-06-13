@@ -164,5 +164,9 @@ def associate_user(message, websocket, metadata):
         'user': message['apiKey'],
     }
 
-    for connection in _web_interface_ws_connections:
+    associated_websockets = (
+        controller.user_management_interface.find_associated_websockets(api_key,
+            _web_ui_ws_connections))
+
+    for connection in associated_websockets:
         connection.send(util.serialize_to_json(guid))

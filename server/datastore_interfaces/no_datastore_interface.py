@@ -1,9 +1,10 @@
 from datastore_interfaces.base_datastore_interface import DatastoreInterface
 
+
 class NoDatastoreInterface(DatastoreInterface):
     """ This class sets up the datastore interface. """
 
-    def __int__(self, **kwargs):
+    def __init__(self, **kwargs):
         """ This constructor sets up datastore interface.
 
         Args:

@@ -13,12 +13,8 @@ def get_device_list():
     """ This function retrieves the list of devices for a given api_key."""
     api_key = request.query.get('apiKey').strip()
     devices = controller.datastore_interface.retrieve_devices(api_key)
-    if devices == '':
-        return {
-            'success': False
-        }
     return {
-        'success': True,
+        'success': devices != '',
         'devices': devices,
     }
 

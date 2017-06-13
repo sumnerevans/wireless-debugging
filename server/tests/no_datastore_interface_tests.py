@@ -65,6 +65,7 @@ logs = [{
     ]
 }]
 
+
 def test_store_logs():
     """This function checks if store_logs returns nothing."""
     di = no_datastore_interface.NoDatastoreInterface()

@@ -35,7 +35,7 @@ class WirelessDebug {
     let apiKey = '';
     for(let i = 0; i < cookieStrings.length; i++) {
       let [cookieKey, cookieVal] = cookieStrings[i].trim().split('=');
-      if (cookieKey == 'api_key') {
+      if (cookieKey === 'api_key') {
         apiKey = cookieVal;
         break;
       }
@@ -48,17 +48,7 @@ class WirelessDebug {
 
     this.ws_.send(JSON.stringify(payload));
 
-    //TODO: remove, for testing purposes only
-    payload = {
-      "messageType": "startSession",
-      "apiKey": "tikalin",
-      "osType": "Android",
-      "deviceName": "Google Pixel10",
-      "appName": "tuff"
-    };
-
-    this.ws_.send(JSON.stringify(payload));
-
+    // Get all the devices for historical sessions.
     let data = {
       'apiKey': payload.apiKey,
     };
@@ -80,22 +70,6 @@ class WirelessDebug {
         }
       }
     });
-
-    // TODO: get rid of this, only for testing purposes
-    payload = {
-      messageType: 'logDump',
-      rawLogData: "--------- beginning of /dev/log/system \n05-22 11:44:31.180 7080 7080 I WiDB Example: aX: 3.0262709 aY: 2.0685902 \n05-22 11:44:32.191 7080 7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection",
-    };
-
-    this.ws_.send(JSON.stringify(payload));
-
-    // TODO: get rid of this, only for testing purposes
-    payload = {
-      messageType: 'endSession',
-    };
-
-    this.ws_.send(JSON.stringify(payload));
-
   }
 
   /** Decodes the WebSocket message and adds to table */
@@ -103,6 +77,7 @@ class WirelessDebug {
     let messageData = JSON.parse(message.data);
     if (messageData.messageType === 'logData') {
       this.logTable_.append(messageData.logEntries);
+      $('#log-table').DataTable();
     }
     if (messageData.messageType === 'guid') {
       this.guid_.append(messageData.user);
@@ -134,6 +109,9 @@ $(document).ready(() => {
   let time = $('#starttime');
   device.on('change', () => {
     let chosen_device = device.val();
+    // Gets rid of old data but keeps table structure.
+    data_table = $('#historical-log-table').DataTable();
+    data_table.destroy();
     if (chosen_device !== "None") {
       $('#hidden-dev-alias').css("display", "block");
       $('#hidden-app').css("display", "block");
@@ -167,6 +145,9 @@ $(document).ready(() => {
   });
   app.on('change', () => {
     let chosen_app = app.val();
+    // Gets rid of old data but keeps table structure.
+    data_table = $('#historical-log-table').DataTable();
+    data_table.destroy();
     if (chosen_app !== "None") {
       $('#hidden-app-alias').css("display", "block");
       $('#hidden-start').css("display", "block");
@@ -198,8 +179,10 @@ $(document).ready(() => {
 
   time.on('change', () => {
     let chosen_starttime = time.val();
+    // Gets rid of old data but keeps table structure.
+    data_table = $('#historical-log-table').DataTable();
+    data_table.destroy();
     $("#historical-log-table tbody tr").remove();
-    console.log(chosen_starttime);
     if (chosen_starttime !== "None") {
       let data = {
         'apiKey': api_key.html(),
@@ -213,6 +196,7 @@ $(document).ready(() => {
         cache: false,
         success: function(data) {
           $('#historical-log-table').append(data.logs);
+          data_table = $('#historical-log-table').DataTable();
         },
       });
     }

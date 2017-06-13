@@ -61,6 +61,7 @@ logs = [{
     ]
 }]
 
+
 def test_store_logs():
     """This function checks if class stores session information as expected."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")

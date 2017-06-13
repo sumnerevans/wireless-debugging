@@ -120,7 +120,7 @@ def test_convert_line_to_html():
 def test_convert_to_html():
     """Tests that LogParser.convert_to_html works properly"""
     current_year = datetime.now().year
-    tests = [[
+    test = [
         {
             'time': datetime(current_year, 5, 22, 11, 44, 31, 180000),
             'logType': 'Info',
@@ -135,9 +135,9 @@ def test_convert_to_html():
             'tag': 'IInputConnectionWrapper',
             'text': 'getTextBeforeCursor on inactive InputConnection',
         },
-    ]]
+    ]
 
-    expected_results = [
+    expected_result = (
         '<tr class="">' +
         '<td>' + str(datetime(current_year, 5, 22, 11, 44, 31, 180000)) + '</td>' +
         '<td>WiDB Example</td>' +
@@ -150,6 +150,5 @@ def test_convert_to_html():
         '<td>Warning</td>' +
         '<td>getTextBeforeCursor on inactive InputConnection</td>' +
         '</tr>'
-    ]
-    for test, expected_result in zip(tests, expected_results):
-        assert parsing_lib.LogParser.convert_to_html(test) == expected_result
+    )
+    assert parsing_lib.LogParser.convert_to_html(test) == expected_result

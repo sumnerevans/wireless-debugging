@@ -12,7 +12,7 @@ class LogParser(object):
     """ Handles parsing of all logs from the Mobile API. """
 
     @staticmethod
-    def parse(message, type_file="dict"):
+    def parse(message, type_file='dict'):
         """ Parses a log message from the Mobile API.
 
         Args:
