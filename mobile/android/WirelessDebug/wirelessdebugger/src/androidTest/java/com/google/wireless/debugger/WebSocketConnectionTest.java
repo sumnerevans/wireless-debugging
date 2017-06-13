@@ -5,7 +5,11 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
+/**
+ * Test for websocket connections.
+ * NOTE: the string TEST_IP must contain a valid server and that server must be running Wireless
+ * Debugger in order for these test to pass.
+ */
 @RunWith(AndroidJUnit4.class)
 public class WebSocketConnectionTest {
 
