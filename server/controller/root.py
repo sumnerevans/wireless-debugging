@@ -86,7 +86,7 @@ def handle_login():
     # error message.
     if not login_successful:
         # TODO: Make better error handling
-        print("Something went wrong!:", error_message)
+        print('Something went wrong!:', error_message)
         abort(403, "Login failed, error: %s" % error_message)
     else:
         redirect('/')
@@ -106,5 +106,5 @@ def logout():
     the login page.
     """
 
-    response.set_cookie("api_key", "", expires=0)
+    response.set_cookie('api_key', '', expires=0)
     redirect('/')
