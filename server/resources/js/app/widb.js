@@ -20,8 +20,8 @@ class WirelessDebug {
     /** @private @const {?WebSocket} */
     this.ws_ = null;
 
-    /** @private @const {!MetricGrapher} */
-    this.metricGrapher = '';
+    /** @private @const {?MetricGrapher} */
+    this.metricGrapher = null;
 
     /** @private @const {!DataTable} */
     this.dataTable = $('#log-table').DataTable();
