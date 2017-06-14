@@ -16,12 +16,8 @@ RUN useradd -d /home/bottle -m bottle
 
 # Add the source files to the user.
 WORKDIR /home/bottle
-# TODO: once it's open source and public, make this the GitHub download.
-ADD https://cdn.the-evans.family/wireless-debugger.zip .
-# TODO: once it's open source and public, make this download the sample from
-# GitHub.
-ADD https://cdn.the-evans.family/config.yaml .
-RUN unzip wireless-debugger.zip
+ADD https://github.com/sumnerevans/wireless-debugging/archive/master.zip .
+RUN unzip wireless-debugging-master.zip
 
 # Compile the CSS.
 WORKDIR /home/bottle/server

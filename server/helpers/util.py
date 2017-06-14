@@ -5,6 +5,7 @@ import json
 from datetime import datetime
 import yaml
 import helpers
+from markupsafe import Markup
 
 
 def serialize_to_json(data):
