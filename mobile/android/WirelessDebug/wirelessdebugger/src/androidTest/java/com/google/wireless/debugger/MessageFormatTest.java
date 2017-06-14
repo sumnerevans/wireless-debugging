@@ -28,6 +28,10 @@ public class MessageFormatTest {
         webSocketMessenger = WebSocketMessenger.buildNewConnection("none", API_KEY, APP_NAME);
     }
 
+    /**
+     * Test the startSession message for correctness.
+     * @throws JSONException
+     */
     @Test
     public void testStartSession() throws JSONException {
         JSONObject startSessionObject = webSocketMessenger.createStartSessionObject();
@@ -46,6 +50,10 @@ public class MessageFormatTest {
         Assert.assertEquals(startSessionObject.getString("deviceName"), deviceName.toString());
     }
 
+    /**
+     * Test the logDump message for correctness.
+     * @throws JSONException
+     */
     @Test
     public void testLogMessage() throws JSONException {
         ArrayList<String> testLogs = new ArrayList<>();
@@ -84,6 +92,10 @@ public class MessageFormatTest {
         Assert.assertEquals(logMessage.getString("rawLogData"), rawLogString.toString());
     }
 
+    /**
+     * Test the deviceMetrics message for correctness.
+     * @throws JSONException
+     */
     @Test
     public void testSystemMetricsMessage() throws JSONException {
         int totalSystemMemory = 1024;
@@ -106,6 +118,10 @@ public class MessageFormatTest {
         Assert.assertEquals(systeMetrics.getInt("timeStamp"), time);
     }
 
+    /**
+     * Test the endSession message for correctness.
+     * @throws JSONException
+     */
     @Test
     public void testEndSessionMessage() throws JSONException {
         JSONObject endSessionObject = webSocketMessenger.createEndSessionObject();

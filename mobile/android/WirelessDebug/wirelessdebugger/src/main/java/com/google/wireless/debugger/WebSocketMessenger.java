@@ -172,6 +172,11 @@ class WebSocketMessenger extends WebSocketClient {
         }
     }
 
+    /**
+     * Creates a JSON object containing startSession information.  This includes the OS type,
+     * device name, API Key, and App name.
+     * @return Complete JSONObject.
+     */
     public JSONObject createStartSessionObject() {
         JSONObject message = new JSONObject();
 
@@ -194,6 +199,11 @@ class WebSocketMessenger extends WebSocketClient {
         return message;
     }
 
+    /**
+     * Creates a JSON object containing a Log Dump message.
+     * @param logQueue Array list containing log lines.
+     * @return Complete JSONObject.
+     */
     public JSONObject createLogMessageObject(ArrayList<String> logQueue) {
         JSONObject message = new JSONObject();
         try {
@@ -212,6 +222,16 @@ class WebSocketMessenger extends WebSocketClient {
         return message;
     }
 
+    /**
+     * Creates a JSON Object containing all device metric information.
+     * @param memUsed Memory currently being used.
+     * @param memTotal Total memory on the system.
+     * @param cpuUsage CPU Usage as a double.
+     * @param bytesSentPerSec Number of bytes sent per second.
+     * @param bytesReceivedPerSec Number of bytes received per second.
+     * @param timeStamp Time the metrics were collected in ms UTC.
+     * @return Complete JSONObject.
+     */
     public JSONObject createSystemMetricsObject(int memUsed, int memTotal, double cpuUsage, double
             bytesSentPerSec, double bytesReceivedPerSec, long timeStamp) {
         JSONObject message = new JSONObject();
@@ -230,6 +250,10 @@ class WebSocketMessenger extends WebSocketClient {
         return message;
     }
 
+    /**
+     * Creates a JSON Object containing end session information.
+     * @return Complete JSONObject.
+     */
     public JSONObject createEndSessionObject() {
         JSONObject message = new JSONObject();
         try {
