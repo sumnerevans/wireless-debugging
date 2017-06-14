@@ -3,9 +3,14 @@ Tests for the Parsing Library
 """
 
 import json
-import parsing_lib
+import os
 
 from datetime import datetime
+
+import parsing_lib
+
+# Make sure that all the relative paths work
+os.chdir(os.path.dirname(__file__))
 
 
 def _test_case_parser(test_case):
