@@ -208,7 +208,6 @@ class LogParser(object):
             log_entry.get('logType', ''),
             log_entry['text'],
         )
-
     @staticmethod
     def convert_to_html(log_entries):
         """ Takes a parsed block and converts it to HTML.

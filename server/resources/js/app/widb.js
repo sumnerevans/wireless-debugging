@@ -15,6 +15,9 @@ class WirelessDebug {
     /** @private @const {!jQuery} */
     this.metricsTable_ = $('.metrics-table');
 
+    /** @private @const {!jQuery} */
+    this.logTablePaste_ = $('.log-table-paste');
+
     /** @private @const {?WebSocket} */
     this.ws_ = null;
 

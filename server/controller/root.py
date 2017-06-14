@@ -4,9 +4,16 @@ Root Controller
 import functools
 import controller
 
-from bottle import abort, post, redirect, request, response, route, static_file
+from bottle import abort, post, redirect, request, response, route, static_file, get
 from kajiki_view import kajiki_view
 from markupsafe import Markup
+from helpers.util import from_config_yaml
+from kajiki_view import kajiki_view
+from markupsafe import Markup
+
+import controller
+import parsing_lib
+
 
 
 def authenticated():
@@ -104,6 +111,34 @@ def historical():
         'page': 'historical',
     }
 
+# Placeholder
+@get('/paste')
+@kajiki_view('paste')
+@authenticated()
+def paste():
+    if not controller.user_management_interface.is_user_logged_in(request):
+        redirect('/login_page')
+    api_key = controller.user_management_interface.get_api_key_for_user(request)
+    return {'page': 'paste',}
+
+
+@post('/paste')
+@kajiki_view('paste')
+def paste():
+    if not controller.user_management_interface.is_user_logged_in(request):
+        redirect('/login_page')
+
+    api_key = controller.user_management_interface.get_api_key_for_user(request)
+
+    print(parsing_lib.LogParser.convert_to_html(parsing_lib.LogParser.parse(request.forms.get('message'))))
+    #print(request.forms.get('message'))
+    # access form data, pass to parsing library, return html for table, return in dictionary
+
+
+    return {'page': 'paste',
+            'api_key': api_key,
+            # If you've made it here, you have to be successfully logged in
+            'logged_in': True,}
 
 @route('/new_login')
 @kajiki_view('new_login')
