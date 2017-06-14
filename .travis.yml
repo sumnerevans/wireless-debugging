@@ -2,4 +2,5 @@ language: python
 python:
     - "3.6"
 install: pip install -r server/requirements.txt
-script: py.test server/tests/*.py
+services: mongodb
+script: py.test -vv server/tests/*.py
