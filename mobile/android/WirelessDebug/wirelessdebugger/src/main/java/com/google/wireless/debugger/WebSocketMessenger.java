@@ -20,8 +20,8 @@ class WebSocketMessenger extends WebSocketClient {
     private static final String TAG = "Web Socket Messenger";
     private final ArrayList<String> mLogsToSend;
     private final String mApiKey;
-    private boolean mRunning;
-    private int mFailedSendsRemaining;
+    private boolean mIsRunning;
+    private int mConnectionRetriesRemaining;
     private String mHostAppName;
 
     /**
@@ -56,9 +56,9 @@ class WebSocketMessenger extends WebSocketClient {
         mLogsToSend = new ArrayList<>();
         mApiKey = apiKey;
         mHostAppName = appName;
-        mFailedSendsRemaining = 10;
+        mConnectionRetriesRemaining = 10;
         connect();
-        mRunning = true;
+        mIsRunning = true;
     }
 
     /**
@@ -84,7 +84,7 @@ class WebSocketMessenger extends WebSocketClient {
      */
     @Override
     public void onClose(int i, String s, boolean b) {
-        mRunning = false;
+        mIsRunning = false;
         Log.i(TAG, "Closed " + s);
     }
 
@@ -93,7 +93,7 @@ class WebSocketMessenger extends WebSocketClient {
      */
     @Override
     public void onError(Exception e) {
-        mRunning = false;
+        mIsRunning = false;
         Log.e(TAG, "Error " + e.getMessage());
     }
 
@@ -110,19 +110,7 @@ class WebSocketMessenger extends WebSocketClient {
         ArrayList<String> logsToSendCopy = new ArrayList<>(mLogsToSend);
         mLogsToSend.clear();
 
-        try {
-            send(createLogMessageObject(logsToSendCopy).toString());
-        } catch (WebsocketNotConnectedException wse) {
-            Log.e(TAG, wse.toString());
-
-            if (mFailedSendsRemaining > 0) {
-                mLogsToSend.addAll(logsToSendCopy);
-                mFailedSendsRemaining--;
-            } else {
-                Log.e(TAG, "Failed to send data, stopping.");
-                mRunning = false;
-            }
-        }
+        sendWithRetries(createLogMessageObject(logsToSendCopy).toString(), logsToSendCopy);
     }
 
     /**
@@ -142,21 +130,57 @@ class WebSocketMessenger extends WebSocketClient {
         sendAndCatch(createEndSessionObject().toString());
     }
 
-    public void sendSystemMetrics(int memUsed, int memTotal, double cpuUsage, double
-            bytesSentPerSec, double bytesReceivedPerSec, long timeStamp) {
+    /**
+     * Sends system metrics through the web socket to the server.
+     * @param memUsed Memory currently being used.
+     * @param memTotal Total memory on the system.
+     * @param cpuUsage CPU Usage as a double.
+     * @param bytesSentPerSec Number of bytes sent per second.
+     * @param bytesReceivedPerSec Number of bytes received per second.
+     * @param timeStamp Time the metrics were collected in ms UTC.
+     */
+    public void sendSystemMetrics(int memUsed, int memTotal, double cpuUsage,
+            double bytesSentPerSec, double bytesReceivedPerSec, long timeStamp) {
 
         String payload = createSystemMetricsObject(memUsed, memTotal, cpuUsage, bytesSentPerSec,
-                bytesReceivedPerSec, timeStamp).toString();
+                    bytesReceivedPerSec, timeStamp).toString();
 
         sendAndCatch(payload);
     }
 
     /**
-     * Returns weather or not the connection is mRunning.
+     * Returns weather or not the connection is mIsRunning.
      * @return True if there is a connection, false otherwise.
      */
     public boolean isRunning() {
-        return mRunning;
+        return mIsRunning;
+    }
+
+    /**
+     * Sends a message over the websocket.  If the send fails or throws an exception, the message
+     * will be put back into the queue to try again later.  This function allows 10 retries of
+     * seding until it stops.
+     * @param message Message to be send.
+     * @param logsCopy Array List containing the original messages.  Needed to re-queue messages
+     *                 in the event of a failed send.
+     */
+    private void sendWithRetries(String message, ArrayList<String> logsCopy) {
+        try {
+            if (isOpen()) {
+                mConnectionRetriesRemaining = 10;
+            }
+            send(message);
+        } catch (WebsocketNotConnectedException wse) {
+            Log.e(TAG, wse.toString());
+
+            if (mConnectionRetriesRemaining > 0) {
+                mLogsToSend.addAll(logsCopy);
+                mConnectionRetriesRemaining--;
+            } else {
+                Log.e(TAG, "Failed to send data, stopping.");
+                mIsRunning = false;
+            }
+        }
     }
 
     /**
@@ -168,7 +192,7 @@ class WebSocketMessenger extends WebSocketClient {
             send(message);
         } catch (WebsocketNotConnectedException wse) {
             Log.e(TAG, wse.toString());
-            mRunning = false;
+            mIsRunning = false;
         }
     }
 
