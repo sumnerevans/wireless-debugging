@@ -44,7 +44,6 @@ def index():
     }
 
 
-# Placeholder
 @route('/current')
 @kajiki_view('current')
 def current():
@@ -52,12 +51,9 @@ def current():
     if not controller.user_management_interface.is_user_logged_in(request):
         redirect('/login_page')
 
-    api_key = controller.user_management_interface.get_api_key_for_user(request)
-
-    return {'page': 'current', 'logged_in': True, 'api_key': api_key,}
+    return {'page': 'current'}
 
 
-# Placeholder
 @route('/historical')
 @kajiki_view('historical')
 def historical():
@@ -65,9 +61,7 @@ def historical():
     if not controller.user_management_interface.is_user_logged_in(request):
         redirect('/login_page')
 
-    api_key = controller.user_management_interface.get_api_key_for_user(request)
-
-    return {'page': 'historical', 'logged_in': True, 'api_key': api_key,}
+    return {'page': 'historical'}
 
 
 @route('/new_login')
