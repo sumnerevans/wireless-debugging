@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-
 import javax.annotation.CheckForNull;
 
 /**
@@ -21,6 +20,7 @@ class WebSocketMessenger extends WebSocketClient {
     private final ArrayList<String> mLogsToSend;
     private final String mApiKey;
     private boolean mRunning;
+    private String mHostAppName;
 
     /**
      * Creates a new WebSocketMessenger using the specified address.
@@ -29,7 +29,8 @@ class WebSocketMessenger extends WebSocketClient {
      * @return A new WebSocket messenger object, or null if the URI is invalid.
      */
     @CheckForNull
-    public static WebSocketMessenger buildNewConnection(String socketAddress, String apiKey) {
+    public static WebSocketMessenger buildNewConnection(String socketAddress, String apiKey,
+                                                        String appName) {
         URI uri;
         Log.i(TAG, "URI: " + socketAddress);
         try {
@@ -39,17 +40,18 @@ class WebSocketMessenger extends WebSocketClient {
             return null;
         }
 
-        return new WebSocketMessenger(uri, apiKey);
+        return new WebSocketMessenger(uri, apiKey, appName);
     }
 
     /**
      * Constructs a new WebSocketMessenger object and attempts to establish a connection.
      * @param uri: Specifies address of the WebSocket connection.
      */
-    private WebSocketMessenger(URI uri, String apiKey) {
+    private WebSocketMessenger(URI uri, String apiKey, String appName) {
         super(uri);
         mLogsToSend = new ArrayList<>();
         mApiKey = apiKey;
+        mHostAppName = appName;
         connect();
         mRunning = true;
     }
@@ -76,10 +78,11 @@ class WebSocketMessenger extends WebSocketClient {
             payload.put("osType", "Android");
             payload.put("apiKey", mApiKey);
             payload.put("deviceName", deviceNameBuilder.toString());
-            payload.put("appName", R.string.app_name);
+            payload.put("appName", mHostAppName);
         } catch (JSONException e) {
             Log.e(TAG, e.toString());
         }
+        // TODO(Reece): Handle WebsocketNotConnectedException
         send(payload.toString());
     }
 
@@ -138,6 +141,7 @@ class WebSocketMessenger extends WebSocketClient {
             Log.e(TAG, e.toString());
         }
 
+        // TODO(Reece): Handle WebsocketNotConnectedException
         send(payload.toString());
     }
 
@@ -147,6 +151,27 @@ class WebSocketMessenger extends WebSocketClient {
      */
     public void enqueueLog(String logLine) {
         mLogsToSend.add(logLine);
+    }
+
+    public void sendSystemMetrics(int memUsed, int memTotal, double cpuUsage, double
+            bytesSentPerSec, double
+            bytesReceivedPerSec, long timeStamp) {
+        JSONObject payload = new JSONObject();
+        try {
+            payload.put("messageType", "deviceMetrics");
+            payload.put("osType", "Android");
+            payload.put("timeStamp", timeStamp);
+            payload.put("cpuUsage", cpuUsage);
+            payload.put("memUsage", memUsed);
+            payload.put("memTotal", memTotal);
+            payload.put("netSentPerSec", bytesSentPerSec);
+            payload.put("netReceivePerSec", bytesReceivedPerSec);
+        } catch (JSONException e) {
+            Log.e(TAG, e.toString());
+        }
+
+        // TODO(Reece): Handle WebsocketNotConnectedException
+        send(payload.toString());
     }
 
     /**

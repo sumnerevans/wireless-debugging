@@ -1,3 +1,5 @@
+@import '_widb-variables.scss';
+
 // Correct the weird issues with the navbar styling
 .navbar-default {
   .navbar-right {
@@ -29,6 +31,25 @@ body {
 /* Dot separator */
 span.dot-sep {
   padding: 0 5px;
+}
+
+.metrics-graph {
+  font-weight: 700;
+  font-size: 16px;
+
+  span {
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  #send {
+    color: $sent-network-usage;
+    margin-right: 15px;
+  }
+
+  #receive {
+    color: $received-network-usage;
+  }
 }
 
 /* Historical Table is padded */

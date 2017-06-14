@@ -169,3 +169,22 @@ def associate_user(message, websocket, metadata):
 
     for connection in associated_websockets:
         connection.send(util.serialize_to_json(web_api_key))
+
+
+@ws_router('deviceMetrics')
+def device_metrics(message, websocket, metadata):
+    """ Handles Device Metrics sent from Mobile API
+
+    When device metrics come in from the Mobile API, this function takes the
+    device metrics and sends it to all connect web clients.
+
+    Args:
+        message: the device metrics in a JSON object
+        websocket: the full websocket connection
+    """
+    associated_websockets = (
+        controller.user_management_interface.find_associated_websockets(api_key,
+            _web_ui_ws_connections))
+
+    for connection in associated_websockets:
+        connection.send(util.serialize_to_json(message))

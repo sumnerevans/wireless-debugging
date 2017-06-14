@@ -15,9 +15,17 @@ class WirelessDebug {
     this.logTable_ = $('.log-table');
     this.apiKey_ = $('.api-key');
 
+    /** @private @const {!jQuery} */
+    this.metricsTable_ = $('.metrics-table');
+
     /** @private @const {?WebSocket} */
     this.ws_ = null;
 
+    /** @private @const {!MetricGrapher} */
+    this.metricGrapher = new MetricGrapher("cpu-usage-graph", "mem-usage-graph", "net-usage-graph");
+    this.metricGrapher.render();
+
+    /** @private @const {!DataTable} */
     this.dataTable = $('#log-table').DataTable();
   }
 
@@ -77,6 +85,7 @@ class WirelessDebug {
   /** Decodes the WebSocket message and adds to table */
   websocketOnMessage(message) {
     let messageData = JSON.parse(message.data);
+
     if (messageData.messageType === 'logData') {
       this.data_table.destroy();
       for (let entry of messageData.logEntries) {
@@ -86,6 +95,11 @@ class WirelessDebug {
     }
     if (messageData.messageType === 'apiKey') {
       this.apiKey_.append(messageData.user);
+    }
+
+    if (messageData.messageType === 'deviceMetrics') {
+      this.metricGrapher.setMetrics(messageData);
+      this.metricGrapher.render();
     }
   }
 

@@ -5,8 +5,8 @@
 
 <body py:block="body" py:strip="True">
   <div class="row">
-    <div class="col-md-12">
-      <p class="api-key" id="api-key">Your api_key is: </p>
+    <div class="col-md-8">
+      <p class="api-key" id="api-key">Your api_key is:</p>
       <table class="table table-hover table-condensed table-bordered log-table" id="log-table">
         <thead>
           <tr>
@@ -19,6 +19,31 @@
         <tbody id="log-table-body">
         </tbody>
       </table>
+    </div>
+
+    <div class="col-md-4">
+      <div class="metrics-graph">
+        <h4>CPU Usage</h4>
+        <canvas id="cpu-usage-graph">
+        </canvas>
+      </div>
+
+      <div class="metrics-graph">
+        <h4>Memory Usage</h4>
+        <canvas id="mem-usage-graph"></canvas>
+      </div>
+
+      <div class="metrics-graph">
+        <div class="row">
+          <div class="col-md-8">
+            <h4>Network Usage</h4>
+          </div>
+          <div class="col-md-4">
+            <span id="send">Sent</span><span id="receive">Received</span>
+          </div>
+        </div>
+        <canvas class="metrics-graph" id="net-usage-graph"></canvas>
+      </div>
     </div>
   </div>
 </body>
