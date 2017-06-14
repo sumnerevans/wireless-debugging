@@ -7,7 +7,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 /**
- * Reads Logcat Logs from the buffer and sends them to a server using a WebSocketMessenger.
+ * Reads Logcat Logs from the buffer, gathers device metrics from System Monitor and sends them
+ * to a server using the WebSocketMessenger.
  * Implements Runnable so it can be run its own thread.
  */
 class LogReader implements Runnable {
@@ -26,6 +27,8 @@ class LogReader implements Runnable {
      * Creates LogReader instance if none exists.
      * Creates a new WebSocketMessenger also.
      * @param hostname Server's IP/Host address
+     * @param apiKey User's API Key
+     * @param appName Name of the application being debugged.
      * @param timeInterval Time interval between log sends
      */
     LogReader(String hostname, String apiKey, String appName, int timeInterval) {
@@ -40,7 +43,7 @@ class LogReader implements Runnable {
 
     /**
      * Inherited from Runnable. Run on a separate thread.
-     * Performs the logging and sending of mLogs.
+     * Reads and sends logs and device metrics to the WebSocketMessenger.
      */
     @Override
     public void run() {
@@ -89,7 +92,7 @@ class LogReader implements Runnable {
             }
 
             bufferedReader.close();
-            // TODO (Reece): Replace with a send finished signal to the web socket messenger
+            mWebSocketMessenger.sendEndSessionMessage();
             outputLogs();
         } catch (IOException ioe) {
             Log.e(TAG, "IO Exception Occurred in run() thread " + ioe.toString());

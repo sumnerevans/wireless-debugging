@@ -21,8 +21,9 @@ public class WirelessDebugger extends Service {
     private static final String HOSTNAME_EXTRA = "hostname";
     private static final String TIME_INTERVAL_EXTRA = "time_interval";
     private static final String API_KEY_EXTRA = "api_key";
+    private static final String HOST_APP_NAME_EXTRA = "host_app_name";
+    private static final int DEFAULT_TIME_INTERVAL = 200;
 
-    private Context mHostAppContext;
     private LogReader mLogReader;
 
     /**
@@ -33,7 +34,8 @@ public class WirelessDebugger extends Service {
      */
     public static void start(String hostname, String apiKey, Context appContext) {
         if (mWirelessDebuggerInstance == null) {
-            mWirelessDebuggerInstance = new WirelessDebugger(hostname, apiKey, 200, appContext);
+            mWirelessDebuggerInstance = new WirelessDebugger(hostname, apiKey,
+                    DEFAULT_TIME_INTERVAL, appContext);
         }
     }
 
@@ -90,7 +92,7 @@ public class WirelessDebugger extends Service {
         startIntent.putExtra(HOSTNAME_EXTRA, hostname);
         startIntent.putExtra(TIME_INTERVAL_EXTRA, timeInterval);
         startIntent.putExtra(API_KEY_EXTRA, apiKey);
-        mHostAppContext = appContext;
+        startIntent.putExtra(HOST_APP_NAME_EXTRA, appContext.getPackageName());
         appContext.startService(startIntent);
     }
 
@@ -113,9 +115,9 @@ public class WirelessDebugger extends Service {
         Log.d(TAG, "Service Started");
         // Create and start threads
         String hostname = intent.getStringExtra(HOSTNAME_EXTRA);
-        int timeInterval = intent.getIntExtra(TIME_INTERVAL_EXTRA, 200);
+        int timeInterval = intent.getIntExtra(TIME_INTERVAL_EXTRA, DEFAULT_TIME_INTERVAL);
         String apiKey = intent.getStringExtra(API_KEY_EXTRA);
-        String hostAppName = mHostAppContext.getPackageName();
+        String hostAppName = intent.getStringExtra(HOST_APP_NAME_EXTRA);
         mLogReader = new LogReader(hostname, apiKey, hostAppName, timeInterval);
         Thread logThread = new Thread(mLogReader);
         logThread.start();

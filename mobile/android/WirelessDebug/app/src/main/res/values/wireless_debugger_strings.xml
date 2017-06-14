@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+    Replace server and api_key with your information
+    Make sure this file is not in your source control to avoid making your server IP/host and API
+    key public.
+    -->
+    <string name="wireless_debug_server">NONE</string>
+    <string name="wireless_debug_api_key">NONE</string>
+</resources>
