@@ -211,6 +211,9 @@ class WebSocketMessenger extends WebSocketClient {
      */
     private void sendWithRetries(String message, ArrayList<String> logsCopy) {
         try {
+            if (isOpen()) {
+                mConnectionRetriesRemaining = 10;
+            }
             send(message);
         } catch (WebsocketNotConnectedException wse) {
             Log.e(TAG, wse.toString());
