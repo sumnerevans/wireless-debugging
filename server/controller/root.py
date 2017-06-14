@@ -3,12 +3,13 @@
 Root Controller
 """
 
-from bottle import abort, post, redirect, request, response, route, static_file
+from bottle import abort, post, redirect, request, response, route, static_file, get
 from helpers.util import from_config_yaml
 from kajiki_view import kajiki_view
 from markupsafe import Markup
 
 import controller
+import parsing_lib
 
 
 @route('/')
@@ -52,7 +53,12 @@ def current():
     if not controller.user_management_interface.is_user_logged_in(request):
         redirect('/login_page')
 
-    return {'page': 'current'}
+    api_key = controller.user_management_interface.get_api_key_for_user(request)
+
+    return {'page': 'current',
+            'api_key': api_key,
+            # If you've made it here, you have to be successfully logged in
+            'logged_in': True,}
 
 
 # Placeholder
@@ -63,8 +69,43 @@ def historical():
     if not controller.user_management_interface.is_user_logged_in(request):
         redirect('/login_page')
 
-    return {'page': 'historical'}
+    api_key = controller.user_management_interface.get_api_key_for_user(request)
 
+    return {'page': 'historical',
+            'api_key': api_key,
+            # If you've made it here, you have to be successfully logged in
+            'logged_in': True,}
+
+# Placeholder
+@get('/paste')
+@kajiki_view('paste')
+def paste():
+    if not controller.user_management_interface.is_user_logged_in(request):
+        redirect('/login_page')
+    api_key = controller.user_management_interface.get_api_key_for_user(request)
+    return {'page': 'paste',
+            'api_key': api_key,
+            # If you've made it here, you have to be successfully logged in
+            'logged_in': True,}
+
+
+@post('/paste')
+@kajiki_view('paste')
+def paste():
+    if not controller.user_management_interface.is_user_logged_in(request):
+        redirect('/login_page')
+
+    api_key = controller.user_management_interface.get_api_key_for_user(request)
+
+    print(parsing_lib.LogParser.convert_to_html(parsing_lib.LogParser.parse(request.forms.get('message'))))
+    #print(request.forms.get('message'))
+    # access form data, pass to parsing library, return html for table, return in dictionary
+
+
+    return {'page': 'paste',
+            'api_key': api_key,
+            # If you've made it here, you have to be successfully logged in
+            'logged_in': True,}
 
 @route('/new_login')
 @kajiki_view('new_login')
@@ -92,12 +133,12 @@ def login():
         None
     Returns:
         An HTML webpage containing a UI for the user to log into the website.
-        This function returns a webpage specified by the kajiki view decorator. 
+        This function returns a webpage specified by the kajiki view decorator.
         This function also returns a subcomponent of a webpage that defines the
-        format of the login page, which is specified in the user management 
-        interface. 
+        format of the login page, which is specified in the user management
+        interface.
     """
-    
+
     return {
         'login_fields': Markup(
             controller.user_management_interface.get_login_ui()),

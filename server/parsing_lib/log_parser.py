@@ -137,6 +137,7 @@ class LogParser(object):
             'Warning': 'warning',
             'Error': 'danger',
         }
+        print(parsed_line)
         if parsed_line['logType'] in ['Warning', 'Error']:
             color = color_dict[parsed_line['logType']]
         return ('<tr class=\"' + color + '\">' +
@@ -157,6 +158,7 @@ class LogParser(object):
             string: formatted HTML
         """
         html = ''
+        print('p',parsed_log_dict)
         for line in parsed_log_dict:
             html += LogParser.convert_line_to_html(line)
         return html
