@@ -146,19 +146,7 @@ class WebSocketMessenger extends WebSocketClient {
             Log.e(TAG, e.toString());
         }
 
-        try {
-            send(payload.toString());
-        } catch (WebsocketNotConnectedException wse) {
-            Log.e(TAG, wse.toString());
-
-            if (mConnectionRetriesRemaining > 0) {
-                mLogsToSend.addAll(logsToSendCopy);
-                mConnectionRetriesRemaining--;
-            } else {
-                Log.e(TAG, "Failed to send data, stopping.");
-                mIsRunning = false;
-            }
-        }
+        sendWithRetries(payload.toString(), logsToSendCopy);
     }
 
     /**
@@ -213,9 +201,28 @@ class WebSocketMessenger extends WebSocketClient {
         return mIsRunning;
     }
 
+    /**
+     * Sends a message over the websocket.  If the send fails or throws an exception, the message
+     * will be put back into the queue to try again later.  This function allows 10 retries of
+     * seding until it stops.
+     * @param message Message to be send.
+     * @param logsCopy Array List containing the original messages.  Needed to re-queue messages
+     *                 in the event of a failed send.
+     */
+    private void sendWithRetries(String message, ArrayList<String> logsCopy) {
+        try {
+            send(message);
+        } catch (WebsocketNotConnectedException wse) {
+            Log.e(TAG, wse.toString());
 
-    private void sendWithRetries() {
-
+            if (mConnectionRetriesRemaining > 0) {
+                mLogsToSend.addAll(logsCopy);
+                mConnectionRetriesRemaining--;
+            } else {
+                Log.e(TAG, "Failed to send data, stopping.");
+                mIsRunning = false;
+            }
+        }
     }
 
     /**
