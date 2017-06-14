@@ -218,6 +218,7 @@ class LogParser(object):
         Returns:
             string: formatted HTML
         """
+        print('log entries', log_entries)
         return ''.join(LogParser.convert_line_to_html(line)
                        for line in log_entries)
 

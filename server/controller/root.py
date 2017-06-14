@@ -22,14 +22,14 @@ def authenticated():
 
         When a function is associated with this decorator, if the function
         returns a dict this function will append a bool indicating whether or
-        not the user is logged in. 
+        not the user is logged in.
 
         Args:
             None, but calls the user management interface to determine if the
             user is logged in.
         Returns:
             The dictionary the contained function returns, with an additional
-            entry named 'logged_in' that maps to a boolean that indicates 
+            entry named 'logged_in' that maps to a boolean that indicates
             whether or not the user is logged in.
 
             If the contained function does not return a dict, then this function
@@ -119,7 +119,8 @@ def paste():
     if not controller.user_management_interface.is_user_logged_in(request):
         redirect('/login_page')
     api_key = controller.user_management_interface.get_api_key_for_user(request)
-    return {'page': 'paste',}
+    return {'page': 'paste',
+    'raw_logs':''}
 
 
 @post('/paste')
@@ -130,7 +131,7 @@ def paste():
 
     api_key = controller.user_management_interface.get_api_key_for_user(request)
 
-    print(parsing_lib.LogParser.convert_to_html(parsing_lib.LogParser.parse(request.forms.get('message'))))
+    print(parsing_lib.LogParser.convert_to_html(parsing_lib.LogParser.parse(str(request.forms.get('message')), "Android")))
     #print(request.forms.get('message'))
     # access form data, pass to parsing library, return html for table, return in dictionary
 
@@ -138,7 +139,8 @@ def paste():
     return {'page': 'paste',
             'api_key': api_key,
             # If you've made it here, you have to be successfully logged in
-            'logged_in': True,}
+            'logged_in': True,
+            'raw_logs': request.forms.get('message'),}
 
 @route('/new_login')
 @kajiki_view('new_login')
