@@ -52,7 +52,9 @@ def current():
     if not controller.user_management_interface.is_user_logged_in(request):
         redirect('/login_page')
 
-    return {'page': 'current'}
+    api_key = controller.user_management_interface.get_api_key_for_user(request)
+
+    return {'page': 'current', 'logged_in': True, 'api_key': api_key,}
 
 
 # Placeholder
@@ -63,7 +65,9 @@ def historical():
     if not controller.user_management_interface.is_user_logged_in(request):
         redirect('/login_page')
 
-    return {'page': 'historical'}
+    api_key = controller.user_management_interface.get_api_key_for_user(request)
+
+    return {'page': 'historical', 'logged_in': True, 'api_key': api_key,}
 
 
 @route('/new_login')
@@ -92,12 +96,12 @@ def login():
         None
     Returns:
         An HTML webpage containing a UI for the user to log into the website.
-        This function returns a webpage specified by the kajiki view decorator. 
+        This function returns a webpage specified by the kajiki view decorator.
         This function also returns a subcomponent of a webpage that defines the
-        format of the login page, which is specified in the user management 
-        interface. 
+        format of the login page, which is specified in the user management
+        interface.
     """
-    
+
     return {
         'login_fields': Markup(
             controller.user_management_interface.get_login_ui()),

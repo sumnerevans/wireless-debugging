@@ -13,7 +13,6 @@ class WirelessDebug {
   constructor() {
     /** @private @const {!jQuery} */
     this.logTable_ = $('.log-table');
-    this.apiKey_ = $('.api-key');
 
     /** @private @const {!jQuery} */
     this.metricsTable_ = $('.metrics-table');
@@ -22,8 +21,7 @@ class WirelessDebug {
     this.ws_ = null;
 
     /** @private @const {!MetricGrapher} */
-    this.metricGrapher = new MetricGrapher("cpu-usage-graph", "mem-usage-graph", "net-usage-graph");
-    this.metricGrapher.render();
+    this.metricGrapher = '';
 
     /** @private @const {!DataTable} */
     this.dataTable = $('#log-table').DataTable();
@@ -76,10 +74,15 @@ class WirelessDebug {
           }
         }
         else {
-          $('#main-page').html('<p>No Datastore</p>');
+          $('#main-page').html('<p>No Datastore and/or No Data</p>');
         }
       }
     });
+
+    if ($('#cpu-usage-graph').length > 0) {
+      this.metricGrapher = new MetricGrapher("cpu-usage-graph", "mem-usage-graph", "net-usage-graph");
+      this.metricGrapher.render();
+    }
   }
 
   /** Decodes the WebSocket message and adds to table */
@@ -92,9 +95,6 @@ class WirelessDebug {
         this.logTable_.append(this.renderLog(entry));
       }
       this.data_table = $('#log-table').DataTable();
-    }
-    if (messageData.messageType === 'apiKey') {
-      this.apiKey_.append(messageData.user);
     }
 
     if (messageData.messageType === 'deviceMetrics') {

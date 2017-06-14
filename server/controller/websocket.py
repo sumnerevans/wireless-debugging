@@ -157,19 +157,6 @@ def associate_user(message, websocket, metadata):
 
     _web_ui_ws_connections.setdefault(api_key, []).append(websocket)
 
-    # give out API key as user
-    web_api_key = {
-        'messageType': 'apiKey',
-        'user': message['apiKey'],
-    }
-
-    associated_websockets = (
-        controller.user_management_interface.find_associated_websockets(api_key,
-            _web_ui_ws_connections))
-
-    for connection in associated_websockets:
-        connection.send(util.serialize_to_json(web_api_key))
-
 
 @ws_router('deviceMetrics')
 def device_metrics(message, websocket, metadata):
