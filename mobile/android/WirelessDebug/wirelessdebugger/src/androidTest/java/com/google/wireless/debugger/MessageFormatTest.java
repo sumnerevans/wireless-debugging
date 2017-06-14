@@ -102,11 +102,11 @@ public class MessageFormatTest {
         int memoryUsage = 425;
         double cpuUsage = 0.67;
         double bytesSentPerSec = 43.3;
-        double bytesRecievedPerSec = 983.4;
+        double bytesReceivedPerSec = 983.4;
         int time = 1233455678;
 
         JSONObject systeMetrics = webSocketMessenger.createSystemMetricsObject(memoryUsage,
-                totalSystemMemory, cpuUsage, bytesSentPerSec, bytesRecievedPerSec, time);
+                totalSystemMemory, cpuUsage, bytesSentPerSec, bytesReceivedPerSec, time);
 
         Assert.assertEquals(systeMetrics.getString(MESSAGE_TYPE), "deviceMetrics");
         Assert.assertEquals(systeMetrics.getString(OS_TYPE), "Android");
@@ -114,7 +114,7 @@ public class MessageFormatTest {
         Assert.assertEquals(systeMetrics.getInt("memUsage"), memoryUsage);
         Assert.assertEquals(systeMetrics.getDouble("cpuUsage"), cpuUsage);
         Assert.assertEquals(systeMetrics.getDouble("netSentPerSec"), bytesSentPerSec);
-        Assert.assertEquals(systeMetrics.getDouble("netReceivePerSec"), bytesRecievedPerSec);
+        Assert.assertEquals(systeMetrics.getDouble("netReceivePerSec"), bytesReceivedPerSec);
         Assert.assertEquals(systeMetrics.getInt("timeStamp"), time);
     }
 
