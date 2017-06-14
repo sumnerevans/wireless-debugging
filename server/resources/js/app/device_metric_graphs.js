@@ -1,5 +1,4 @@
 /**
-* Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 * @fileoverview Contains code for graphing device metrics using D3
 */
 
