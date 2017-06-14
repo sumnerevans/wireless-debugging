@@ -10,8 +10,8 @@ from kajiki_view import kajiki_view
 from markupsafe import Markup
 
 
-def check_login():
-    """ Defines a check_login decorator, which verifies that the user is logged
+def authenticated():
+    """ Defines an authenticated decorator, which verifies that the user is logged
         in.
 
         When a function is associated with this decorator, if the function
@@ -44,8 +44,11 @@ def check_login():
 
             webpage_arguments = function(*args, **kwargs)
 
-            if isinstance(webpage_arguments) is dict:
+            api_key = controller.user_management_interface.get_api_key_for_user(
+                request)
+            if isinstance(webpage_arguments, dict):
                 webpage_arguments['logged_in'] = is_user_logged_in
+                webpage_arguments['api_key'] = api_key
 
             return webpage_arguments
 
@@ -56,7 +59,7 @@ def check_login():
 
 @route('/')
 @kajiki_view('index')
-@check_login()
+@authenticated()
 def index():
     """ The log streaming dashboard, this is where logs go when they're
         streamed.
@@ -75,37 +78,33 @@ def index():
         api_key: The Web UI user's API key.
 
     """
-    api_key = controller.user_management_interface.get_api_key_for_user(request)
 
     return {
         'page': 'index',
-        'api_key': api_key,
     }
 
 
 # Placeholder
 @route('/current')
 @kajiki_view('current')
-@check_login()
+@authenticated()
 def current():
     """ Show current streaming logs. """
-    api_key = controller.user_management_interface.get_api_key_for_user(request)
 
-    return {'page': 'current',
-            'api_key': api_key,
+    return {
+        'page': 'current',
     }
 
 
 # Placeholder
 @route('/historical')
 @kajiki_view('historical')
-@check_login()
+@authenticated()
 def historical():
     """" Retrieve stored data from datastore. """
-    api_key = controller.user_management_interface.get_api_key_for_user(request)
 
-    return {'page': 'historical',
-            'api_key': api_key,
+    return {
+        'page': 'historical',
     }
 
 
