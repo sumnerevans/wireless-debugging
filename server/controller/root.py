@@ -2,17 +2,64 @@
 """
 Root Controller
 """
+import functools
+import controller
 
 from bottle import abort, post, redirect, request, response, route, static_file
-from helpers.util import from_config_yaml
 from kajiki_view import kajiki_view
 from markupsafe import Markup
 
-import controller
+
+def authenticated():
+    """ Defines an authenticated decorator, which verifies that the user is logged
+        in.
+
+        When a function is associated with this decorator, if the function
+        returns a dict this function will append a bool indicating whether or
+        not the user is logged in. 
+
+        Args:
+            None, but calls the user management interface to determine if the
+            user is logged in.
+        Returns:
+            The dictionary the contained function returns, with an additional
+            entry named 'logged_in' that maps to a boolean that indicates 
+            whether or not the user is logged in.
+
+            If the contained function does not return a dict, then this function
+            returns whatever the contained function returns.
+
+            This function will also redirect the user to the login page if the
+            user is not logged in.
+    """
+
+    def decorator(function):
+
+        @functools.wraps(function)
+        def wrapper(*args, **kwargs):
+            is_user_logged_in = (
+                controller.user_management_interface.is_user_logged_in(request))
+            if not is_user_logged_in:
+                redirect('/login_page')
+
+            webpage_arguments = function(*args, **kwargs)
+
+            api_key = controller.user_management_interface.get_api_key_for_user(
+                request)
+            if isinstance(webpage_arguments, dict):
+                webpage_arguments['logged_in'] = is_user_logged_in
+                webpage_arguments['api_key'] = api_key
+
+            return webpage_arguments
+
+        return wrapper
+
+    return decorator
 
 
 @route('/')
 @kajiki_view('index')
+@authenticated()
 def index():
     """ The log streaming dashboard, this is where logs go when they're
         streamed.
@@ -31,39 +78,34 @@ def index():
         api_key: The Web UI user's API key.
 
     """
-    if not controller.user_management_interface.is_user_logged_in(request):
-        redirect('/login_page')
-
-    api_key = controller.user_management_interface.get_api_key_for_user(request)
 
     return {
         'page': 'index',
-        'api_key': api_key,
-        # If you've made it here, you have to be successfully logged in
-        'logged_in': True,
     }
 
 
 # Placeholder
 @route('/current')
 @kajiki_view('current')
+@authenticated()
 def current():
-    """Show current streaming logs."""
-    if not controller.user_management_interface.is_user_logged_in(request):
-        redirect('/login_page')
+    """ Show current streaming logs. """
 
-    return {'page': 'current'}
+    return {
+        'page': 'current',
+    }
 
 
 # Placeholder
 @route('/historical')
 @kajiki_view('historical')
+@authenticated()
 def historical():
-    """"Retrieve stored data from datastore."""
-    if not controller.user_management_interface.is_user_logged_in(request):
-        redirect('/login_page')
+    """" Retrieve stored data from datastore. """
 
-    return {'page': 'historical'}
+    return {
+        'page': 'historical',
+    }
 
 
 @route('/new_login')
