@@ -88,11 +88,12 @@ def index():
 @kajiki_view('current')
 @check_login()
 def current():
-    """Show current streaming logs."""
-    if not controller.user_management_interface.is_user_logged_in(request):
-        redirect('/login_page')
+    """ Show current streaming logs. """
+    api_key = controller.user_management_interface.get_api_key_for_user(request)
 
-    return {'page': 'current'}
+    return {'page': 'current',
+            'api_key': api_key,
+    }
 
 
 # Placeholder
@@ -100,11 +101,12 @@ def current():
 @kajiki_view('historical')
 @check_login()
 def historical():
-    """"Retrieve stored data from datastore."""
-    if not controller.user_management_interface.is_user_logged_in(request):
-        redirect('/login_page')
+    """" Retrieve stored data from datastore. """
+    api_key = controller.user_management_interface.get_api_key_for_user(request)
 
-    return {'page': 'historical'}
+    return {'page': 'historical',
+            'api_key': api_key,
+    }
 
 
 @route('/new_login')
