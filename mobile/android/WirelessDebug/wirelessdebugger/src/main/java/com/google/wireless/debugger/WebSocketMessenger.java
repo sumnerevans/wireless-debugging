@@ -20,8 +20,8 @@ class WebSocketMessenger extends WebSocketClient {
     private static final String TAG = "Web Socket Messenger";
     private final ArrayList<String> mLogsToSend;
     private final String mApiKey;
-    private boolean mRunning;
-    private int mFailedSendsRemaining;
+    private boolean mIsRunning;
+    private int mConnectionRetriesRemaining;
     private String mHostAppName;
 
     /**
@@ -56,9 +56,9 @@ class WebSocketMessenger extends WebSocketClient {
         mLogsToSend = new ArrayList<>();
         mApiKey = apiKey;
         mHostAppName = appName;
-        mFailedSendsRemaining = 10;
+        mConnectionRetriesRemaining = 10;
         connect();
-        mRunning = true;
+        mIsRunning = true;
     }
 
     /**
@@ -105,7 +105,7 @@ class WebSocketMessenger extends WebSocketClient {
      */
     @Override
     public void onClose(int i, String s, boolean b) {
-        mRunning = false;
+        mIsRunning = false;
         Log.i(TAG, "Closed " + s);
     }
 
@@ -114,7 +114,7 @@ class WebSocketMessenger extends WebSocketClient {
      */
     @Override
     public void onError(Exception e) {
-        mRunning = false;
+        mIsRunning = false;
         Log.e(TAG, "Error " + e.getMessage());
     }
 
@@ -151,12 +151,12 @@ class WebSocketMessenger extends WebSocketClient {
         } catch (WebsocketNotConnectedException wse) {
             Log.e(TAG, wse.toString());
 
-            if (mFailedSendsRemaining > 0) {
+            if (mConnectionRetriesRemaining > 0) {
                 mLogsToSend.addAll(logsToSendCopy);
-                mFailedSendsRemaining--;
+                mConnectionRetriesRemaining--;
             } else {
                 Log.e(TAG, "Failed to send data, stopping.");
-                mRunning = false;
+                mIsRunning = false;
             }
         }
     }
@@ -206,11 +206,16 @@ class WebSocketMessenger extends WebSocketClient {
     }
 
     /**
-     * Returns weather or not the connection is mRunning.
+     * Returns weather or not the connection is mIsRunning.
      * @return True if there is a connection, false otherwise.
      */
     public boolean isRunning() {
-        return mRunning;
+        return mIsRunning;
+    }
+
+
+    private void sendWithRetries() {
+
     }
 
     /**
@@ -222,7 +227,7 @@ class WebSocketMessenger extends WebSocketClient {
             send(message);
         } catch (WebsocketNotConnectedException wse) {
             Log.e(TAG, wse.toString());
-            mRunning = false;
+            mIsRunning = false;
         }
     }
 }
