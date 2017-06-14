@@ -1,6 +1,4 @@
 /**
- * Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
- *
  * @fileoverview This contains the main app logic
  */
 
@@ -13,11 +11,17 @@ class WirelessDebug {
   constructor() {
     /** @private @const {!jQuery} */
     this.logTable_ = $('.log-table');
-    this.apiKey_ = $('.api-key');
+
+    /** @private @const {!jQuery} */
+    this.metricsTable_ = $('.metrics-table');
 
     /** @private @const {?WebSocket} */
     this.ws_ = null;
 
+    /** @private @const {?MetricGrapher} */
+    this.metricGrapher = null;
+
+    /** @private @const {!DataTable} */
     this.dataTable = $('#log-table').DataTable();
   }
 
@@ -68,15 +72,21 @@ class WirelessDebug {
           }
         }
         else {
-          $('#main-page').html('<p>No Datastore</p>');
+          $('#main-page').html('<p>No Datastore and/or No Data</p>');
         }
       }
     });
+
+    if ($('#cpu-usage-graph').length > 0) {
+      this.metricGrapher = new MetricGrapher("cpu-usage-graph", "mem-usage-graph", "net-usage-graph");
+      this.metricGrapher.render();
+    }
   }
 
   /** Decodes the WebSocket message and adds to table */
   websocketOnMessage(message) {
     let messageData = JSON.parse(message.data);
+
     if (messageData.messageType === 'logData') {
       this.data_table.destroy();
       for (let entry of messageData.logEntries) {
@@ -84,8 +94,10 @@ class WirelessDebug {
       }
       this.data_table = $('#log-table').DataTable();
     }
-    if (messageData.messageType === 'apiKey') {
-      this.apiKey_.append(messageData.user);
+
+    if (messageData.messageType === 'deviceMetrics') {
+      this.metricGrapher.setMetrics(messageData);
+      this.metricGrapher.render();
     }
   }
 

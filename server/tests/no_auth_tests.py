@@ -17,12 +17,12 @@ def test_get_login():
         returned.
     """
     umi = no_auth.NoAuth()
-    
+
     assert umi.get_login_ui() == ""
 
 
 def test_user_logged_in():
-    """ Verify that the no authorization user management interface doesn't care 
+    """ Verify that the no authorization user management interface doesn't care
         about user logins and always returns true.
     """
     umi = no_auth.NoAuth()
@@ -30,7 +30,7 @@ def test_user_logged_in():
 
 
 def test_handle_login():
-    """ Verify that the no authorization use management interface always lets 
+    """ Verify that the no authorization use management interface always lets
         the user through.
     """
     umi = no_auth.NoAuth()
@@ -46,7 +46,7 @@ def test_get_api_key():
 
 
 def test_find_websockets():
-    """ The only sort of non-trivial test, verifies that 
+    """ The only sort of non-trivial test, verifies that
         find_associated_websockets says to broadcast to all websocket
         connections.
     """
@@ -59,9 +59,9 @@ def test_find_websockets():
     }
 
     # The expected result is the concatenation of the above lists
-    expected_result = itertools.chain(*[websocket for api_keys, websocket in 
+    expected_result = itertools.chain(*[websocket for api_keys, websocket in
                                         websockets.items()])
-    
+
     destination_websockets = umi.find_associated_websockets(api_key, websockets)
 
     comparisons = zip(destination_websockets, expected_result)

@@ -1,7 +1,7 @@
-from datastore_interfaces.base_datastore_interface import DatastoreInterface
+from datastore_interfaces import base_datastore_interface
 
 
-class NoDatastoreInterface(DatastoreInterface):
+class NoDatastoreInterface(base_datastore_interface.DatastoreInterface):
     """ This class sets up the datastore interface. """
 
     def __init__(self, **kwargs):
@@ -61,7 +61,7 @@ class NoDatastoreInterface(DatastoreInterface):
             api_key: the API Key to retrieve devices for
 
         Returns:
-            array: array of names of device names
+            array: array of names of device names. Returns none for comparison reasons.
         """
         return []
 

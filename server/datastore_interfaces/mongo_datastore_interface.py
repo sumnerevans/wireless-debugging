@@ -1,8 +1,8 @@
 from pymongo import MongoClient
-from datastore_interfaces.base_datastore_interface import DatastoreInterface
+from datastore_interfaces import base_datastore_interface
 
 
-class MongoDatastoreInterface(DatastoreInterface):
+class MongoDatastoreInterface(base_datastore_interface.DatastoreInterface):
     """This is the Mongo Datastore interface implementing the base interface."""
 
     def __init__(self, hostname="test_database"):
