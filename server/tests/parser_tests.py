@@ -3,14 +3,10 @@ Tests for the Parsing Library
 """
 
 import json
-import os
 
 from datetime import datetime
 
 import parsing_lib
-
-# Make sure that all the relative paths work
-os.chdir(os.path.dirname(__file__))
 
 
 def _test_case_parser(test_case):
@@ -51,7 +47,7 @@ def _test_case_parser(test_case):
 def test_parse():
     """ Tests that the LogParser.parse method works properly. """
 
-    with open('test_parse.json') as test_case_file:
+    with open('tests/inputs/test_parse.json') as test_case_file:
         test_cases = json.load(test_case_file, object_hook=_test_case_parser)
 
         for test_case in test_cases:
@@ -71,7 +67,7 @@ def test_parse():
 def test_parse_raw_log():
     """ Tests that the LogParser.parse_raw_log method works properly. """
 
-    with open('test_parse_raw.json') as test_case_file:
+    with open('tests/inputs/test_parse_raw.json') as test_case_file:
         test_cases = json.load(test_case_file, object_hook=_test_case_parser)
 
         for test_case in test_cases:

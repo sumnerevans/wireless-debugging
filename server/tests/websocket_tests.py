@@ -5,6 +5,7 @@ Tests components of the WebSocket controller.
 from controller import websocket
 from tests.test_classes import DummySocket
 
+
 def test_start_session():
     """ Verifies that start session passes all of data from message into
         metadata where it can be stored for the lifetime of the WebSocket.

@@ -2,14 +2,11 @@
 Utility Functions
 """
 import json
-import yaml
-import helpers
 
 from datetime import datetime
-from markupsafe import Markup
 
-
-
+import helpers
+import yaml
 
 def serialize_to_json(data):
     """ Serialize an object to JSON, ensuring that the datetimes are formatted
@@ -40,7 +37,6 @@ def from_config_yaml(key, force_reload=False):
         force_reload (:obj:`bool`, optional): Whether or not to force the
             configs to be reloaded from disk. Defaults to False.
     """
-
     if helpers._config_yaml is None or force_reload:
         with open('config.yaml') as config:
             helpers._config_yaml = yaml.load(config)
