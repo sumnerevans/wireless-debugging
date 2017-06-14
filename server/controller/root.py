@@ -84,7 +84,6 @@ def index():
     }
 
 
-# Placeholder
 @route('/current')
 @kajiki_view('current')
 @authenticated()
@@ -96,7 +95,6 @@ def current():
     }
 
 
-# Placeholder
 @route('/historical')
 @kajiki_view('historical')
 @authenticated()
@@ -134,12 +132,12 @@ def login():
         None
     Returns:
         An HTML webpage containing a UI for the user to log into the website.
-        This function returns a webpage specified by the kajiki view decorator. 
+        This function returns a webpage specified by the kajiki view decorator.
         This function also returns a subcomponent of a webpage that defines the
-        format of the login page, which is specified in the user management 
-        interface. 
+        format of the login page, which is specified in the user management
+        interface.
     """
-    
+
     return {
         'login_fields': Markup(
             controller.user_management_interface.get_login_ui()),

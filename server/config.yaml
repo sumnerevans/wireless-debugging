@@ -1,2 +1,4 @@
 hostname: 0.0.0.0
 port: 80
+datastore_interface: mongo_datastore_interface.MongoDatastoreInterface()
+user_management_interface: email_auth.EmailAuth()
