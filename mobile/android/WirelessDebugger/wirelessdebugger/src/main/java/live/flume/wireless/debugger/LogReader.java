@@ -64,7 +64,7 @@ class LogReader implements Runnable {
 
             String logLine = "";
 
-            Log.d(TAG, "Begin Read line in buffer");
+            // Log.d(TAG, "Begin Read line in buffer");
             while (mHostAppRunning && mWebSocketMessenger.isRunning()) {
                 sendLogsIfReady();
 
@@ -93,7 +93,6 @@ class LogReader implements Runnable {
 
             bufferedReader.close();
             mWebSocketMessenger.sendEndSessionMessage();
-            outputLogs();
         } catch (IOException ioe) {
             Log.e(TAG, "IO Exception Occurred in run() thread " + ioe.toString());
         }
@@ -121,18 +120,6 @@ class LogReader implements Runnable {
             mWebSocketMessenger.sendLogDump();
             mLastSendTime = currentTime;
         }
-    }
-
-    /**
-     * Temporary function.
-     * Called if the app terminates
-     */
-    private void outputLogs() {
-        Log.d(TAG, "BEGIN LOG OUTPUT");
-        for (String logLine : mLogs) {
-            Log.i(TAG, logLine);
-        }
-        Log.d(TAG, "END LOG OUTPUT");
     }
 
     /**

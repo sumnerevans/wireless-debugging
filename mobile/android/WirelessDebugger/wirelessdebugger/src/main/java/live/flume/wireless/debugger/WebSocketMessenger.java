@@ -36,7 +36,7 @@ class WebSocketMessenger extends WebSocketClient {
     public static WebSocketMessenger buildNewConnection(String socketAddress, String apiKey,
                                                         String appName) {
         URI uri;
-        Log.i(TAG, "URI: " + socketAddress);
+        // Log.i(TAG, "URI: " + socketAddress);
         try {
             uri = new URI("ws://" + socketAddress + "/ws");
         } catch (URISyntaxException e) {
@@ -67,7 +67,7 @@ class WebSocketMessenger extends WebSocketClient {
      */
     @Override
     public void onOpen(ServerHandshake serverHandshake) {
-        Log.i(TAG, "Connection opened!");
+        //Log.i(TAG, "Connection opened!");
         sendAndCatch(createStartSessionObject().toString());
     }
 
@@ -85,7 +85,7 @@ class WebSocketMessenger extends WebSocketClient {
     @Override
     public void onClose(int i, String s, boolean b) {
         mIsRunning = false;
-        Log.i(TAG, "Closed " + s);
+        // Log.i(TAG, "Closed " + s);
     }
 
     /**
