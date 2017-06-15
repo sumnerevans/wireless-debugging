@@ -30,6 +30,8 @@ def handle_websocket():
     if not websocket:
         abort(400, 'Expected WebSocket request.')
 
+    print('connection recieved')
+
     _websocket_metadata = {}
 
     while not websocket.closed:
@@ -101,6 +103,11 @@ def log_dump(message, websocket, metadata):
             received.
     """
     print('logs sent')
+    print(message)
+
+    # TODO: (Sumner) fix when implementing the iOS parsing component.
+    if metadata['osType'] == 'iOS':
+        return
 
     parsed_logs = LogParser.parse(message)
 
