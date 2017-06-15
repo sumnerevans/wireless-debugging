@@ -89,9 +89,7 @@ class WirelessDebug {
 
     if (messageData.messageType === 'logData') {
       this.data_table.destroy();
-      for (let entry of messageData.logEntries) {
-        this.logTable_.append(this.renderLog(entry));
-      }
+      this.logTable_.append(messageData.logEntries);
       this.data_table = $('#log-table').DataTable();
     }
 

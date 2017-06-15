@@ -168,6 +168,7 @@ def device_metrics(message, websocket, metadata):
         message: the device metrics in a JSON object
         websocket: the full websocket connection
     """
+    api_key = metadata['apiKey']
     associated_websockets = (
         controller.user_management_interface.find_associated_websockets(api_key,
             _web_ui_ws_connections))

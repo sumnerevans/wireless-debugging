@@ -68,27 +68,7 @@ class WebSocketMessenger extends WebSocketClient {
     @Override
     public void onOpen(ServerHandshake serverHandshake) {
         Log.i(TAG, "Connection opened!");
-
-        JSONObject payload = new JSONObject();
-
-        StringBuilder deviceNameBuilder = new StringBuilder();
-        deviceNameBuilder.append(Build.MANUFACTURER);
-        deviceNameBuilder.append(" ");
-        deviceNameBuilder.append(Build.MODEL);
-        deviceNameBuilder.append(" ");
-        deviceNameBuilder.append(Build.DEVICE);
-
-        try {
-            payload.put("messageType", "startSession");
-            payload.put("osType", "Android");
-            payload.put("apiKey", mApiKey);
-            payload.put("deviceName", deviceNameBuilder.toString());
-            payload.put("appName", mHostAppName);
-        } catch (JSONException e) {
-            Log.e(TAG, e.toString());
-        }
-
-        sendAndCatch(payload.toString());
+        sendAndCatch(createStartSessionObject().toString());
     }
 
     /**
@@ -97,8 +77,7 @@ class WebSocketMessenger extends WebSocketClient {
      * @param s, The received message.
      */
     @Override
-    public void onMessage(String s) {
-    }
+    public void onMessage(String s) {}
 
     /**
      * Called by the parent when the web socket connection is closed.
@@ -131,22 +110,7 @@ class WebSocketMessenger extends WebSocketClient {
         ArrayList<String> logsToSendCopy = new ArrayList<>(mLogsToSend);
         mLogsToSend.clear();
 
-        JSONObject payload = new JSONObject();
-        try {
-            payload.put("messageType", "logDump");
-            payload.put("osType", "Android");
-
-            String queuedLogs = "";
-
-            for (String logLine : logsToSendCopy) {
-                queuedLogs += logLine + "\n";
-            }
-            payload.put("rawLogData", queuedLogs);
-        } catch (JSONException e) {
-            Log.e(TAG, e.toString());
-        }
-
-        sendWithRetries(payload.toString(), logsToSendCopy);
+        sendWithRetries(createLogMessageObject(logsToSendCopy).toString(), logsToSendCopy);
     }
 
     /**
@@ -163,34 +127,25 @@ class WebSocketMessenger extends WebSocketClient {
      */
     public void sendEndSessionMessage() {
         sendLogDump();
-
-        JSONObject payload = new JSONObject();
-        try {
-            payload.put("messageType", "endSession");
-        } catch (JSONException e) {
-            Log.e(TAG, e.toString());
-        }
-
-        sendAndCatch(payload.toString());
+        sendAndCatch(createEndSessionObject().toString());
     }
 
+    /**
+     * Sends system metrics through the web socket to the server.
+     * @param memUsed Memory currently being used.
+     * @param memTotal Total memory on the system.
+     * @param cpuUsage CPU Usage as a double.
+     * @param bytesSentPerSec Number of bytes sent per second.
+     * @param bytesReceivedPerSec Number of bytes received per second.
+     * @param timeStamp Time the metrics were collected in ms UTC.
+     */
     public void sendSystemMetrics(int memUsed, int memTotal, double cpuUsage,
             double bytesSentPerSec, double bytesReceivedPerSec, long timeStamp) {
-        JSONObject payload = new JSONObject();
-        try {
-            payload.put("messageType", "deviceMetrics");
-            payload.put("osType", "Android");
-            payload.put("timeStamp", timeStamp);
-            payload.put("cpuUsage", cpuUsage);
-            payload.put("memUsage", memUsed);
-            payload.put("memTotal", memTotal);
-            payload.put("netSentPerSec", bytesSentPerSec);
-            payload.put("netReceivePerSec", bytesReceivedPerSec);
-        } catch (JSONException e) {
-            Log.e(TAG, e.toString());
-        }
 
-        sendAndCatch(payload.toString());
+        String payload = createSystemMetricsObject(memUsed, memTotal, cpuUsage, bytesSentPerSec,
+                    bytesReceivedPerSec, timeStamp).toString();
+
+        sendAndCatch(payload);
     }
 
     /**
@@ -240,4 +195,97 @@ class WebSocketMessenger extends WebSocketClient {
             mIsRunning = false;
         }
     }
+
+    /**
+     * Creates a JSON object containing startSession information.  This includes the OS type,
+     * device name, API Key, and App name.
+     * @return Complete JSONObject.
+     */
+    public JSONObject createStartSessionObject() {
+        JSONObject message = new JSONObject();
+
+        StringBuilder deviceNameBuilder = new StringBuilder();
+        deviceNameBuilder.append(Build.MANUFACTURER);
+        deviceNameBuilder.append(" ");
+        deviceNameBuilder.append(Build.MODEL);
+        deviceNameBuilder.append(" ");
+        deviceNameBuilder.append(Build.DEVICE);
+
+        try {
+            message.put("messageType", "startSession");
+            message.put("osType", "Android");
+            message.put("apiKey", mApiKey);
+            message.put("deviceName", deviceNameBuilder.toString());
+            message.put("appName", mHostAppName);
+        } catch (JSONException e) {
+            Log.e(TAG, e.toString());
+        }
+        return message;
+    }
+
+    /**
+     * Creates a JSON object containing a Log Dump message.
+     * @param logQueue Array list containing log lines.
+     * @return Complete JSONObject.
+     */
+    public JSONObject createLogMessageObject(ArrayList<String> logQueue) {
+        JSONObject message = new JSONObject();
+        try {
+            message.put("messageType", "logDump");
+            message.put("osType", "Android");
+
+            String queuedLogs = "";
+
+            for (String logLine : logQueue) {
+                queuedLogs += logLine + "\n";
+            }
+            message.put("rawLogData", queuedLogs);
+        } catch (JSONException e) {
+            Log.e(TAG, e.toString());
+        }
+        return message;
+    }
+
+    /**
+     * Creates a JSON Object containing all device metric information.
+     * @param memUsed Memory currently being used.
+     * @param memTotal Total memory on the system.
+     * @param cpuUsage CPU Usage as a double.
+     * @param bytesSentPerSec Number of bytes sent per second.
+     * @param bytesReceivedPerSec Number of bytes received per second.
+     * @param timeStamp Time the metrics were collected in ms UTC.
+     * @return Complete JSONObject.
+     */
+    public JSONObject createSystemMetricsObject(int memUsed, int memTotal, double cpuUsage, double
+            bytesSentPerSec, double bytesReceivedPerSec, long timeStamp) {
+        JSONObject message = new JSONObject();
+        try {
+            message.put("messageType", "deviceMetrics");
+            message.put("osType", "Android");
+            message.put("timeStamp", timeStamp);
+            message.put("cpuUsage", cpuUsage);
+            message.put("memUsage", memUsed);
+            message.put("memTotal", memTotal);
+            message.put("netSentPerSec", bytesSentPerSec);
+            message.put("netReceivePerSec", bytesReceivedPerSec);
+        } catch (JSONException e) {
+            Log.e(TAG, e.toString());
+        }
+        return message;
+    }
+
+    /**
+     * Creates a JSON Object containing end session information.
+     * @return Complete JSONObject.
+     */
+    public JSONObject createEndSessionObject() {
+        JSONObject message = new JSONObject();
+        try {
+            message.put("messageType", "endSession");
+        } catch (JSONException e) {
+            Log.e(TAG, e.toString());
+        }
+        return message;
+    }
+
 }
