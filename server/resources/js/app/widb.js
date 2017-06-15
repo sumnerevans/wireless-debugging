@@ -95,9 +95,7 @@ class WirelessDebug {
     let messageData = JSON.parse(message.data);
 
     if (messageData.messageType === 'logData') {
-      this.data_table.destroy();
-      this.logTable_.append(messageData.logEntries);
-      this.data_table = $('#log-table').DataTable(this.tableConfig);
+      this.data_table.row.add($(messageData.logEntries)).draw();
       let scrollBody = $('.dataTables_scrollBody');
       scrollBody.scrollTop(scrollBody[0].scrollHeight);
     }
