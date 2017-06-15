@@ -23,7 +23,6 @@ class WirelessDebug {
 
     this.tableConfig = {
       'paging': false,
-      'bPaginate': false,
       'lengthMenu': [-1],
       'scrollY': '75vh',
       'scrollCollapse': true,
