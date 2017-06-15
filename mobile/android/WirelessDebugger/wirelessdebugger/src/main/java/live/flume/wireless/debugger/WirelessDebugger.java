@@ -112,7 +112,6 @@ public class WirelessDebugger extends Service {
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // Log.d(TAG, "Service Started");
         // Create and start threads
         String hostname = intent.getStringExtra(HOSTNAME_EXTRA);
         int timeInterval = intent.getIntExtra(TIME_INTERVAL_EXTRA, DEFAULT_TIME_INTERVAL);
@@ -134,7 +133,6 @@ public class WirelessDebugger extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-        // Log.d(TAG, "Service Stopped, Task Removed");
         mLogReader.setAppTerminated();
         while (mLogReader.isThreadRunning()){
             // Wait for mLogReader to finish sending logs

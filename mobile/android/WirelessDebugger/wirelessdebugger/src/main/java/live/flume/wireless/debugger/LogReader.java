@@ -64,7 +64,6 @@ class LogReader implements Runnable {
 
             String logLine = "";
 
-            // Log.d(TAG, "Begin Read line in buffer");
             while (mHostAppRunning && mWebSocketMessenger.isRunning()) {
                 sendLogsIfReady();
 
