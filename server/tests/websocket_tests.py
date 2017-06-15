@@ -5,6 +5,7 @@ Tests components of the WebSocket controller.
 from controller import websocket
 from tests.test_classes import DummySocket
 
+
 def test_start_session():
     """ Verifies that start session passes all of data from message into
         metadata where it can be stored for the lifetime of the WebSocket.
@@ -20,6 +21,12 @@ def test_start_session():
     }
 
     websocket._ws_routes[message['messageType']](message, socket, _metadata)
+
+    # Just ensure that the start time was added, since it is set to
+    # datetime.now, we can't do a full camparison.
+    assert 'startTime' in _metadata
+    _metadata.pop('startTime')
+
     assert message == _metadata
 
 
