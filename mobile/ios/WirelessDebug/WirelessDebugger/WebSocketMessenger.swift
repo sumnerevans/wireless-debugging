@@ -105,6 +105,9 @@ class WebSocketMessenger {
         self.webSocket.send(JSON(newData))
     }
     
+    /// Internal log function that takes into account verbosity flag.
+    ///
+    /// - Parameter message: the message to log
     private func log(_ message: String) {
         if self.verbose {
             NSLog(message)
