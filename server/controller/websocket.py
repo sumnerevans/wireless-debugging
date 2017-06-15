@@ -32,7 +32,7 @@ def handle_websocket():
 
     print('connection recieved')
 
-    _websocket_metadata = {}
+    websocket_metadata = {}
 
     while not websocket.closed:
         try:
@@ -43,17 +43,17 @@ def handle_websocket():
             decoded_message = json.loads(message)
             message_type = decoded_message['messageType']
             if message_type is None:
-                # TODO: blow up
-                pass
+                print('Unrecognized message_type %s' % message_type)
+                continue
 
             _ws_routes[message_type](decoded_message, websocket,
-                                     _websocket_metadata)
+                                     websocket_metadata)
         except WebSocketError:
             break
 
     # If we have the API key, we can waste a little less time searching for the
     # WebSocket.
-    ws_api_key = _websocket_metadata.get('apiKey', '')
+    ws_api_key = websocket_metadata.get('apiKey', '')
     if (ws_api_key and ws_api_key in _web_ui_ws_connections and websocket in
             _web_ui_ws_connections[ws_api_key]):
         _web_ui_ws_connections[ws_api_key].remove(websocket)
@@ -108,10 +108,6 @@ def log_dump(message, websocket, metadata):
 
     api_key = metadata.get('apiKey', '')
 
-    associated_websockets = (
-        controller.user_management_interface.find_associated_websockets(api_key,
-            _web_ui_ws_connections))
-
     # Send to database and convert to HTML.
     controller.datastore_interface.store_logs(
         metadata['apiKey'], metadata['deviceName'], metadata['appName'],
@@ -126,7 +122,7 @@ def log_dump(message, websocket, metadata):
 
     # Determine wich WebSocket connections to send the logs to
     associated_websockets = controller.user_management_interface \
-        .find_associated_websockets(api_key, browser_websocket_connections)
+        .find_associated_websockets(api_key, _web_ui_ws_connections)
 
     for connection in associated_websockets:
         connection.send(util.serialize_to_json(send_logs))
@@ -175,9 +171,8 @@ def device_metrics(message, websocket, metadata):
         websocket: the full websocket connection
     """
     api_key = metadata['apiKey']
-    associated_websockets = (
-        controller.user_management_interface.find_associated_websockets(api_key,
-            _web_ui_ws_connections))
+    associated_websockets = controller.user_management_interface \
+        .find_associated_websockets(api_key, _web_ui_ws_connections)
 
     for connection in associated_websockets:
         connection.send(util.serialize_to_json(message))

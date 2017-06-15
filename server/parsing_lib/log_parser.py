@@ -58,15 +58,16 @@ class LogParser(object):
 
     @staticmethod
     def parse(raw_log_lines, os_type):
-        """ Parses a log message from the Mobile API.
+        """ Parses a log message from the Mobile API. Note, this is a Generator
+        function.
 
         Args:
             raw_log_lines (string): the raw log lines
             os_type (string): the OS type from which the logs came ("iOS" or
                 "Android")
 
-        Returns:
-            list: a list of log entry dictionaries
+        Generates:
+            a single log entry dictionary every time the function is called
         """
         # If there are no log lines, don't do anything.
         if not raw_log_lines or raw_log_lines.isspace():
@@ -111,7 +112,8 @@ class LogParser(object):
                 current_log['text'] += '\n%s' % line
                 multiline = True
             else:
-                # Check if current log is like the previous log parsed.
+                # Check if current log has the same time as the previous log
+                # parsed.
                 new_log = LogParser.parse_raw_log(line, os_type)
                 if not current_log or current_log['time'] != new_log['time']:
                     current_log = LogParser.parse_entries(new_log)
@@ -125,7 +127,7 @@ class LogParser(object):
             if not multiline:
                 yield current_log
 
-        # Send any leftover unhandled exception logs.
+        # Yield any leftover unhandled exception logs.
         if in_unhandled_exception:
             yield current_log
 
@@ -135,12 +137,10 @@ class LogParser(object):
 
         Args:
             log_entry: the logEntry to return including processId and threadId
-            os_type (string): the OS type from which the logs came ("iOS" or
-                "Android")
 
         Returns:
             dict: the message data to be sent to the web browser (no processId
-            nor threadId)
+                nor threadId)
         """
         return {
             'time': log_entry['time'],
@@ -156,6 +156,8 @@ class LogParser(object):
 
         Args:
             log_data: the raw log line
+            os_type (string): the OS type from which the logs came ("iOS" or
+                "Android")
 
         Returns:
             dict: the log entry from the log line
@@ -194,7 +196,7 @@ class LogParser(object):
             string: formatted HTML
         """
         return '''
-        <tr class=\"%s\">
+        <tr class="%s">
             <td>%s</td>
             <td>%s</td>
             <td>%s</td>
@@ -228,6 +230,8 @@ class LogParser(object):
         Args:
             parsed_log: regex results from parsing the log line
             group_name: the name of the group to get
+            os_type (string): the OS type from which the logs came ("iOS" or
+                "Android")
 
         Returns:
             string: the value of the group
@@ -244,7 +248,8 @@ class LogParser(object):
 
         Args:
             date_string: the date string to parse
-            os_type: the type of OS from which the logs came
+            os_type (string): the OS type from which the logs came ("iOS" or
+                "Android")
 
         Returns:
             datetime: the parsed datetime object
