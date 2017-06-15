@@ -77,19 +77,6 @@ class WebSocketMessenger {
     public func enqueueLog(logLine: String) {
         logsToSend.append(logLine)
     }
-    
-    public func sendUnhandledException(exception: NSException) {
-        var exceptionString = "\(Date.init())---------- BEGIN UNHANDLED EXCEPTION\n"
-        exceptionString += "Name: \(exception.name.rawValue)\n"
-        exceptionString += "Reason: \(exception.reason ?? "nil")\n"
-        exceptionString += "Call Stack:\n\(exception.callStackSymbols.joined(separator: "\n"))"
-        
-        print(exceptionString)
-
-        self.send("logDump", data: [
-            "rawLogData": exceptionString,
-        ])
-    }
 
     /// Sends information for an unhandled exception.
     ///

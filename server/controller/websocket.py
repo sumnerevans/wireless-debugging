@@ -115,7 +115,7 @@ def log_dump(message, websocket, metadata):
     # Send to database and convert to HTML.
     controller.datastore_interface.store_logs(
         metadata['apiKey'], metadata['deviceName'], metadata['appName'],
-        metadata['start_time'], metadata['osType'], log_entries)
+        metadata['startTime'], metadata['osType'], log_entries)
 
     # Create a message to send to the web clients.
     send_logs = {
