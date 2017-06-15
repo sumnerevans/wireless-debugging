@@ -1,0 +1,471 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		445BBC2C1EE89AC700085B83 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445BBC2B1EE89AC700085B83 /* AppDelegate.swift */; };
+		445BBC2E1EE89AC700085B83 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445BBC2D1EE89AC700085B83 /* ViewController.swift */; };
+		445BBC311EE89AC700085B83 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 445BBC2F1EE89AC700085B83 /* Main.storyboard */; };
+		445BBC331EE89AC700085B83 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 445BBC321EE89AC700085B83 /* Assets.xcassets */; };
+		445BBC361EE89AC700085B83 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 445BBC341EE89AC700085B83 /* LaunchScreen.storyboard */; };
+		445BBC411EE89AC700085B83 /* WirelessDebugTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445BBC401EE89AC700085B83 /* WirelessDebugTests.swift */; };
+		445BBC511EE89B4800085B83 /* WebSocketMessenger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445BBC4F1EE89B4800085B83 /* WebSocketMessenger.swift */; };
+		445BBC521EE89B4800085B83 /* LogStreamer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445BBC501EE89B4800085B83 /* LogStreamer.swift */; };
+		445BBC5C1EE8A11800085B83 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445BBC5B1EE8A11800085B83 /* WebSocket.swift */; };
+		449FFF121EE8A4D000074409 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 449FFF111EE8A4D000074409 /* libz.tbd */; };
+		449FFF161EE8AC7600074409 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449FFF151EE8AC7600074409 /* SwiftyJSON.swift */; };
+		44E35A7A1EEAFBB000DDDAEF /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 44E35A791EEAFBB000DDDAEF /* Localizable.strings */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		445BBC3D1EE89AC700085B83 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 445BBC201EE89AC700085B83 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 445BBC271EE89AC700085B83;
+			remoteInfo = WirelessDebug;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		445BBC281EE89AC700085B83 /* WirelessDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WirelessDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		445BBC2B1EE89AC700085B83 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		445BBC2D1EE89AC700085B83 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		445BBC301EE89AC700085B83 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		445BBC321EE89AC700085B83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		445BBC351EE89AC700085B83 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		445BBC371EE89AC700085B83 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		445BBC3C1EE89AC700085B83 /* WirelessDebugTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WirelessDebugTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		445BBC401EE89AC700085B83 /* WirelessDebugTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WirelessDebugTests.swift; sourceTree = "<group>"; };
+		445BBC421EE89AC700085B83 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		445BBC4F1EE89B4800085B83 /* WebSocketMessenger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebSocketMessenger.swift; path = WirelessDebugger/WebSocketMessenger.swift; sourceTree = "<group>"; };
+		445BBC501EE89B4800085B83 /* LogStreamer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogStreamer.swift; path = WirelessDebugger/LogStreamer.swift; sourceTree = "<group>"; };
+		445BBC5B1EE8A11800085B83 /* WebSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebSocket.swift; path = WirelessDebugger/WebSocket.swift; sourceTree = "<group>"; };
+		449FFF111EE8A4D000074409 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		449FFF151EE8AC7600074409 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftyJSON.swift; path = WirelessDebugger/SwiftyJSON.swift; sourceTree = "<group>"; };
+		44E35A791EEAFBB000DDDAEF /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		445BBC251EE89AC700085B83 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				449FFF121EE8A4D000074409 /* libz.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		445BBC391EE89AC700085B83 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		445BBC1F1EE89AC700085B83 = {
+			isa = PBXGroup;
+			children = (
+				445BBC4C1EE89B2800085B83 /* WirelessDebugger */,
+				445BBC2A1EE89AC700085B83 /* WirelessDebug */,
+				445BBC3F1EE89AC700085B83 /* WirelessDebugTests */,
+				445BBC291EE89AC700085B83 /* Products */,
+				449FFF101EE8A4D000074409 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		445BBC291EE89AC700085B83 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				445BBC281EE89AC700085B83 /* WirelessDebug.app */,
+				445BBC3C1EE89AC700085B83 /* WirelessDebugTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		445BBC2A1EE89AC700085B83 /* WirelessDebug */ = {
+			isa = PBXGroup;
+			children = (
+				445BBC2B1EE89AC700085B83 /* AppDelegate.swift */,
+				445BBC2D1EE89AC700085B83 /* ViewController.swift */,
+				445BBC2F1EE89AC700085B83 /* Main.storyboard */,
+				445BBC321EE89AC700085B83 /* Assets.xcassets */,
+				445BBC341EE89AC700085B83 /* LaunchScreen.storyboard */,
+				445BBC371EE89AC700085B83 /* Info.plist */,
+				44E35A791EEAFBB000DDDAEF /* Localizable.strings */,
+			);
+			path = WirelessDebug;
+			sourceTree = "<group>";
+		};
+		445BBC3F1EE89AC700085B83 /* WirelessDebugTests */ = {
+			isa = PBXGroup;
+			children = (
+				445BBC401EE89AC700085B83 /* WirelessDebugTests.swift */,
+				445BBC421EE89AC700085B83 /* Info.plist */,
+			);
+			path = WirelessDebugTests;
+			sourceTree = "<group>";
+		};
+		445BBC4C1EE89B2800085B83 /* WirelessDebugger */ = {
+			isa = PBXGroup;
+			children = (
+				449FFF151EE8AC7600074409 /* SwiftyJSON.swift */,
+				445BBC5B1EE8A11800085B83 /* WebSocket.swift */,
+				445BBC4F1EE89B4800085B83 /* WebSocketMessenger.swift */,
+				445BBC501EE89B4800085B83 /* LogStreamer.swift */,
+			);
+			name = WirelessDebugger;
+			sourceTree = "<group>";
+		};
+		449FFF101EE8A4D000074409 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				449FFF111EE8A4D000074409 /* libz.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		445BBC271EE89AC700085B83 /* WirelessDebug */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 445BBC451EE89AC700085B83 /* Build configuration list for PBXNativeTarget "WirelessDebug" */;
+			buildPhases = (
+				445BBC241EE89AC700085B83 /* Sources */,
+				445BBC251EE89AC700085B83 /* Frameworks */,
+				445BBC261EE89AC700085B83 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WirelessDebug;
+			productName = WirelessDebug;
+			productReference = 445BBC281EE89AC700085B83 /* WirelessDebug.app */;
+			productType = "com.apple.product-type.application";
+		};
+		445BBC3B1EE89AC700085B83 /* WirelessDebugTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 445BBC481EE89AC700085B83 /* Build configuration list for PBXNativeTarget "WirelessDebugTests" */;
+			buildPhases = (
+				445BBC381EE89AC700085B83 /* Sources */,
+				445BBC391EE89AC700085B83 /* Frameworks */,
+				445BBC3A1EE89AC700085B83 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				445BBC3E1EE89AC700085B83 /* PBXTargetDependency */,
+			);
+			name = WirelessDebugTests;
+			productName = WirelessDebugTests;
+			productReference = 445BBC3C1EE89AC700085B83 /* WirelessDebugTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		445BBC201EE89AC700085B83 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0830;
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = "Google Field Session Team";
+				TargetAttributes = {
+					445BBC271EE89AC700085B83 = {
+						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = 3DJHQLE2C6;
+						ProvisioningStyle = Automatic;
+					};
+					445BBC3B1EE89AC700085B83 = {
+						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = 3DJHQLE2C6;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 445BBC271EE89AC700085B83;
+					};
+				};
+			};
+			buildConfigurationList = 445BBC231EE89AC700085B83 /* Build configuration list for PBXProject "WirelessDebug" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 445BBC1F1EE89AC700085B83;
+			productRefGroup = 445BBC291EE89AC700085B83 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				445BBC271EE89AC700085B83 /* WirelessDebug */,
+				445BBC3B1EE89AC700085B83 /* WirelessDebugTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		445BBC261EE89AC700085B83 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				445BBC361EE89AC700085B83 /* LaunchScreen.storyboard in Resources */,
+				44E35A7A1EEAFBB000DDDAEF /* Localizable.strings in Resources */,
+				445BBC331EE89AC700085B83 /* Assets.xcassets in Resources */,
+				445BBC311EE89AC700085B83 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		445BBC3A1EE89AC700085B83 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		445BBC241EE89AC700085B83 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				445BBC521EE89B4800085B83 /* LogStreamer.swift in Sources */,
+				445BBC2E1EE89AC700085B83 /* ViewController.swift in Sources */,
+				445BBC2C1EE89AC700085B83 /* AppDelegate.swift in Sources */,
+				449FFF161EE8AC7600074409 /* SwiftyJSON.swift in Sources */,
+				445BBC511EE89B4800085B83 /* WebSocketMessenger.swift in Sources */,
+				445BBC5C1EE8A11800085B83 /* WebSocket.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		445BBC381EE89AC700085B83 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				445BBC411EE89AC700085B83 /* WirelessDebugTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		445BBC3E1EE89AC700085B83 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 445BBC271EE89AC700085B83 /* WirelessDebug */;
+			targetProxy = 445BBC3D1EE89AC700085B83 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		445BBC2F1EE89AC700085B83 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				445BBC301EE89AC700085B83 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		445BBC341EE89AC700085B83 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				445BBC351EE89AC700085B83 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		445BBC431EE89AC700085B83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		445BBC441EE89AC700085B83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		445BBC461EE89AC700085B83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 3DJHQLE2C6;
+				INFOPLIST_FILE = WirelessDebug/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = google.WirelessDebug;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		445BBC471EE89AC700085B83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 3DJHQLE2C6;
+				INFOPLIST_FILE = WirelessDebug/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = google.WirelessDebug;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		445BBC491EE89AC700085B83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 3DJHQLE2C6;
+				INFOPLIST_FILE = WirelessDebugTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = google.WirelessDebugTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WirelessDebug.app/WirelessDebug";
+			};
+			name = Debug;
+		};
+		445BBC4A1EE89AC700085B83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 3DJHQLE2C6;
+				INFOPLIST_FILE = WirelessDebugTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = google.WirelessDebugTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WirelessDebug.app/WirelessDebug";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		445BBC231EE89AC700085B83 /* Build configuration list for PBXProject "WirelessDebug" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				445BBC431EE89AC700085B83 /* Debug */,
+				445BBC441EE89AC700085B83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		445BBC451EE89AC700085B83 /* Build configuration list for PBXNativeTarget "WirelessDebug" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				445BBC461EE89AC700085B83 /* Debug */,
+				445BBC471EE89AC700085B83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		445BBC481EE89AC700085B83 /* Build configuration list for PBXNativeTarget "WirelessDebugTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				445BBC491EE89AC700085B83 /* Debug */,
+				445BBC4A1EE89AC700085B83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 445BBC201EE89AC700085B83 /* Project object */;
+}
