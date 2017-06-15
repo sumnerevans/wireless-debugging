@@ -32,7 +32,7 @@ def handle_websocket():
 
     print('connection recieved')
 
-    _websocket_metadata = {}
+    websocket_metadata = {}
 
     while not websocket.closed:
         try:
@@ -43,11 +43,11 @@ def handle_websocket():
             decoded_message = json.loads(message)
             message_type = decoded_message['messageType']
             if message_type is None:
-                # TODO: blow up
-                pass
+                print('Unrecognized message_type %s' % message_type)
+                continue
 
             _ws_routes[message_type](decoded_message, websocket,
-                                     _websocket_metadata)
+                                     websocket_metadata)
         except WebSocketError:
             break
 
