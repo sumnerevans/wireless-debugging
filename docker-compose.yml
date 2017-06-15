@@ -1,0 +1,18 @@
+version: '2'
+
+services:
+    web:
+        build: .
+        expose:
+            - '80'
+        ports:
+            - '80:80'
+        depends_on:
+            - mongo
+
+    mongo:
+        image: mongo:latest
+        volumes:
+            - /data/db
+        ports:
+            - '27017:27017'
