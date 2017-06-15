@@ -1,0 +1,13 @@
+language: python
+python:
+    - "3.6"
+sudo: required
+install: pip install -r server/requirements.txt
+services:
+    - docker
+before_script:
+    - docker pull mongo
+    - docker run -dp 27017:27017 mongo:3.4.4
+script:
+    - cd server
+    - pytest -vv
