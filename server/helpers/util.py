@@ -4,8 +4,8 @@ Utility Functions
 import json
 from datetime import datetime
 import yaml
-import helpers
 from markupsafe import Markup
+import helpers
 
 
 def serialize_to_json(data):

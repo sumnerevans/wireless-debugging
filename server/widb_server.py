@@ -4,15 +4,15 @@ WiDb Server Main Function
 """
 import os
 
+import bottle
 from gevent.pywsgi import WSGIServer
 from geventwebsocket import WebSocketError
 from geventwebsocket.handler import WebSocketHandler
-from helpers.util import from_config_yaml
-
-import bottle
 
 import controller
+from helpers.util import from_config_yaml
 import parsing_lib
+
 
 def main():
     os.chdir(os.path.dirname(__file__))
