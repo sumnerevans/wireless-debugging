@@ -5,6 +5,6 @@
     Make sure this file is not in your source control to avoid making your server IP/host and API
     key public.
     -->
-    <string name="wireless_debug_server">138.67.232.18</string>
-    <string name="wireless_debug_api_key">reece@test.com</string>
+    <string name="wireless_debug_server">NONE</string>
+    <string name="wireless_debug_api_key">NONE</string>
 </resources>
