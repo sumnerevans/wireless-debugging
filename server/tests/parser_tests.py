@@ -3,9 +3,7 @@ Tests for the Parsing Library
 """
 
 import json
-
 from datetime import datetime
-
 import parsing_lib
 
 
