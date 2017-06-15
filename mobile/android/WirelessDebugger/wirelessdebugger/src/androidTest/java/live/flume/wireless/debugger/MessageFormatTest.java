@@ -1,4 +1,4 @@
-package com.google.wireless.debugger;
+package live.flume.wireless.debugger;
 
 import android.os.Build;
 import android.support.test.runner.AndroidJUnit4;

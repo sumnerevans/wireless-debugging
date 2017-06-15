@@ -3,7 +3,7 @@ apply plugin: 'com.android.library'
 ext {
     PUBLISH_GROUP_ID = 'live.flume'
     PUBLISH_ARTIFACT_ID = 'wireless.debugger'
-    PUBLISH_VERSION = '1.0'
+    PUBLISH_VERSION = '1.0.0'
 }
 
 android {
