@@ -21,7 +21,8 @@ class WirelessDebug {
     /** @private @const {?MetricGrapher} */
     this.metricGrapher = null;
 
-    this.tableConfig = {
+    /** @private @const {!Object}*/
+    this.tableConfig_ = {
       'paging': false,
       'lengthMenu': [-1],
       'scrollY': '75vh',
@@ -29,7 +30,7 @@ class WirelessDebug {
     };
 
     /** @private @const {!DataTable} */
-    this.dataTable;;
+    this.dataTable;
   }
 
   /**
@@ -59,7 +60,7 @@ class WirelessDebug {
       apiKey: apiKey || '',
     };
 
-    this.data_table = $('#log-table').DataTable(this.tableConfig);
+    this.data_table = $('#log-table').DataTable(this.tableConfig_);
     this.ws_.send(JSON.stringify(payload));
 
     // Get all the devices for historical sessions.
