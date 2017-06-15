@@ -20,6 +20,7 @@ class LogParser(object):
         Returns:
             dict: the message data to be sent to the web browser
         """
+
         log_entries = []
         if 'rawLogData' not in message:
             return {
