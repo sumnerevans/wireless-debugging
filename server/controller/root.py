@@ -2,7 +2,8 @@
 Root Controller
 """
 import functools
-import controller
+import io
+import sys
 
 from bottle import abort, post, redirect, request, response, route, static_file, get
 from kajiki_view import kajiki_view
@@ -120,7 +121,7 @@ def paste():
         redirect('/login_page')
     api_key = controller.user_management_interface.get_api_key_for_user(request)
     return {'page': 'paste',
-    'raw_logs':''}
+            'raw_logs':''}
 
 
 @post('/paste')
@@ -131,16 +132,31 @@ def paste():
 
     api_key = controller.user_management_interface.get_api_key_for_user(request)
 
-    print(parsing_lib.LogParser.convert_to_html(parsing_lib.LogParser.parse(str(request.forms.get('message')), "Android")))
-    #print(request.forms.get('message'))
-    # access form data, pass to parsing library, return html for table, return in dictionary
-
-
+    os_type = request.forms.get('os_type')
+    upload = request.files.get('upload')
+    #file_object = io.BytesIO(upload)
+    #file_object  = open("/Users/amandagiles/Documents/"+str(upload), 'r')
+    pasted = request.forms.get('message')
+    if upload != None:
+        message = str(upload.file.read())
+    elif pasted != None:
+        message = pasted
+    try:
+        parsed_message = parsing_lib.LogParser.parse(message, os_type)
+        log_entries = parsing_lib.LogParser.convert_to_html(parsed_message)
+        e = ""
+    except:
+        log_entries = ""
+        e = sys.exc_info()[0]
+        print("Error: " + str(e))
     return {'page': 'paste',
             'api_key': api_key,
             # If you've made it here, you have to be successfully logged in
             'logged_in': True,
-            'raw_logs': request.forms.get('message'),}
+            'raw_logs': request.forms.get('message'),
+            'log_entries': Markup(log_entries),
+            'log_error_message': str(e),
+            }
 
 @route('/new_login')
 @kajiki_view('new_login')
