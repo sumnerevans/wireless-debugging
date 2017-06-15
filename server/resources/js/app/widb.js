@@ -25,7 +25,7 @@ class WirelessDebug {
       'paging': false,
       'bPaginate': false,
       'lengthMenu': [-1],
-      'scrollY': '200px',
+      'scrollY': '75vh',
       'scrollCollapse': true,
     };
 
