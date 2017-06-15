@@ -26,6 +26,16 @@ android {
     }
 }
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.novoda:bintray-release:0.4.0'
+    }
+}
+apply plugin: 'com.novoda.bintray-release'
+
 repositories {
     mavenCentral()
 }
@@ -39,4 +49,15 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile "org.java-websocket:Java-WebSocket:1.3.4"
     compile 'com.google.code.findbugs:jsr305:2.0.1'
+}
+
+publish {
+    groupId = 'live.flume.wireless.debugger'
+    artifactId = 'wirelessdebugger'
+    repoName = 'wireless-debugger'
+    publishVersion = '1.0.0'
+    desc = 'Wireless Debugging Library for Android - Initial Release'
+    licences = ['Apache-2.0']
+    uploadName='WirelessDebugger'
+    website = 'https://github.com/sumnerevans/wireless-debugging '
 }
