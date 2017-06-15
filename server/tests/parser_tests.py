@@ -140,7 +140,7 @@ def test_convert_line_to_html():
 def test_convert_to_html():
     """Tests that LogParser.convert_to_html works properly"""
     current_year = datetime.now().year
-    test = [
+    tests = [[
         {
             'time': datetime(current_year, 5, 22, 11, 44, 31, 180000),
             'logType': 'Info',
@@ -155,7 +155,7 @@ def test_convert_to_html():
             'tag': 'IInputConnectionWrapper',
             'text': 'getTextBeforeCursor on inactive InputConnection',
         },
-    ]
+    ]]
 
     expected_results = [
         '<tr class="info">' +
