@@ -6,3 +6,5 @@ gevent
 gevent-websocket
 PyYaml
 pymongo
+pytest-cov
+codecov
