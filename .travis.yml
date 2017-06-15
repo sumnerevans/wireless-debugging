@@ -59,3 +59,9 @@ matrix:
         - ./gradlew build connectedAndroidTest test
       after_success: 
         — bash <(curl -s https://codecov.io/bash)
+
+    - language: swift
+      osx_image: xcode8.3
+      xcode_project: mobile/ios/WirelessDebug.xcodeproj
+      xcode_scheme: WirelessDebug
+      xcode_sdk: iphonesimulator10.3
