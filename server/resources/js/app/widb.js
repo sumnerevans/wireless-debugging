@@ -21,8 +21,16 @@ class WirelessDebug {
     /** @private @const {?MetricGrapher} */
     this.metricGrapher = null;
 
+    this.tableConfig = {
+      'paging': false,
+      'bPaginate': false,
+      'lengthMenu': [-1],
+      'scrollY': '200px',
+      'scrollCollapse': true,
+    };
+
     /** @private @const {!DataTable} */
-    this.dataTable = $('#log-table').DataTable();
+    this.dataTable;;
   }
 
   /**
@@ -52,7 +60,7 @@ class WirelessDebug {
       apiKey: apiKey || '',
     };
 
-    this.data_table = $('#log-table').DataTable();
+    this.data_table = $('#log-table').DataTable(this.tableConfig);
     this.ws_.send(JSON.stringify(payload));
 
     // Get all the devices for historical sessions.
@@ -90,7 +98,9 @@ class WirelessDebug {
     if (messageData.messageType === 'logData') {
       this.data_table.destroy();
       this.logTable_.append(messageData.logEntries);
-      this.data_table = $('#log-table').DataTable();
+      this.data_table = $('#log-table').DataTable(this.tableConfig);
+      let scrollBody = $('.dataTables_scrollBody');
+      scrollBody.scrollTop(scrollBody[0].scrollHeight);
     }
 
     if (messageData.messageType === 'deviceMetrics') {
