@@ -1,5 +1,6 @@
 # Wireless Debugging
 [![Build Status](https://travis-ci.org/sumnerevans/wireless-debugging.svg?branch=master)](https://travis-ci.org/sumnerevans/wireless-debugging)
+[![codecov](https://codecov.io/gh/sumnerevans/wireless-debugging/branch/master/graph/badge.svg)](https://codecov.io/gh/sumnerevans/wireless-debugging)
 
 This is a student project by CS students at Colorado School of Mines. The goal
 of this project is to build a mobile SDK and sample web server to allow mobile
