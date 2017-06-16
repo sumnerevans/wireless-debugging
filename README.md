@@ -10,7 +10,7 @@ This project was done under supervision of Google and was sponsored by the
 Colorado School of Mines for the CSCI-370 course.
 
 ## Getting Started
-Head over to our [Wiki](wiki) or jump straight to [Usage](wiki/Usage) or [Deployment](wiki/Deployment).
+Head over to our [Wiki](../../wiki) or jump straight to [Usage](../../wiki/Usage) or [Deployment](../../wiki/Deployment).
 
 ## Contributors
 - Jonathan Sumner Evans
