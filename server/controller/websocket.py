@@ -54,8 +54,8 @@ def handle_websocket():
     # If we have the API key, we can waste a little less time searching for the
     # WebSocket.
     ws_api_key = websocket_metadata.get('apiKey', '')
-    if (ws_api_key and ws_api_key in _web_ui_ws_connections and websocket in
-            _web_ui_ws_connections[ws_api_key]):
+    if (ws_api_key and ws_api_key in _web_ui_ws_connections and
+            websocket in _web_ui_ws_connections[ws_api_key]):
         _web_ui_ws_connections[ws_api_key].remove(websocket)
     # ... Otherwise we have to search everywhere to find and delete it.
     else:
@@ -103,8 +103,7 @@ def log_dump(message, websocket, metadata):
         metadata: the metadata object for the WebSocket connection
     """
     log_entries = list(
-        LogParser.parse(message['rawLogData'], metadata['osType'])
-    )
+        LogParser.parse(message['rawLogData'], metadata['osType']))
 
     api_key = metadata.get('apiKey', '')
 
@@ -121,8 +120,9 @@ def log_dump(message, websocket, metadata):
     }
 
     # Determine wich WebSocket connections to send the logs to
-    associated_websockets = controller.user_management_interface \
-        .find_associated_websockets(api_key, _web_ui_ws_connections)
+    associated_websockets = (
+        controller.user_management_interface.find_associated_websockets(
+            api_key, _web_ui_ws_connections))
 
     for connection in associated_websockets:
         connection.send(util.serialize_to_json(send_logs))
@@ -132,9 +132,7 @@ def log_dump(message, websocket, metadata):
 def end_session(message, websocket, metadata):
     """Set session is over and add to the device/app collection."""
     controller.datastore_interface.set_session_over(
-        metadata['apiKey'],
-        metadata['deviceName'],
-        metadata['appName'],
+        metadata['apiKey'], metadata['deviceName'], metadata['appName'],
         metadata['startTime'])
     controller.datastore_interface.add_device_app(
         metadata['apiKey'], metadata['deviceName'], metadata['appName'])
@@ -171,8 +169,9 @@ def device_metrics(message, websocket, metadata):
         websocket: the full websocket connection
     """
     api_key = metadata['apiKey']
-    associated_websockets = controller.user_management_interface \
-        .find_associated_websockets(api_key, _web_ui_ws_connections)
+    associated_websockets = (
+        controller.user_management_interface.find_associated_websockets(
+            api_key, _web_ui_ws_connections))
 
     for connection in associated_websockets:
         connection.send(util.serialize_to_json(message))
