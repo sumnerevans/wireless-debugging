@@ -1,8 +1,8 @@
 /**
-* @fileoverview Contains code for graphing device metrics using D3
-*/
+ * @fileoverview Contains code for graphing device metrics using D3
+ */
 
-class MetricGrapher {
+define(['chart'], (Chart) => class MetricGrapher {
   /** Initializes the graphs for device metrics using chart.js.
    * @param {string=} cpuCanvasId
    * @param {string=} memoryCanvasId
@@ -33,7 +33,7 @@ class MetricGrapher {
       memTotal: 0,
       netSentPerSec: 0,
       netReceivePerSec: 0,
-    }
+    };
 
     this.initializeData(recordedTime);
 
@@ -47,7 +47,7 @@ class MetricGrapher {
       data: {
         labels: this.xAxisScale_,
         datasets: [
-          this.generateDataset_(this.cpuUsageHistory_ ,"#3cba9f"),
+          this.generateDataset_(this.cpuUsageHistory_, '#3cba9f'),
         ]
       },
       options: this.generateOptions_(100)
@@ -59,7 +59,7 @@ class MetricGrapher {
       data: {
         labels: this.xAxisScale_,
         datasets: [
-          this.generateDataset_(this.memoryUsageHistory_ ,"#3e95cd"),
+          this.generateDataset_(this.memoryUsageHistory_, '#3e95cd'),
         ]
       },
       options: this.generateOptions_(1024)
@@ -72,8 +72,9 @@ class MetricGrapher {
       data: {
         labels: this.xAxisScale_,
         datasets: [
-          this.generateDataset_(this.networkSentHistory_ ,"#4EE9E4"),
-          this.generateDataset_(this.networkReceiveHistory_ ,"#8e5ea2")
+          this.generateDataset_(this.networkSentHistory_, '#4EE9E4'),
+          this.generateDataset_(this.networkReceiveHistory_,
+            '#8e5ea2'),
         ]
       },
       options: this.generateOptions_(1000)
@@ -146,9 +147,9 @@ class MetricGrapher {
     return {
       legend: {
         display: false
-       },
-       scales: {
-         xAxes: [{
+      },
+      scales: {
+        xAxes: [{
           display: true,
           ticks: {
             maxTicksLimit: 10.1,
@@ -157,11 +158,11 @@ class MetricGrapher {
           }
         }],
         yAxes: [{
-        display: true,
-        ticks: {
-          suggestedMax: suggestedMax,
-          beginAtZero: true,
-        }
+          display: true,
+          ticks: {
+            suggestedMax: suggestedMax,
+            beginAtZero: true,
+          }
         }]
       },
       tooltips: {
@@ -173,7 +174,7 @@ class MetricGrapher {
       animation: {
         duration: 0,
       },
-    }
+    };
   }
 
   /**
@@ -188,6 +189,6 @@ class MetricGrapher {
       borderWidth: 2,
       fill: true,
       pointRadius: 0.01,
-    }
+    };
   }
-}
+});
