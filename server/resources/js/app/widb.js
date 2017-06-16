@@ -30,7 +30,7 @@ class WirelessDebug {
     };
 
     /** @private @const {!DataTable} */
-    this.dataTable;
+    this.dataTable_;
   }
 
   /**
@@ -60,7 +60,7 @@ class WirelessDebug {
       apiKey: apiKey || '',
     };
 
-    this.data_table = $('#log-table').DataTable(this.tableConfig_);
+    this.dataTable_ = $('#log-table').DataTable(this.tableConfig_);
     this.ws_.send(JSON.stringify(payload));
 
     // Get all the devices for historical sessions.
@@ -98,7 +98,7 @@ class WirelessDebug {
     if (messageData.messageType === 'logData') {
       // If we get more log data, append the log data to the table and scroll to
       // the bottom of the table.
-      this.data_table.row.add($(messageData.logEntries)).draw();
+      this.dataTable_.row.add($(messageData.logEntries)).draw();
       let scrollBody = $('.dataTables_scrollBody');
       scrollBody.scrollTop(scrollBody[0].scrollHeight);
     }
