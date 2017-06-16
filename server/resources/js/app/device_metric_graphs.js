@@ -171,8 +171,8 @@ class MetricGrapher {
         mode: null
       },
       animation: {
-          duration: 0,
-        },
+        duration: 0,
+      },
     }
   }
 
