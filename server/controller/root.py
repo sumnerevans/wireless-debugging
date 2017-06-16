@@ -138,11 +138,13 @@ def paste():
     #file_object  = open("/Users/amandagiles/Documents/"+str(upload), 'r')
     pasted = request.forms.get('message')
     if upload != None:
-        message = str(upload.file.read())
+        message = str(upload.file.read(), 'utf-8')
+        print(message)
     elif pasted != None:
         message = pasted
     try:
         parsed_message = parsing_lib.LogParser.parse(message, os_type)
+        print(parsed_message)
         log_entries = parsing_lib.LogParser.convert_to_html(parsed_message)
         e = ""
     except:
