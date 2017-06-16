@@ -1,5 +1,5 @@
 /**
- * @fileoverview Contains code for graphing device metrics using D3
+ * @fileoverview Contains code for graphing device metrics using Chart.js.
  */
 
 define(['chart'], (Chart) => class MetricGrapher {

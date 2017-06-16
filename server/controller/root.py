@@ -113,7 +113,6 @@ def new_login():
 
 
 @route('/<resource_root>/<filepath:path>')
-@route('/<resource_root>/<filepath:path>')
 def static(resource_root, filepath):
     """
     Routes all of the resources
@@ -148,6 +147,7 @@ def login():
             request),
     }
 
+
 @post('/login')
 def handle_login():
     """ Takes a login form and verifies the user's identity. """
@@ -163,6 +163,7 @@ def handle_login():
         abort(403, "Login failed, error: %s" % error_message)
     else:
         redirect('/')
+
 
 @route('/logout')
 def logout():
