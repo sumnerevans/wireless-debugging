@@ -113,10 +113,10 @@ class MetricGrapher {
     this.memoryUsageHistory_.push(this.metrics.memUsage / 1024.0);
     this.memoryUsageHistory_.shift();
 
-    this.networkSentHistory_.push(this.metrics.netSentPerSec);
+    this.networkSentHistory_.push(this.metrics.netSentPerSec / 1024.0);
     this.networkSentHistory_.shift();
 
-    this.networkReceiveHistory_.push(this.metrics.netReceivePerSec);
+    this.networkReceiveHistory_.push(this.metrics.netReceivePerSec / 1024.0);
     this.networkReceiveHistory_.shift();
 
     this.cpuGraph.data.datasets[0].data = this.cpuUsageHistory_;
@@ -162,6 +162,9 @@ class MetricGrapher {
       hover: {
         mode: null
       },
+      animation: {
+            duration: 0,
+        },
     }
   }
 
