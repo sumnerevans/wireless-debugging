@@ -53,7 +53,7 @@ def handle_websocket():
 
     # If we have the API key, we can waste a little less time searching for the
     # WebSocket.
-    ws_api_key = _websocket_metadata.get('apiKey', '')
+    ws_api_key = websocket_metadata.get('apiKey', '')
     if (ws_api_key and ws_api_key in _web_ui_ws_connections and
             websocket in _web_ui_ws_connections[ws_api_key]):
         _web_ui_ws_connections[ws_api_key].remove(websocket)
@@ -103,8 +103,7 @@ def log_dump(message, websocket, metadata):
         metadata: the metadata object for the WebSocket connection
     """
     log_entries = list(
-        LogParser.parse(message['rawLogData'], metadata['osType'])
-    )
+        LogParser.parse(message['rawLogData'], metadata['osType']))
 
     api_key = metadata.get('apiKey', '')
 

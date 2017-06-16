@@ -222,7 +222,6 @@ class LogParser(object):
         return ''.join(LogParser.convert_line_to_html(line)
                        for line in log_entries)
 
-
     @staticmethod
     def _group_from_log(parsed_log, group_name, os_type):
         """ Gets a group from a parsed log.
