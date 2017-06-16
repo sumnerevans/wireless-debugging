@@ -4,7 +4,7 @@
  */
 
 requirejs.config({
-  'baseUrl': 'resources/js',
+  'baseUrl': 'js',
   'paths': {
     'jquery': '//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.0/jquery.min',
     'bootstrap': '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min',
@@ -13,4 +13,7 @@ requirejs.config({
   },
 });
 
-requirejs(['app/wireless-debug']);
+requirejs(['app/wireless-debug', 'jquery'], (WirelessDebug, $) => {
+  // Run the Application
+  $(document).ready(() => new WirelessDebug().start());
+});
