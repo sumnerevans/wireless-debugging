@@ -5,6 +5,7 @@ from datetime import datetime
 
 from helpers import util
 
+
 def test_json_serialize():
     """ Test that the JSON Serialization works as expected. """
     time = datetime.strptime('2017-06-15 17:41:45', '%Y-%m-%d %H:%M:%S')
@@ -17,17 +18,18 @@ def test_json_serialize():
         'nested': {
             'now': time,
             'inAnArray': [time, time],
-        }
+        },
     }
 
     expected_result = ' '.join([
-        '{"coolThings": ["Travis CI", "Codecov"], "app": "Wireless Debug",',
-        '"isAwesome": true, "nested": {"inAnArray": ["2017-06-15T17:41:45Z",',
-        '"2017-06-15T17:41:45Z"], "now": "2017-06-15T17:41:45Z"},',
-        '"time": "2017-06-15T17:41:45Z", "pi": 3.14}'
+        '{"time": "2017-06-15T17:41:45Z", "app": "Wireless Debug",',
+        '"isAwesome": true, "coolThings": ["Travis CI", "Codecov"],',
+        '"pi": 3.14, "nested": {"now": "2017-06-15T17:41:45Z",',
+        '"inAnArray": ["2017-06-15T17:41:45Z", "2017-06-15T17:41:45Z"]}}',
     ])
 
     assert util.serialize_to_json(object_to_serialize) == expected_result
+
 
 def test_from_config_yaml():
     """ Tests that retrieving data from the config file works as expected. """
