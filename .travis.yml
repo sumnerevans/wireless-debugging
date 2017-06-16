@@ -17,6 +17,8 @@ matrix:
     - language: node_js
       node_js:
         - "node"
+      install:
+        - npm install -g istanbul
       before_script:
         - cd server
         - npm install
