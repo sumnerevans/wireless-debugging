@@ -10,4 +10,6 @@ before_script:
     - docker run -dp 27017:27017 mongo:3.4.4
 script:
     - cd server
-    - pytest -vv
+    - pytest -vv --cov=./
+after_script:
+    - codecov
