@@ -39,10 +39,11 @@ define([
     let device = $('#device');
     let app = $('#app');
     let time = $('#start-time');
+    let data_table = $('#historical-log-table').DataTable();
+
     device.on('change', () => {
       let chosen_device = device.val();
       // Gets rid of old data but keeps table structure.
-      let data_table = $('#historical-log-table').DataTable();
       data_table.destroy();
       if (chosen_device !== 'None') {
         $('#hidden-dev-alias').css('display', 'block');
@@ -78,7 +79,6 @@ define([
     app.on('change', () => {
       let chosen_app = app.val();
       // Gets rid of old data but keeps table structure.
-      data_table = $('#historical-log-table').DataTable();
       data_table.destroy();
       if (chosen_app !== 'None') {
         $('#hidden-app-alias').css('display', 'block');
@@ -112,7 +112,6 @@ define([
     time.on('change', () => {
       let chosen_starttime = time.val();
       // Gets rid of old data but keeps table structure.
-      data_table = $('#historical-log-table').DataTable();
       data_table.destroy();
       $('#historical-log-table tbody tr').remove();
       if (chosen_starttime !== 'None') {
@@ -128,7 +127,6 @@ define([
           cache: false,
           success: function(data) {
             $('#historical-log-table').append(data.logs);
-            data_table = $('#historical-log-table').DataTable();
           },
         });
       }
