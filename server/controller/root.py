@@ -4,6 +4,7 @@ Root Controller
 import functools
 import io
 import sys
+import traceback
 
 from bottle import abort, post, redirect, request, response, route, static_file, get
 from kajiki_view import kajiki_view
@@ -146,18 +147,25 @@ def paste():
         parsed_message = parsing_lib.LogParser.parse(message, os_type)
         print(parsed_message)
         log_entries = parsing_lib.LogParser.convert_to_html(parsed_message)
-        e = ""
     except:
         log_entries = ""
         e = sys.exc_info()[0]
-        print("Error: " + str(e))
+        tracebackk = str(traceback.print_exc())
+        flash = {'content': "Log format error: " +str(e), 'cls': 'error'}
+        return {'page': 'paste',
+                'api_key': api_key,
+                # If you've made it here, you have to be successfully logged in
+                'logged_in': True,
+                'raw_logs': request.forms.get('message'),
+                'log_entries': Markup(log_entries),
+                'flash': flash,
+                }
     return {'page': 'paste',
             'api_key': api_key,
             # If you've made it here, you have to be successfully logged in
             'logged_in': True,
             'raw_logs': request.forms.get('message'),
             'log_entries': Markup(log_entries),
-            'log_error_message': str(e),
             }
 
 @route('/new_login')

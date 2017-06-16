@@ -81,7 +81,7 @@ class LogParser(object):
 
         current_log = None
         in_unhandled_exception = False
-        print(len(raw_log_lines.splitlines()))
+
         for line in raw_log_lines.splitlines():
             # Skip lines that are not log lines. There may be cases when these
             # appear in a log line that is not at the beginning of the raw
@@ -93,6 +93,9 @@ class LogParser(object):
             if exception_regex:
                 exception_groups = exception_regex.match(line)
                 if exception_groups:
+                    if current_log:
+                        yield current_log
+
                     in_unhandled_exception = True
                     exception_time_string = exception_groups.group(1)
                     current_log = {

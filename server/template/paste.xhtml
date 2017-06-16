@@ -13,29 +13,29 @@
        clear: both;
    }
   </style>
-<div class="container">
-  <form name="upload_form" action="paste" method="post" enctype="multipart/form-data">
-  <div class="form-group" id="message">
-    <textarea name="message" rows="10" cols="60" placeholder="Enter logs here or upload a text file below" >${raw_logs}</textarea>
-    <br /><br />
-    <input type="file" name="upload" accept="*.txt" ></input>
-    <div class="radio">
-      <label>
-        <input type="radio" name="os_type" value="iOS" checked="checked" /> iOS
-      </label>
-    </div>
-    <div class="radio">
-      <label>
-        <input type="radio" name="os_type" value="Android" /> Android
-      </label>
-    </div>
-    <input value="Submit" type="submit" style="height:30px; width:80px" />
-  </div>
-</form>
-</div>
 </head>
 
 <body py:block="body" py:strip="True">
+  <div class="container">
+    <form name="upload_form" action="paste" method="post" enctype="multipart/form-data">
+    <div class="form-group" id="message">
+      <textarea name="message" rows="10" cols="60" placeholder="Enter logs here or upload a text file below" >${raw_logs}</textarea>
+      <br /><br />
+      <input type="file" name="upload" accept="*.txt" ></input>
+      <div class="radio">
+        <label>
+          <input type="radio" name="os_type" value="iOS" checked="checked" /> iOS
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="os_type" value="Android" /> Android
+        </label>
+      </div>
+      <input value="Submit" type="submit" style="height:30px; width:80px" />
+    </div>
+  </form>
+  </div>
   <div class="row">
     <div class="col-md-8">
       <p></p>
@@ -53,10 +53,6 @@
           ${log_entries if self.defined('log_entries') else ''}
         </tbody>
       </table>
-      <div>
-        Error:
-        ${log_error_message if self.defined('log_error_message') else ''}
-      </div>
     </div>
   </div>
 </body>
