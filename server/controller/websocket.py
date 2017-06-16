@@ -110,11 +110,12 @@ def log_dump(message, websocket, metadata):
         return
 
     parsed_logs = LogParser.parse(message)
+    api_key = metadata.get('apiKey', '')
 
     # Send to database and convert to html.
     html_logs = LogParser.convert_to_html(parsed_logs['logEntries'])
     controller.datastore_interface.store_logs(
-        metadata['apiKey'], metadata['deviceName'], metadata['appName'],
+        api_key, metadata['deviceName'], metadata['appName'],
         metadata['startTime'], metadata['osType'], parsed_logs)
 
     send_logs = {
@@ -123,18 +124,19 @@ def log_dump(message, websocket, metadata):
         'logEntries': html_logs,
     }
 
-    for connection in _get_associated_websockets(metadata['apiKey']):
+    for connection in _get_associated_websockets(api_key):
         connection.send(util.serialize_to_json(send_logs))
 
 
 @ws_router('endSession')
 def end_session(message, websocket, metadata):
     """Set session is over and add to the device/app collection."""
+    api_key = metadata.get('apiKey', '')
     controller.datastore_interface.set_session_over(
-        metadata['apiKey'], metadata['deviceName'], metadata['appName'],
+        api_key, metadata['deviceName'], metadata['appName'],
         metadata['startTime'])
     controller.datastore_interface.add_device_app(
-        metadata['apiKey'], metadata['deviceName'], metadata['appName'])
+        api_key, metadata['deviceName'], metadata['appName'])
 
 
 @ws_router('associateUser')
@@ -167,7 +169,7 @@ def device_metrics(message, websocket, metadata):
         message: the device metrics in a JSON object
         websocket: the full websocket connection
     """
-    for connection in _get_associated_websockets(metadata['apiKey']):
+    for connection in _get_associated_websockets(metadata.get('apiKey', '')):
         connection.send(util.serialize_to_json(message))
 
 
