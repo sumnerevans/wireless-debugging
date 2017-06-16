@@ -24,5 +24,6 @@ matrix:
         - npm install
       script:
         - istanbul cover --hook-run-in-context --dir public/js/coverage ./node_modules/mocha/bin/_mocha -- js/test
+
 after_script:
   - codecov
