@@ -21,8 +21,16 @@ class WirelessDebug {
     /** @private @const {?MetricGrapher} */
     this.metricGrapher = null;
 
+    /** @private @const {!Object}*/
+    this.tableConfig_ = {
+      'paging': false,
+      'lengthMenu': [-1],
+      'scrollY': '75vh',
+      'scrollCollapse': true,
+    };
+
     /** @private @const {!DataTable} */
-    this.dataTable = $('#log-table').DataTable();
+    this.dataTable_;
   }
 
   /**
@@ -52,7 +60,7 @@ class WirelessDebug {
       apiKey: apiKey || '',
     };
 
-    this.data_table = $('#log-table').DataTable();
+    this.dataTable_ = $('#log-table').DataTable(this.tableConfig_);
     this.ws_.send(JSON.stringify(payload));
 
     // Get all the devices for historical sessions.
@@ -88,9 +96,11 @@ class WirelessDebug {
     let messageData = JSON.parse(message.data);
 
     if (messageData.messageType === 'logData') {
-      this.data_table.destroy();
-      this.logTable_.append(messageData.logEntries);
-      this.data_table = $('#log-table').DataTable();
+      // If we get more log data, append the log data to the table and scroll to
+      // the bottom of the table.
+      this.dataTable_.row.add($(messageData.logEntries)).draw();
+      let scrollBody = $('.dataTables_scrollBody');
+      scrollBody.scrollTop(scrollBody[0].scrollHeight);
     }
 
     if (messageData.messageType === 'deviceMetrics') {
