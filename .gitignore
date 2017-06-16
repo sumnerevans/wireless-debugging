@@ -4,7 +4,7 @@
 */resources/css/*
 .jshintrc
 .pylintrc
-mobile/android/WirelessDebug/.idea/*
+mobile/android/WirelessDebugger/.idea/*
 *.orig
 *key_table.txt
 
