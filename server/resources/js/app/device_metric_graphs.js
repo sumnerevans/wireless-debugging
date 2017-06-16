@@ -13,6 +13,9 @@ class MetricGrapher {
     // 30 seconds times sample rate gives number of metrics recorded.
     let recordedTime = 30 * (1 / timeInterval);
 
+    /** @private @const Number */
+    this.BYTE_CONVERSION = 1024.0;
+
     /** @private @const {Array<number>} */
     this.cpuUsageHistory_ = [];
     /** @private @const {Array<number>} */
@@ -110,13 +113,18 @@ class MetricGrapher {
     this.cpuUsageHistory_.push(this.metrics.cpuUsage * 100);
     this.cpuUsageHistory_.shift();
 
-    this.memoryUsageHistory_.push(this.metrics.memUsage / 1024.0);
+    // Divided by 1024 to convert from KB to MB.
+    this.memoryUsageHistory_.push(this.metrics.memUsage /
+      this.BYTE_CONVERSION);
     this.memoryUsageHistory_.shift();
 
-    this.networkSentHistory_.push(this.metrics.netSentPerSec);
+    // Divided by 1024 to convert from Bytes to KB.
+    this.networkSentHistory_.push(this.metrics.netSentPerSec /
+      this.BYTE_CONVERSION);
     this.networkSentHistory_.shift();
 
-    this.networkReceiveHistory_.push(this.metrics.netReceivePerSec);
+    this.networkReceiveHistory_.push(this.metrics.netReceivePerSec /
+      this.BYTE_CONVERSION);
     this.networkReceiveHistory_.shift();
 
     this.cpuGraph.data.datasets[0].data = this.cpuUsageHistory_;
@@ -162,6 +170,9 @@ class MetricGrapher {
       hover: {
         mode: null
       },
+      animation: {
+            duration: 0,
+        },
     }
   }
 
