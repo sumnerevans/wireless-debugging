@@ -7,6 +7,7 @@
 mobile/android/WirelessDebugger/.idea/*
 *.orig
 *key_table.txt
+server/config.yaml
 
 # Created by https://www.gitignore.io/api/python,android,androidstudio,appengine,vim,linux,windows,macos,sublimetext,gradle,java,jetbrains,pycharm,pydev,sass,xcode
 
