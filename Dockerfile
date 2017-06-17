@@ -29,4 +29,4 @@ RUN compass compile
 
 # Expose port 80 and run the application.
 EXPOSE 80
-CMD ["/home/wirelessdebug/server/widb_server.py"]
+ENTRYPOINT ["/home/wirelessdebug/server/widb_server.py"]
