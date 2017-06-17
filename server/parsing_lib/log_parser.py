@@ -194,6 +194,11 @@ class LogParser(object):
         Returns:
             string: formatted HTML
         """
+        row_classes = {
+            'Error': 'danger',
+            'Warning': 'warning',
+        }
+
         return '''
         <tr class="%s">
             <td>%s</td>
@@ -201,7 +206,7 @@ class LogParser(object):
             <td>%s</td>
             <td>%s</td>
         </tr>''' % (
-            log_entry['logType'].lower() if log_entry['logType'] else '',
+            row_classes.get(log_entry['logType'], ''),
             str(log_entry['time']),
             log_entry['tag'],
             log_entry.get('logType', ''),
