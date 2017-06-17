@@ -8,8 +8,9 @@ services:
 before_script:
     - docker pull mongo
     - docker run -dp 27017:27017 mongo:3.4.4
-script:
     - cd server
+    - cp sample-config.yaml config.yaml
+script:
     - pytest -vv --cov=./
 after_script:
     - codecov
