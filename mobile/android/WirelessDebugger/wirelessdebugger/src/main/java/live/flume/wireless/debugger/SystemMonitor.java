@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 class SystemMonitor {
 
-    private static final String TAG = "System Monitor";
+    private static final String TAG = "WirelessDebugger";
     private static final String PROC_ROOT = "/proc/";
     private static final String PROC_STAT = PROC_ROOT + "stat";
     private static final String PROC_MEMINFO = PROC_ROOT + "meminfo";
@@ -27,8 +27,8 @@ class SystemMonitor {
     private int[] mPreviousCpuStats = new int[2];
     private long mLastBytesSentTime;
     private long mLastBytesReceivedTime;
-    private int mPreviousBytesSent;
-    private int mPreviousBytesReceived;
+    private long mPreviousBytesSent;
+    private long mPreviousBytesReceived;
 
     /**
      * Creates a new System Monitor and reads initial system state.
@@ -111,7 +111,7 @@ class SystemMonitor {
      * @return Bytes per second sent.
      */
     public double getSentBytesPerSecond() {
-        int currentBytesSent = getSentBytes();
+        long currentBytesSent = getSentBytes();
         long currentTime = System.currentTimeMillis();
         long elapsedMilliseconds = currentTime - mLastBytesSentTime;
         mLastBytesSentTime = currentTime;
@@ -128,7 +128,7 @@ class SystemMonitor {
      * @return Bytes per second received.
      */
     public double getReceivedBytesPerSecond() {
-        int currentBytesReceived = getReceivedBytes();
+        long currentBytesReceived = getReceivedBytes();
         long currentTime = System.currentTimeMillis();
         long elapsedMilliseconds = currentTime - mLastBytesReceivedTime;
         mLastBytesReceivedTime = currentTime;
@@ -144,7 +144,7 @@ class SystemMonitor {
      * Returns the total number of bytes sent.
      * @return Bytes sent.
      */
-    private int getSentBytes() {
+    private long getSentBytes() {
         return sumNetworkUsageColumn(NETWORK_BYTES_SENT_COLUMN);
     }
 
@@ -152,7 +152,7 @@ class SystemMonitor {
      * Returns the total number of bytes received.
      * @return Bytes received.
      */
-    private int getReceivedBytes() {
+    private long getReceivedBytes() {
         return sumNetworkUsageColumn(NETWORK_BYTES_RECEIVED_COLUMN);
     }
 
@@ -205,9 +205,9 @@ class SystemMonitor {
      * @param column Column to sum across.
      * @return Total number of bytes in the column.
      */
-    private int sumNetworkUsageColumn(int column){
+    private long sumNetworkUsageColumn(int column){
         ArrayList<String> networkFileLines = getFileLines(PROC_NET_DEV);
-        int totalBytes = 0;
+        long totalBytes = 0;
 
         // Remove first two lines from the /proc/net/dev file
         if (networkFileLines.size() > 2) {
@@ -221,7 +221,7 @@ class SystemMonitor {
         for (String networkLine : networkFileLines) {
             networkLine = networkLine.substring(networkLine.indexOf(":"));
             String[] networkStats = networkLine.split(REGEX_WHITESPACE);
-            totalBytes += Integer.parseInt(networkStats[column]);
+            totalBytes += Long.parseLong(networkStats[column]);
         }
 
         return totalBytes;
