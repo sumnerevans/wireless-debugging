@@ -48,7 +48,11 @@ matrix:
           - sys-img-armeabi-v7a-$ANDROID_TAG-$ANDROID_API_LEVEL
           - sys-img-armeabi-v7a-$ANDROID_TAG-$EMULATOR_API_LEVEL
       before_script:
-        - cd mobile/android/WirelessDebug
+        - pwd
+        - ls mobile
+        - ls mobile/android
+        - ls mobile/android/WirelessDebugger
+        - cd mobile/android/WirelessDebugger
 
         # Create an emulator.
         - android list targets
