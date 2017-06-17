@@ -11,11 +11,18 @@ from user_management_interfaces import *
 
 
 class ConfigManager(object):
+    """ Manages configuration from both the CLI and from the config file. """
     _config_manager = None
     user_management_interface = None
     datastore_interface = None
 
     def __init__(self):
+        """ Initialize the ConfigManager.
+
+        This reads the arguments from the command line and from the config
+        file. The command line parameters override any parameters specified in
+        the config file.
+        """
         self._config = {}
 
         # Read configuration from command line arguments.
@@ -55,6 +62,7 @@ class ConfigManager(object):
             if value is not None or arg not in self._config:
                 self._config[arg] = value
 
+        # Initialise the Datastore Interface and User Management Interface
         ConfigManager.datastore_interface = eval(
             self._config.get('datastore_interface', None))
         ConfigManager.user_management_interface = eval(
@@ -62,10 +70,21 @@ class ConfigManager(object):
 
     @staticmethod
     def reset():
+        """ Used in the tests to force a re-parse of the command line arguments
+            and a reload of the file.
+        """
         ConfigManager._config_manager = ConfigManager()
 
     @staticmethod
     def get(config_name, default=None):
+        """ Retrieves an item from the configuration manager.
+
+        Args:
+            config_name (string): the name of the configuration to retrieve
+            [default=None]: the value to return if the configuration value is
+                not found in either the config file or the command line
+                arguments
+        """
         if ConfigManager._config_manager is None:
             ConfigManager._config_manager = ConfigManager()
 
