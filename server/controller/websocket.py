@@ -4,7 +4,6 @@ WebSocket Controller
 
 import json
 import datetime
-import controller
 
 from bottle import route, request, abort
 from geventwebsocket import WebSocketError
@@ -112,13 +111,13 @@ def log_dump(message, websocket, metadata):
     api_key = metadata.get('apiKey', '')
 
     # Send to database.
-    controller.datastore_interface.store_logs(
+    ConfigManager.datastore_interface.store_logs(
         api_key, metadata['deviceName'], metadata['appName'],
         metadata['startTime'], metadata['osType'], parsed_logs)
 
     # Convert to html by creaing an array of all the converted rows.
-    html_logs = [LogParser.convert_line_to_html(log) for log in
-    parsed_logs['logEntries']]
+    html_logs = [LogParser.convert_line_to_html(log)
+                 for log in parsed_logs['logEntries']]
 
     send_logs = {
         'messageType': 'logData',
@@ -134,10 +133,10 @@ def log_dump(message, websocket, metadata):
 def end_session(message, websocket, metadata):
     """Set session is over and add to the device/app collection."""
     api_key = metadata.get('apiKey', '')
-    controller.datastore_interface.set_session_over(
+    ConfigManager.datastore_interface.set_session_over(
         api_key, metadata['deviceName'], metadata['appName'],
         metadata['startTime'])
-    controller.datastore_interface.add_device_app(
+    ConfigManager.datastore_interface.add_device_app(
         api_key, metadata['deviceName'], metadata['appName'])
 
 
@@ -181,5 +180,5 @@ def _get_associated_websockets(api_key):
     This calls to the User Management Interface which is configured in the
     config.yaml file.
     """
-    return controller.user_management_interface.find_associated_websockets(
+    return ConfigManager.user_management_interface.find_associated_websockets(
         api_key, _web_ui_ws_connections)

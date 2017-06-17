@@ -29,9 +29,3 @@ def test_json_serialize():
     ])
 
     assert util.serialize_to_json(object_to_serialize) == expected_result
-
-
-def test_from_config_yaml():
-    """ Tests that retrieving data from the config file works as expected. """
-    assert util.from_config_yaml('hostname') == '0.0.0.0'
-    assert util.from_config_yaml('nothing') is None
