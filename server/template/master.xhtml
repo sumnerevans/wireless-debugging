@@ -21,18 +21,21 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/">WiDb</a>
+          <a class="navbar-brand" href="/">Wireless Debugging</a>
         </div>
         <div class="collapse navbar-collapse" id="navbar-content">
-          <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav" py:if="logged_in">
             <li class="${('', 'active')[self.defined('page') and page=='index']}"><a href="/">Home</a></li>
             <li class="${('', 'active')[self.defined('page') and page=='current']}"><a href="/current">Current Session</a></li>
             <li class="${('', 'active')[self.defined('page') and page=='historical']}"><a href="/historical">Historical Session</a></li>
             <li class="${('', 'active')[self.defined('page') and page=='upload_logs']}"><a href="/upload_logs">Upload Logs</a></li>
           </ul>
-          <ul class="nav navbar-nav navbar-right" py:if="logged_in">
-            <li class="nav-item">
-              <a class="nav-link" href="/logout">Logout</a>
+          <ul class="nav navbar-nav navbar-right">
+            <li py:if="logged_in">
+              <a href="/logout">Logout</a>
+            </li>
+            <li class="${('', 'active')[self.defined('page') and page=='login']}">
+              <a href="/login_page" py:if="not logged_in">Login</a>
             </li>
           </ul>
         </div>

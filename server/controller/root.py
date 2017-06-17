@@ -12,7 +12,6 @@ from markupsafe import Markup
 import parsing_lib
 from helpers.config_manager import ConfigManager as config
 
-
 def authenticated():
     """ Defines an authenticated decorator, which verifies that the user is logged
         in.
@@ -190,6 +189,7 @@ def login():
         redirect('/')
 
     return {
+        'page': 'login',
         'login_fields': Markup(config.user_management_interface.get_login_ui()),
         'logged_in':
         config.user_management_interface.is_user_logged_in(request),
