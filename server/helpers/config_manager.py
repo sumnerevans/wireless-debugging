@@ -2,6 +2,8 @@
 Manages CLI arguments and retrieving arguments from the  configuration YAML.
 """
 import argparse
+import os
+
 import yaml
 
 from datastore_interfaces import *
@@ -14,12 +16,16 @@ class ConfigManager(object):
     datastore_interface = None
 
     def __init__(self):
-        # Read config from file
-        with open('config.yaml') as config:
-            self._config = yaml.load(config)
+        self._config = {}
 
         # Read configuration from command line arguments.
         parser = argparse.ArgumentParser()
+        parser.add_argument(
+            '-c',
+            '--config',
+            type=str,
+            default='config.yaml',
+            help='the config file to use (defaults to "config.yaml")')
         parser.add_argument(
             '--hostname',
             type=str,
@@ -27,7 +33,8 @@ class ConfigManager(object):
         parser.add_argument(
             '-p',
             '--port',
-            type=str,
+            type=int,
+            default=80,
             help='the port to expose the application on')
         parser.add_argument(
             '-u',
@@ -37,9 +44,14 @@ class ConfigManager(object):
             '-d',
             '--datastore-interface',
             help='the Datastore Interface to use')
+        parsed_args = parser.parse_args()
 
-        command_line_args = vars(parser.parse_args())
-        for arg, value in command_line_args.items():
+        # Read config from file
+        if os.path.isfile(parsed_args.config):
+            with open(parsed_args.config) as config:
+                self._config = yaml.load(config)
+
+        for arg, value in vars(parsed_args).items():
             if value is not None or arg not in self._config:
                 self._config[arg] = value
 
