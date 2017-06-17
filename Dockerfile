@@ -18,6 +18,7 @@ RUN unzip master.zip
 
 # Change into the server directory
 WORKDIR /home/bottle/wireless-debugging-master/server
+RUN cp sample-config.yaml config.yaml
 
 # Install the necessary packages.
 RUN gem install compass font-awesome-sass bootstrap-sass
