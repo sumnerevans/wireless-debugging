@@ -41,8 +41,8 @@ def handle_websocket():
                 continue
 
             decoded_message = json.loads(message)
-            message_type = decoded_message['messageType']
-            if message_type is None:
+            message_type = decoded_message.get('messageType', None)
+            if message_type not in _ws_routes:
                 print('Unrecognized message_type %s' % message_type)
                 continue
 
@@ -87,6 +87,7 @@ def start_session(message, websocket, metadata):
 
     for attribute, value in message.items():
         metadata[attribute] = value
+
     metadata['startTime'] = str(datetime.datetime.now())
 
 
@@ -109,7 +110,7 @@ def log_dump(message, websocket, metadata):
 
     # Send to database.
     controller.datastore_interface.store_logs(
-        metadata['apiKey'], metadata['deviceName'], metadata['appName'],
+        api_key, metadata['deviceName'], metadata['appName'],
         metadata['startTime'], metadata['osType'], log_entries)
 
     # Convert to html by creaing an array of all the converted rows.
@@ -152,7 +153,7 @@ def associate_user(message, websocket, metadata):
             received.
     """
 
-    api_key = message['apiKey']
+    api_key = message.get('apiKey', '')
 
     _web_ui_ws_connections.setdefault(api_key, []).append(websocket)
 
