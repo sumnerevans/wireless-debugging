@@ -98,7 +98,9 @@ class WirelessDebug {
     if (messageData.messageType === 'logData') {
       // If we get more log data, append the log data to the table and scroll to
       // the bottom of the table.
-      this.dataTable_.row.add($(messageData.logEntries)).draw();
+      for (let log_row of messageData.logEntries) {
+        this.dataTable_.row.add($(log_row)).draw();
+      }
       let scrollBody = $('.dataTables_scrollBody');
       scrollBody.scrollTop(scrollBody[0].scrollHeight);
     }
@@ -107,21 +109,6 @@ class WirelessDebug {
       this.metricGrapher.setMetrics(messageData);
       this.metricGrapher.render();
     }
-  }
-
-  /** Formats new table entries from log data */
-  renderLog(logEntry) {
-    let color = {
-      'Warning': 'warning',
-      'Error': 'danger',
-    };
-
-    return `<tr class="${color[logEntry.logType]}">
-    <td>${logEntry.time}</td>
-    <td>${logEntry.tag}</td>
-    <td>${logEntry.logType}</td>
-    <td>${logEntry.text}</td>
-    </tr>`;
   }
 }
 
