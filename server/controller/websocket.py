@@ -103,20 +103,24 @@ def log_dump(message, websocket, metadata):
             received.
     """
     print('logs sent')
-    print(message)
 
     # TODO: (Sumner) fix when implementing the iOS parsing component.
     if metadata['osType'] == 'iOS':
         return
 
+
     parsed_logs = LogParser.parse(message)
     api_key = metadata.get('apiKey', '')
 
-    # Send to database and convert to html.
-    html_logs = LogParser.convert_to_html(parsed_logs['logEntries'])
+    # Send to database.
     controller.datastore_interface.store_logs(
         api_key, metadata['deviceName'], metadata['appName'],
         metadata['startTime'], metadata['osType'], parsed_logs)
+
+    # Convert to html by creaing an array of all the converted rows.
+    html_logs = []
+    for log in parsed_logs['logEntries']:
+        html_logs.append(LogParser.convert_line_to_html(log))
 
     send_logs = {
         'messageType': 'logData',
