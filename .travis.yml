@@ -13,6 +13,8 @@ matrix:
         - cp sample-config.yaml config.yaml
       script:
         - pytest -vv --cov=./
+      after_script:
+        - codecov
 
     - language: node_js
       node_js:
@@ -24,6 +26,8 @@ matrix:
         - npm install
       script:
         - istanbul cover --hook-run-in-context --dir public/js/coverage ./node_modules/mocha/bin/_mocha -- js/test
+      after_script:
+        - codecov
 
     - language: android
       jdk: oraclejdk8
@@ -53,6 +57,5 @@ matrix:
         - adb shell input keyevent 82 &
       script:
         - ./gradlew build connectedAndroidTest test
-
-after_script:
-  - codecov
+      after_success: 
+        — bash <(curl -s https://codecov.io/bash)
