@@ -82,5 +82,5 @@ def post_alias_app():
 
 @route('/clearDatastore')
 def get_clear_datastore():
-    """This function clears the datastore of any entries."""
+    """ This function clears the datastore of any entries. """
     ConfigManager.datastore_interface.clear_datastore()
