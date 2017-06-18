@@ -7,7 +7,7 @@ from bottle import abort, post, redirect, request, response, route, static_file
 from kajiki_view import kajiki_view
 from markupsafe import Markup
 
-from helpers.config_manager import ConfigManager
+from helpers.config_manager import ConfigManager as config
 
 
 def authenticated():
@@ -37,15 +37,15 @@ def authenticated():
 
         @functools.wraps(function)
         def wrapper(*args, **kwargs):
-            is_user_logged_in = (ConfigManager.user_management_interface.
-                                 is_user_logged_in(request))
+            is_user_logged_in = config.user_management_interface.is_user_logged_in(
+                request)
             if not is_user_logged_in:
                 redirect('/login_page')
 
             webpage_arguments = function(*args, **kwargs)
 
-            api_key = (ConfigManager.user_management_interface.
-                       get_api_key_for_user(request))
+            api_key = config.user_management_interface.get_api_key_for_user(
+                request)
             if isinstance(webpage_arguments, dict):
                 webpage_arguments['logged_in'] = is_user_logged_in
                 webpage_arguments['api_key'] = api_key
@@ -130,16 +130,14 @@ def login():
         format of the login page, which is specified in the user management
         interface.
     """
-
     # Redirect to the home page if the user in already logged in.
     if controller.user_management_interface.is_user_logged_in(request):
         redirect('/')
 
     return {
-        'login_fields':
-        Markup(ConfigManager.user_management_interface.get_login_ui()),
+        'login_fields': Markup(config.user_management_interface.get_login_ui()),
         'logged_in':
-        ConfigManager.user_management_interface.is_user_logged_in(request),
+        config.user_management_interface.is_user_logged_in(request),
     }
 
 
@@ -147,8 +145,8 @@ def login():
 def handle_login():
     """ Takes a login form and verifies the user's identity. """
     login_successful, error_message = (
-        ConfigManager.user_management_interface.handle_login(
-            request.forms, request, response))
+        config.user_management_interface.handle_login(request.forms, request,
+                                                      response))
 
     # If handle_login returned a string, it means it failed and returned an
     # error message.
