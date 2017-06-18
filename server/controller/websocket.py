@@ -10,6 +10,7 @@ from geventwebsocket import WebSocketError
 
 from parsing_lib import LogParser
 from helpers import util
+from helpers.config_manager import ConfigManager
 
 # Store a dictionary of string -> function
 _ws_routes = {}
