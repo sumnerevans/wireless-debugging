@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 class LogReader implements Runnable {
 
-    private static final String TAG = "Log Reader";
+    private static final String TAG = "WirelessDebugger";
     private final ArrayList<String> mLogs = new ArrayList<>();
     private Boolean mHostAppRunning = true;
     private Boolean mThreadRunning = true;
