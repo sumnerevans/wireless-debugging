@@ -105,13 +105,6 @@ def historical():
     }
 
 
-@route('/new_login')
-@kajiki_view('new_login')
-def new_login():
-    """Shows new login page."""
-    return {'page': 'new_login'}
-
-
 @route('/resources/<filepath:path>')
 def static(filepath):
     """
@@ -137,11 +130,14 @@ def login():
         interface.
     """
 
+    # Redirect to the home page if the user in already logged in.
+    if controller.user_management_interface.is_user_logged_in(request):
+        redirect('/')
+
     return {
         'login_fields': Markup(
             controller.user_management_interface.get_login_ui()),
-        'logged_in': controller.user_management_interface.is_user_logged_in(
-            request),
+        'logged_in': False,
     }
 
 @post('/login')
