@@ -108,7 +108,6 @@ def log_dump(message, websocket, metadata):
     if metadata['osType'] == 'iOS':
         return
 
-
     parsed_logs = LogParser.parse(message)
     api_key = metadata.get('apiKey', '')
 
