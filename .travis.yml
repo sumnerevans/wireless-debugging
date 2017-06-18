@@ -30,7 +30,6 @@ matrix:
       env:
         global:
           - ANDROID_API_LEVEL=25
-          - EMULATOR_API_LEVEL=21
           - BUILD_TOOLS_VERSION=25.0.2
           - ANDROID_ABI=armeabi-v7a
           - ANDROID_TAG=google_apis
@@ -40,18 +39,11 @@ matrix:
         components:
           - tools
           - platform-tools
-          - tools
           - android-$ANDROID_API_LEVEL
           - build-tools-$BUILD_TOOLS_VERSION
-          - extra-google-m2repository
           - extra-android-m2repository
           - sys-img-armeabi-v7a-$ANDROID_TAG-$ANDROID_API_LEVEL
-          - sys-img-armeabi-v7a-$ANDROID_TAG-$EMULATOR_API_LEVEL
       before_script:
-        - pwd
-        - ls mobile
-        - ls mobile/android
-        - ls mobile/android/WirelessDebugger
         - cd mobile/android/WirelessDebugger
 
         # Create an emulator.
