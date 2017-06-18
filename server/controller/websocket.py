@@ -117,9 +117,8 @@ def log_dump(message, websocket, metadata):
         metadata['startTime'], metadata['osType'], parsed_logs)
 
     # Convert to html by creaing an array of all the converted rows.
-    html_logs = []
-    for log in parsed_logs['logEntries']:
-        html_logs.append(LogParser.convert_line_to_html(log))
+    html_logs = [LogParser.convert_line_to_html(log) for log in
+    parsed_logs['logEntries']]
 
     send_logs = {
         'messageType': 'logData',
