@@ -63,8 +63,6 @@ matrix:
     - language: swift
       osx_image: xcode8.3
       before_script:
-        - pwd
-        - ls
         - cd mobile/ios/WirelessDebug
       script:
         - xcodebuild -scheme WirelessDebug -destination 'platform=iOS Simulator,name=iPhone 7,OS=10.3.1' build test
