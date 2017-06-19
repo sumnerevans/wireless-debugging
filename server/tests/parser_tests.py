@@ -28,7 +28,7 @@ def _test_case_parser(test_case):
         test_case['time'] = datetime.strptime(date_with_year,
                                               '%Y-%m-%d %H:%M:%S.%f')
 
-        # Parse multiline input into one string
+    # Parse multiline input into one string
     if isinstance(test_case.get('inputLines', None), list):
         test_case['inputLines'] = '\n'.join(test_case['inputLines'])
 
@@ -124,7 +124,7 @@ def test_convert_line_to_html():
     ]
 
     expected_results = [[
-        '<tr class="info">',
+        '<tr class="">',
         '    <td>%s</td>' % datetime(current_year, 5, 22, 11, 44, 31, 180000),
         '    <td>WiDB Example</td>',
         '    <td>Info</td>',
@@ -150,25 +150,43 @@ def test_convert_line_to_html():
 def test_convert_to_html():
     """Tests that LogParser.convert_to_html works properly"""
     current_year = datetime.now().year
-    tests = [[
-        {
-            'time': datetime(current_year, 5, 22, 11, 44, 31, 180000),
-            'logType': 'Info',
-            'tag': 'WiDB Example',
-            'text': 'aX: 3.0262709 aY: 2.0685902',
-        },
-        {
-            'time': datetime(current_year, 5, 22, 11, 44, 32, 191000),
-            'processId': '7080',
-            'threadId': '7080',
-            'logType': 'Warning',
-            'tag': 'IInputConnectionWrapper',
-            'text': 'getTextBeforeCursor on inactive InputConnection',
-        },
-    ]]
+    tests = [[{
+        'time': datetime(current_year, 5, 22, 11, 44, 31, 180000),
+        'logType': 'Info',
+        'tag': 'WiDB Example',
+        'text': 'aX: 3.0262709 aY: 2.0685902',
+    }, {
+        'time': datetime(current_year, 5, 22, 11, 44, 32, 191000),
+        'processId': '7080',
+        'threadId': '7080',
+        'logType': 'Warning',
+        'tag': 'IInputConnectionWrapper',
+        'text': 'getTextBeforeCursor on inactive InputConnection',
+    }, {
+        'time': datetime(current_year, 5, 24, 12, 12, 49, 247000),
+        'logType': 'Error',
+        'tag': 'AndroidRuntime',
+        'text': ''.join([
+            'FATAL EXCEPTION: main',
+            'Process: com.google.wireless.debugging, PID: 23930',
+            'java.lang.RuntimeException: Forced Crash',
+            'at com.google.wireless.debugging.example.MainFragment$2.onClick(MainFragment.java:73)',
+            'at android.view.View.performClick(View.java:4445)',
+            'at android.view.View$PerformClick.run(View.java:18446)',
+            'at android.os.Handler.handleCallback(Handler.java:733)',
+            'at android.os.Handler.dispatchMessage(Handler.java:95)',
+            'at android.os.Looper.loop(Looper.java:136)',
+            'at android.app.ActivityThread.main(ActivityThread.java:5146)',
+            'at java.lang.reflect.Method.invokeNative(Native Method)',
+            'at java.lang.reflect.Method.invoke(Method.java:515)',
+            'at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:796)',
+            'at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:612)',
+            'at dalvik.system.NativeStart.main(Native Method)'
+        ]),
+    }]]
 
     expected_results = [[
-        '<tr class="info">',
+        '<tr class="">',
         '    <td>%s</td>' % datetime(current_year, 5, 22, 11, 44, 31, 180000),
         '    <td>WiDB Example</td>',
         '    <td>Info</td>',
@@ -179,6 +197,27 @@ def test_convert_to_html():
         '    <td>IInputConnectionWrapper</td>',
         '    <td>Warning</td>',
         '    <td>getTextBeforeCursor on inactive InputConnection</td>',
+        '</tr>',
+        '<tr class="danger">',
+        '    <td>%s</td>' % datetime(current_year, 5, 24, 12, 12, 49, 247000),
+        '    <td>AndroidRuntime</td>',
+        '    <td>Error</td>',
+        '    <td>FATAL EXCEPTION: main',
+        '        Process: com.google.wireless.debugging, PID: 23930',
+        '        java.lang.RuntimeException: Forced Crash',
+        '        at com.google.wireless.debugging.example.MainFragment$2.onClick(MainFragment.java:73)',
+        '        at android.view.View.performClick(View.java:4445)',
+        '        at android.view.View$PerformClick.run(View.java:18446)',
+        '        at android.os.Handler.handleCallback(Handler.java:733)',
+        '        at android.os.Handler.dispatchMessage(Handler.java:95)',
+        '        at android.os.Looper.loop(Looper.java:136)',
+        '        at android.app.ActivityThread.main(ActivityThread.java:5146)',
+        '        at java.lang.reflect.Method.invokeNative(Native Method)',
+        '        at java.lang.reflect.Method.invoke(Method.java:515)',
+        '        at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:796)',
+        '        at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:612)',
+        '        at dalvik.system.NativeStart.main(Native Method)',
+        '    </td>',
         '</tr>',
     ]]
 
