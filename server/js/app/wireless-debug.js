@@ -131,7 +131,7 @@ define([
           cache: false,
           success: function(data) {
             $('#historical-log-table tbody').append(data.logs);
-	    data_table = $('#historical-log-table').DataTable();
+            data_table = $('#historical-log-table').DataTable();
           },
         });
       }
@@ -212,8 +212,7 @@ define([
         if (data.success) {
           $('#device').append('<option value="None"></option>');
           for (let i of data.devices) {
-            $('#device').append(
-              `<option value="${i}">${i}</option>`);
+            $('#device').append(`<option value="${i}">${i}</option>`);
           }
         } else {
           $('#main-page').html('<p>No Datastore and/or No Data</p>');
@@ -234,7 +233,8 @@ define([
 
     if (messageData.messageType === 'logData') {
       this.data_table.destroy();
-      this.logTable_.append(messageData.logEntries);
+      console.log(messageData.logEntries);
+      $('tbody', this.logTable_).append(messageData.logEntries);
       this.data_table = $('#log-table').DataTable();
     }
 

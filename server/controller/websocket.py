@@ -114,7 +114,7 @@ def log_dump(message, websocket, metadata):
 
     # Convert to html by creaing an array of all the converted rows.
     html_logs = [LogParser.convert_line_to_html(log)
-                 for log in parsed_logs['logEntries']]
+                 for log in log_entries]
 
     # Create a message to send to the web clients.
     send_logs = {
