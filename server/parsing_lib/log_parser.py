@@ -115,7 +115,8 @@ class LogParser(object):
                 # Check if current log has the same time as the previous log
                 # parsed.
                 new_log = LogParser.parse_raw_log(line, os_type)
-                if current_log and current_log['time'] == new_log['time']:
+                if current_log and (current_log['time'] == new_log['time'] and
+                        current_log['logType'] == new_log['logType']):
                     # If part of the same event, add the log's text to the
                     # previous parsed log.
                     current_log['text'] += '\n%s' % new_log['text']
