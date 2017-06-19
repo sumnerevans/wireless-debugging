@@ -11,11 +11,9 @@ from kajiki_view import kajiki_view
 from markupsafe import Markup
 from helpers.util import from_config_yaml
 from kajiki_view import kajiki_view
-from markupsafe import Markup
 
 import controller
 import parsing_lib
-
 
 
 def authenticated():
@@ -113,60 +111,56 @@ def historical():
         'page': 'historical',
     }
 
-# Placeholder
-@get('/paste')
-@kajiki_view('paste')
+
+@get('/upload_logs')
+@kajiki_view('upload_logs')
 @authenticated()
-def paste():
-    if not controller.user_management_interface.is_user_logged_in(request):
-        redirect('/login_page')
+def upload_logs():
     api_key = controller.user_management_interface.get_api_key_for_user(request)
-    return {'page': 'paste',
-            'raw_logs':''}
+    return {
+        'page': 'upload_logs',
+        'raw_logs': '',
+    }
 
 
-@post('/paste')
-@kajiki_view('paste')
-def paste():
-    if not controller.user_management_interface.is_user_logged_in(request):
-        redirect('/login_page')
-
+@post('/upload_logs')
+@kajiki_view('upload_logs')
+@authenticated()
+def upload_logs():
     api_key = controller.user_management_interface.get_api_key_for_user(request)
 
     os_type = request.forms.get('os_type')
     upload = request.files.get('upload')
-    #file_object = io.BytesIO(upload)
-    #file_object  = open("/Users/amandagiles/Documents/"+str(upload), 'r')
     pasted = request.forms.get('message')
-    if upload != None:
+    return_val = {
+        'page': 'upload_logs',
+        'raw_logs': request.forms.get('message'),
+        'log_entries': Markup(''),
+    }
+
+    if upload is not None:
         message = str(upload.file.read(), 'utf-8')
-        print(message)
-    elif pasted != None:
+    elif not pasted.isspace() and pasted != '':
         message = pasted
+    else:
+        return_val['flash'] = {
+            'content': 'Please upload a file or paste logs.',
+            'cls': 'error',
+        }
+        return return_val
+
     try:
         parsed_message = parsing_lib.LogParser.parse(message, os_type)
-        print(parsed_message)
         log_entries = parsing_lib.LogParser.convert_to_html(parsed_message)
+        return_val['log_entries'] = Markup(log_entries)
     except:
-        log_entries = ""
         e = sys.exc_info()[0]
-        tracebackk = str(traceback.print_exc())
-        flash = {'content': "Log format error: " +str(e), 'cls': 'error'}
-        return {'page': 'paste',
-                'api_key': api_key,
-                # If you've made it here, you have to be successfully logged in
-                'logged_in': True,
-                'raw_logs': request.forms.get('message'),
-                'log_entries': Markup(log_entries),
-                'flash': flash,
-                }
-    return {'page': 'paste',
-            'api_key': api_key,
-            # If you've made it here, you have to be successfully logged in
-            'logged_in': True,
-            'raw_logs': request.forms.get('message'),
-            'log_entries': Markup(log_entries),
-            }
+        return_val['flash'] = {
+            'content': 'Log format error: %s' % str(e),
+            'cls': 'error',
+        }
+    finally:
+        return return_val
 
 @route('/new_login')
 @kajiki_view('new_login')
