@@ -17,7 +17,7 @@ ADD . .
 
 # Change into the server directory
 WORKDIR /home/wirelessdebug/server
-RUN cp sample-config.yaml config.yaml
+RUN cp -n sample-config.yaml config.yaml
 
 # Install the necessary packages.
 RUN gem install compass font-awesome-sass bootstrap-sass
