@@ -8,7 +8,6 @@ import sys
 from bottle import abort, post, redirect, request, response, route, static_file, get
 from kajiki_view import kajiki_view
 from markupsafe import Markup
-from kajiki_view import kajiki_view
 
 import parsing_lib
 from helpers.config_manager import ConfigManager as config
@@ -114,7 +113,6 @@ def historical():
 @kajiki_view('upload_logs')
 @authenticated()
 def upload_logs():
-    api_key = config.user_management_interface.get_api_key_for_user(request)
     return {
         'page': 'upload_logs',
         'raw_logs': '',
@@ -125,21 +123,19 @@ def upload_logs():
 @kajiki_view('upload_logs')
 @authenticated()
 def upload_logs():
-    api_key = config.user_management_interface.get_api_key_for_user(request)
-
     os_type = request.forms.get('os_type')
-    upload = request.files.get('upload')
-    pasted = request.forms.get('message')
+    log_file = request.files.get('log_file')
+    raw_text = request.forms.get('message')
     return_val = {
         'page': 'upload_logs',
-        'raw_logs': request.forms.get('message'),
+        'raw_logs': raw_text,
         'log_entries': Markup(''),
     }
 
-    if upload is not None:
-        message = str(upload.file.read(), 'utf-8')
-    elif not pasted.isspace() and pasted != '':
-        message = pasted
+    if log_file:
+        message = str(log_file.file.read(), 'utf-8')
+    elif raw_text.strip():
+        message = raw_text
     else:
         return_val['flash'] = {
             'content': 'Please upload a file or paste logs.',
@@ -151,7 +147,7 @@ def upload_logs():
         parsed_message = parsing_lib.LogParser.parse(message, os_type)
         log_entries = parsing_lib.LogParser.convert_to_html(parsed_message)
         return_val['log_entries'] = Markup(log_entries)
-    except:
+    except Exception as e:
         e = sys.exc_info()[0]
         return_val['flash'] = {
             'content': 'Log format error: %s' % str(e),
@@ -159,12 +155,6 @@ def upload_logs():
         }
     finally:
         return return_val
-
-@route('/new_login')
-@kajiki_view('new_login')
-def new_login():
-    """Shows new login page."""
-    return {'page': 'new_login'}
 
 
 @route('/<resource_root>/<filepath:path>')
