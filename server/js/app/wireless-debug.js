@@ -23,8 +23,16 @@ define([
     /** @private @const {?MetricGrapher} */
     this.metricGrapher = null;
 
-    /** @private @const {!DataTable} */
-    this.dataTable = $('#log-table').DataTable();
+    /** @private @const {!Object}*/
+    this.tableConfig_ = {
+      'paging': false,
+      'lengthMenu': [-1],
+      'scrollY': '75vh',
+      'scrollCollapse': true,
+    };
+
+    /** @private @const {?DataTable} */
+    this.dataTable_ = $('#log-table').DataTable(this.tableConfig_);
   }
 
   /**
@@ -196,7 +204,6 @@ define([
       apiKey: apiKey || '',
     };
 
-    this.data_table = $('#log-table').DataTable();
     this.ws_.send(JSON.stringify(payload));
 
     // Get all the devices for historical sessions.
@@ -232,10 +239,13 @@ define([
     let messageData = JSON.parse(message.data);
 
     if (messageData.messageType === 'logData') {
-      this.data_table.destroy();
-      console.log(messageData.logEntries);
-      $('tbody', this.logTable_).append(messageData.logEntries);
-      this.data_table = $('#log-table').DataTable();
+      // If we get more log data, append the log data to the table and scroll to
+      // the bottom of the table.
+      for (let logEntry of messageData.logEntries) {
+        this.dataTable_.row.add($(logEntry)).draw();
+        let scrollBody = $('.dataTables_scrollBody');
+        scrollBody.scrollTop(scrollBody[0].scrollHeight);
+      }
     }
 
     if (messageData.messageType === 'deviceMetrics') {

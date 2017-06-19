@@ -120,7 +120,7 @@ def log_dump(message, websocket, metadata):
     send_logs = {
         'messageType': 'logData',
         'osType': metadata['osType'],
-        'logEntries': LogParser.convert_to_html(log_entries),
+        'logEntries': html_logs,
     }
 
     for connection in _get_associated_websockets(api_key):
