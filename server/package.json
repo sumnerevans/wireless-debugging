@@ -1,0 +1,13 @@
+{
+  "name": "wireless-debgger",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "codecov": "^2.2.0",
+    "mocha": "^3.4.2",
+    "requirejs": "^2.3.3",
+    "zombie": "^5.0.5"
+  }
+}

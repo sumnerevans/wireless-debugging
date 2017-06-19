@@ -1,16 +1,29 @@
-language: python
-python:
-    - "3.6"
-sudo: required
-install: pip install -r server/requirements.txt
-services:
-    - docker
-before_script:
-    - docker pull mongo
-    - docker run -dp 27017:27017 mongo:3.4.4
-    - cd server
-    - cp sample-config.yaml config.yaml
-script:
-    - pytest -vv --cov=./
+matrix:
+  include:
+    - language: python
+      python: 3.6
+      sudo: required
+      install: pip install -r server/requirements.txt
+      services:
+        - docker
+      before_script:
+        - docker pull mongo
+        - docker run -dp 27017:27017 mongo:3.4.4
+        - cd server
+        - cp sample-config.yaml config.yaml
+      script:
+        - pytest -vv --cov=./
+
+    - language: node_js
+      node_js:
+        - "node"
+      install:
+        - npm install -g istanbul
+      before_script:
+        - cd server
+        - npm install
+      script:
+        - istanbul cover --hook-run-in-context --dir public/js/coverage ./node_modules/mocha/bin/_mocha -- js/test
+
 after_script:
-    - codecov
+  - codecov

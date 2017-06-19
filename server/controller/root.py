@@ -106,13 +106,16 @@ def historical():
     }
 
 
-@route('/resources/<filepath:path>')
-def static(filepath):
+@route('/<resource_root>/<filepath:path>')
+def static(resource_root, filepath):
     """
     Routes all of the resources
     http://stackoverflow.com/a/13258941/2319844
     """
-    return static_file(filepath, root='resources')
+    if resource_root not in ('resources', 'js'):
+        abort(404)
+
+    return static_file(filepath, root=resource_root)
 
 
 @route('/login_page')
