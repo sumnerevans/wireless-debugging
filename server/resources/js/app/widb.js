@@ -21,8 +21,16 @@ class WirelessDebug {
     /** @private @const {?MetricGrapher} */
     this.metricGrapher = null;
 
+    /** @private @const {!Object}*/
+    this.tableConfig_ = {
+      'paging': false,
+      'lengthMenu': [-1],
+      'scrollY': '75vh',
+      'scrollCollapse': true,
+    };
+
     /** @private @const {!DataTable} */
-    this.dataTable = $('#log-table').DataTable();
+    this.dataTable_;
   }
 
   /**
@@ -52,7 +60,7 @@ class WirelessDebug {
       apiKey: apiKey || '',
     };
 
-    this.data_table = $('#log-table').DataTable();
+    this.dataTable_ = $('#log-table').DataTable(this.tableConfig_);
     this.ws_.send(JSON.stringify(payload));
 
     // Get all the devices for historical sessions.
@@ -88,30 +96,19 @@ class WirelessDebug {
     let messageData = JSON.parse(message.data);
 
     if (messageData.messageType === 'logData') {
-      this.data_table.destroy();
-      this.logTable_.append(messageData.logEntries);
-      this.data_table = $('#log-table').DataTable();
+      // If we get more log data, append the log data to the table and scroll to
+      // the bottom of the table.
+      for (let log_row of messageData.logEntries) {
+        this.dataTable_.row.add($(log_row)).draw();
+      }
+      let scrollBody = $('.dataTables_scrollBody');
+      scrollBody.scrollTop(scrollBody[0].scrollHeight);
     }
 
     if (messageData.messageType === 'deviceMetrics') {
       this.metricGrapher.setMetrics(messageData);
       this.metricGrapher.render();
     }
-  }
-
-  /** Formats new table entries from log data */
-  renderLog(logEntry) {
-    let color = {
-      'Warning': 'warning',
-      'Error': 'danger',
-    };
-
-    return `<tr class="${color[logEntry.logType]}">
-    <td>${logEntry.time}</td>
-    <td>${logEntry.tag}</td>
-    <td>${logEntry.logType}</td>
-    <td>${logEntry.text}</td>
-    </tr>`;
   }
 }
 

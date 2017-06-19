@@ -1,0 +1,31 @@
+"""
+Tests for the Utility functions in helpers.util
+"""
+from datetime import datetime
+
+from helpers import util
+
+
+def test_json_serialize():
+    """ Test that the JSON Serialization works as expected. """
+    time = datetime.strptime('2017-06-15 17:41:45', '%Y-%m-%d %H:%M:%S')
+    object_to_serialize = {
+        'time': time,
+        'app': 'Wireless Debug',
+        'isAwesome': True,
+        'coolThings': ['Travis CI', 'Codecov'],
+        'pi': 3.14,
+        'nested': {
+            'now': time,
+            'inAnArray': [time, time],
+        },
+    }
+
+    expected_result = ' '.join([
+        '{"time": "2017-06-15T17:41:45Z", "app": "Wireless Debug",',
+        '"isAwesome": true, "coolThings": ["Travis CI", "Codecov"],',
+        '"pi": 3.14, "nested": {"now": "2017-06-15T17:41:45Z",',
+        '"inAnArray": ["2017-06-15T17:41:45Z", "2017-06-15T17:41:45Z"]}}',
+    ])
+
+    assert util.serialize_to_json(object_to_serialize) == expected_result
