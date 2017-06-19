@@ -2,4 +2,4 @@
 // Localizable.strings
 //
 
-"hostname" = "localhost";
+"hostname" = "HOSTNAME";
