@@ -65,4 +65,6 @@ matrix:
       before_script:
         - cd mobile/ios/WirelessDebug
       script:
-        - xcodebuild -scheme WirelessDebug -destination 'platform=iOS Simulator,name=iPhone 7,OS=10.3.1' build test
+        - xcodebuild -scheme Test -destination 'platform=iOS Simulator,name=iPhone 7,OS=10.3.1' build test
+      after_success:
+        - bash <(curl -s https://codecov.io/bash)
