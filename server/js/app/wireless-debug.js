@@ -39,7 +39,7 @@ define([
     let device = $('#device');
     let app = $('#app');
     let time = $('#start-time');
-    let data_table = $('#historical-log-table').DataTable();
+    let data_table = $('#historical-log-table');
 
     device.on('change', () => {
       let chosen_device = device.val();
@@ -116,6 +116,7 @@ define([
       // Gets rid of old data but keeps table structure.
       data_table = $('#historical-log-table').DataTable();
       data_table.destroy();
+      console.log($('#historical-log-table tbody tr'));
       $('#historical-log-table tbody tr').remove();
       if (chosen_starttime !== 'None') {
         let data = {
@@ -129,7 +130,8 @@ define([
           data: data,
           cache: false,
           success: function(data) {
-            $('#historical-log-table').append(data.logs);
+            $('#historical-log-table tbody').append(data.logs);
+	    data_table = $('#historical-log-table').DataTable();
           },
         });
       }
