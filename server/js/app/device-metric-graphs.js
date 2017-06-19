@@ -1,8 +1,8 @@
 /**
-* @fileoverview Contains code for graphing device metrics using D3
-*/
+ * @fileoverview Contains code for graphing device metrics using Chart.js.
+ */
 
-class MetricGrapher {
+define(['chart'], (Chart) => class MetricGrapher {
   /** Initializes the graphs for device metrics using chart.js.
    * @param {string=} cpuCanvasId
    * @param {string=} memoryCanvasId
@@ -12,6 +12,9 @@ class MetricGrapher {
     let timeInterval = 0.2;
     // 30 seconds times sample rate gives number of metrics recorded.
     let recordedTime = 30 * (1 / timeInterval);
+
+    /** @private @const Number */
+    this.BYTE_CONVERSION = 1024.0;
 
     /** @private @const {Array<number>} */
     this.cpuUsageHistory_ = [];
@@ -30,7 +33,7 @@ class MetricGrapher {
       memTotal: 0,
       netSentPerSec: 0,
       netReceivePerSec: 0,
-    }
+    };
 
     this.initializeData(recordedTime);
 
@@ -44,7 +47,7 @@ class MetricGrapher {
       data: {
         labels: this.xAxisScale_,
         datasets: [
-          this.generateDataset_(this.cpuUsageHistory_ ,"#3cba9f"),
+          this.generateDataset_(this.cpuUsageHistory_, '#3cba9f'),
         ]
       },
       options: this.generateOptions_(100)
@@ -56,7 +59,7 @@ class MetricGrapher {
       data: {
         labels: this.xAxisScale_,
         datasets: [
-          this.generateDataset_(this.memoryUsageHistory_ ,"#3e95cd"),
+          this.generateDataset_(this.memoryUsageHistory_, '#3e95cd'),
         ]
       },
       options: this.generateOptions_(1024)
@@ -69,8 +72,9 @@ class MetricGrapher {
       data: {
         labels: this.xAxisScale_,
         datasets: [
-          this.generateDataset_(this.networkSentHistory_ ,"#4EE9E4"),
-          this.generateDataset_(this.networkReceiveHistory_ ,"#8e5ea2")
+          this.generateDataset_(this.networkSentHistory_, '#4EE9E4'),
+          this.generateDataset_(this.networkReceiveHistory_,
+            '#8e5ea2'),
         ]
       },
       options: this.generateOptions_(1000)
@@ -110,13 +114,18 @@ class MetricGrapher {
     this.cpuUsageHistory_.push(this.metrics.cpuUsage * 100);
     this.cpuUsageHistory_.shift();
 
-    this.memoryUsageHistory_.push(this.metrics.memUsage / 1024.0);
+    // Divided by 1024 to convert from KB to MB.
+    this.memoryUsageHistory_.push(this.metrics.memUsage /
+      this.BYTE_CONVERSION);
     this.memoryUsageHistory_.shift();
 
-    this.networkSentHistory_.push(this.metrics.netSentPerSec);
+    // Divided by 1024 to convert from Bytes to KB.
+    this.networkSentHistory_.push(this.metrics.netSentPerSec /
+      this.BYTE_CONVERSION);
     this.networkSentHistory_.shift();
 
-    this.networkReceiveHistory_.push(this.metrics.netReceivePerSec);
+    this.networkReceiveHistory_.push(this.metrics.netReceivePerSec /
+      this.BYTE_CONVERSION);
     this.networkReceiveHistory_.shift();
 
     this.cpuGraph.data.datasets[0].data = this.cpuUsageHistory_;
@@ -138,9 +147,9 @@ class MetricGrapher {
     return {
       legend: {
         display: false
-       },
-       scales: {
-         xAxes: [{
+      },
+      scales: {
+        xAxes: [{
           display: true,
           ticks: {
             maxTicksLimit: 10.1,
@@ -149,11 +158,11 @@ class MetricGrapher {
           }
         }],
         yAxes: [{
-        display: true,
-        ticks: {
-          suggestedMax: suggestedMax,
-          beginAtZero: true,
-        }
+          display: true,
+          ticks: {
+            suggestedMax: suggestedMax,
+            beginAtZero: true,
+          }
         }]
       },
       tooltips: {
@@ -162,7 +171,10 @@ class MetricGrapher {
       hover: {
         mode: null
       },
-    }
+      animation: {
+        duration: 0,
+      },
+    };
   }
 
   /**
@@ -177,6 +189,6 @@ class MetricGrapher {
       borderWidth: 2,
       fill: true,
       pointRadius: 0.01,
-    }
+    };
   }
-}
+});

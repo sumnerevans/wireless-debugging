@@ -4,13 +4,13 @@ WebSocket Controller
 
 import json
 import datetime
-import controller
 
 from bottle import route, request, abort
 from geventwebsocket import WebSocketError
 
 from parsing_lib import LogParser
 from helpers import util
+from helpers.config_manager import ConfigManager
 
 # Store a dictionary of string -> function
 _ws_routes = {}
@@ -41,8 +41,8 @@ def handle_websocket():
                 continue
 
             decoded_message = json.loads(message)
-            message_type = decoded_message['messageType']
-            if message_type is None:
+            message_type = decoded_message.get('messageType', None)
+            if message_type not in _ws_routes:
                 print('Unrecognized message_type %s' % message_type)
                 continue
 
@@ -54,8 +54,7 @@ def handle_websocket():
     # If we have the API key, we can waste a little less time searching for the
     # WebSocket.
     ws_api_key = websocket_metadata.get('apiKey', '')
-    if (ws_api_key and ws_api_key in _web_ui_ws_connections and
-            websocket in _web_ui_ws_connections[ws_api_key]):
+    if websocket in _web_ui_ws_connections.get(ws_api_key, []):
         _web_ui_ws_connections[ws_api_key].remove(websocket)
     # ... Otherwise we have to search everywhere to find and delete it.
     else:
@@ -87,6 +86,7 @@ def start_session(message, websocket, metadata):
 
     for attribute, value in message.items():
         metadata[attribute] = value
+
     metadata['startTime'] = str(datetime.datetime.now())
 
 
@@ -107,35 +107,35 @@ def log_dump(message, websocket, metadata):
 
     api_key = metadata.get('apiKey', '')
 
-    # Send to database and convert to HTML.
-    controller.datastore_interface.store_logs(
-        metadata['apiKey'], metadata['deviceName'], metadata['appName'],
+    # Send to database.
+    ConfigManager.datastore_interface.store_logs(
+        api_key, metadata['deviceName'], metadata['appName'],
         metadata['startTime'], metadata['osType'], log_entries)
+
+    # Convert to html by creaing an array of all the converted rows.
+    html_logs = [LogParser.convert_line_to_html(log)
+                 for log in log_entries]
 
     # Create a message to send to the web clients.
     send_logs = {
         'messageType': 'logData',
         'osType': metadata['osType'],
-        'logEntries': LogParser.convert_to_html(log_entries),
+        'logEntries': html_logs,
     }
 
-    # Determine wich WebSocket connections to send the logs to
-    associated_websockets = (
-        controller.user_management_interface.find_associated_websockets(
-            api_key, _web_ui_ws_connections))
-
-    for connection in associated_websockets:
+    for connection in _get_associated_websockets(api_key):
         connection.send(util.serialize_to_json(send_logs))
 
 
 @ws_router('endSession')
 def end_session(message, websocket, metadata):
     """Set session is over and add to the device/app collection."""
-    controller.datastore_interface.set_session_over(
-        metadata['apiKey'], metadata['deviceName'], metadata['appName'],
+    api_key = metadata.get('apiKey', '')
+    ConfigManager.datastore_interface.set_session_over(
+        api_key, metadata['deviceName'], metadata['appName'],
         metadata['startTime'])
-    controller.datastore_interface.add_device_app(
-        metadata['apiKey'], metadata['deviceName'], metadata['appName'])
+    ConfigManager.datastore_interface.add_device_app(
+        api_key, metadata['deviceName'], metadata['appName'])
 
 
 @ws_router('associateUser')
@@ -152,14 +152,14 @@ def associate_user(message, websocket, metadata):
             received.
     """
 
-    api_key = message['apiKey']
+    api_key = message.get('apiKey', '')
 
     _web_ui_ws_connections.setdefault(api_key, []).append(websocket)
 
 
 @ws_router('deviceMetrics')
 def device_metrics(message, websocket, metadata):
-    """ Handles Device Metrics sent from Mobile API
+    """ Handles Device Metrics sent from Mobile API.
 
     When device metrics come in from the Mobile API, this function takes the
     device metrics and sends it to all connect web clients.
@@ -168,10 +168,15 @@ def device_metrics(message, websocket, metadata):
         message: the device metrics in a JSON object
         websocket: the full websocket connection
     """
-    api_key = metadata['apiKey']
-    associated_websockets = (
-        controller.user_management_interface.find_associated_websockets(
-            api_key, _web_ui_ws_connections))
-
-    for connection in associated_websockets:
+    for connection in _get_associated_websockets(metadata.get('apiKey', '')):
         connection.send(util.serialize_to_json(message))
+
+
+def _get_associated_websockets(api_key):
+    """ Gets the WebSocket connections assoicated with the given API Key.
+
+    This calls to the User Management Interface which is configured in the
+    config.yaml file.
+    """
+    return ConfigManager.user_management_interface.find_associated_websockets(
+        api_key, _web_ui_ws_connections)

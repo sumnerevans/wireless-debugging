@@ -17,7 +17,7 @@ import javax.annotation.CheckForNull;
  */
 class WebSocketMessenger extends WebSocketClient {
 
-    private static final String TAG = "Web Socket Messenger";
+    private static final String TAG = "WirelessDebugger";
     private final ArrayList<String> mLogsToSend;
     private final String mApiKey;
     private boolean mIsRunning;

@@ -16,7 +16,7 @@ public class WirelessDebugger extends Service {
 
     private static WirelessDebugger mWirelessDebuggerInstance;
 
-    private static final String TAG = "Wireless Debugger";
+    private static final String TAG = "WirelessDebugger";
     // Extras to pass arguments to the intent that starts the service
     private static final String HOSTNAME_EXTRA = "hostname";
     private static final String TIME_INTERVAL_EXTRA = "time_interval";
