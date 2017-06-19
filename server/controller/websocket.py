@@ -108,7 +108,7 @@ def log_dump(message, websocket, metadata):
     api_key = metadata.get('apiKey', '')
 
     # Send to database.
-    controller.datastore_interface.store_logs(
+    ConfigManager.datastore_interface.store_logs(
         api_key, metadata['deviceName'], metadata['appName'],
         metadata['startTime'], metadata['osType'], log_entries)
 
