@@ -131,7 +131,7 @@ def login():
         interface.
     """
     # Redirect to the home page if the user in already logged in.
-    if controller.user_management_interface.is_user_logged_in(request):
+    if config.user_management_interface.is_user_logged_in(request):
         redirect('/')
 
     return {
