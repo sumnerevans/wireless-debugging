@@ -114,7 +114,7 @@ def historical():
 @kajiki_view('upload_logs')
 @authenticated()
 def upload_logs():
-    api_key = controller.user_management_interface.get_api_key_for_user(request)
+    api_key = config.user_management_interface.get_api_key_for_user(request)
     return {
         'page': 'upload_logs',
         'raw_logs': '',
@@ -125,7 +125,7 @@ def upload_logs():
 @kajiki_view('upload_logs')
 @authenticated()
 def upload_logs():
-    api_key = controller.user_management_interface.get_api_key_for_user(request)
+    api_key = config.user_management_interface.get_api_key_for_user(request)
 
     os_type = request.forms.get('os_type')
     upload = request.files.get('upload')
