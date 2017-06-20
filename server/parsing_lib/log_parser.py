@@ -16,7 +16,7 @@ class LogParser(object):
     parser_info = {
         'Android': {
             'logLineRegex': re.compile(
-                '(.*)\\s+(\\d*)\\s+(\\d*) ([IWVEDAF]) (.*?): ((?:.*\\n*)*)'),
+                '(.+?)\\s+(\\d+)\\s+(\\d+) ([IWVEDAF]) (.*?): ((?:.*\\n*)*)'),
             'datetimeFormat': ['%Y-%m-%d %H:%M:%S.%f'],
             'filterLineRegex': re.compile('-* beginning of'),
             'groupNums': {
@@ -81,7 +81,6 @@ class LogParser(object):
 
         current_log = None
         in_unhandled_exception = False
-        multiline = False
 
         for line in raw_log_lines.splitlines():
             # Skip lines that are not log lines. There may be cases when these
