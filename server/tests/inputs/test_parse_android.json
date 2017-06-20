@@ -1,8 +1,8 @@
 [{
   "inputLines": [
     "--------- beginning of /dev/log/system",
-    "05-22 11:44:31.180 7080 7080 I WiDB Example: aX: 3.0262709 aY: 2.0685902",
-    "05-22 11:44:32.191 7080 7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection"
+    "05-22 11:44:31.180  7080  7080 I WiDB Example: aX: 3.0262709 aY: 2.0685902",
+    "05-22 11:44:32.191  7080  7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection"
   ],
   "expectedResult": [{
       "time": "05-22 11:44:31.180000",
@@ -58,8 +58,8 @@
 }, {
   "inputLines": [
     "--------- beginning of /dev/log/system",
-    "05-22 11:44:31.180 7080 7080 I WiDB Example: aX: 3.0262709 aY: 2.0685902",
-    "05-22 11:44:32.191 7080 7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection",
+    "05-22 11:44:31.180  7080  7080 I WiDB Example: aX: 3.0262709 aY: 2.0685902",
+    "05-22 11:44:32.191  7080  7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection",
     "--------- beginning of /dev/log/system",
     "05-24 12:12:49.247 23930 23930 E AndroidRuntime: FATAL EXCEPTION: main",
     "05-24 12:12:49.247 23930 23930 E AndroidRuntime: Process: com.google.wireless.debugging, PID: 23930",
@@ -118,7 +118,7 @@
   }]
 }, {
   "inputLines": [
-    "05-22 11:44:32.191 7080 7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection",
+    "05-22 11:44:32.191  7080  7080 W IInputConnectionWrapper: getTextBeforeCursor on inactive InputConnection",
     "--------- beginning of /dev/log/system",
     "05-24 12:12:49.247 23930 23930 E AndroidRuntime: FATAL EXCEPTION: main"
   ],
