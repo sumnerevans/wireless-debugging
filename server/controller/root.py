@@ -2,8 +2,6 @@
 Root Controller
 """
 import functools
-import io
-import sys
 
 from bottle import abort, post, redirect, request, response, route, static_file, get
 from kajiki_view import kajiki_view
@@ -11,6 +9,7 @@ from markupsafe import Markup
 
 import parsing_lib
 from helpers.config_manager import ConfigManager as config
+
 
 def authenticated():
     """ Defines an authenticated decorator, which verifies that the user is logged
@@ -122,7 +121,7 @@ def upload_logs():
 @post('/upload_logs')
 @kajiki_view('upload_logs')
 @authenticated()
-def upload_logs():
+def process_uploaded_logs():
     """ This is where the logs will be uploaded from the page. """
     os_type = request.forms.get('os_type')
     log_file = request.files.get('log_file')
