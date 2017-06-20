@@ -102,7 +102,7 @@ def test_retrieve_logs():
                   log_entries)
     di.add_device_app(api_key, device_name, app_name)
     log = di.retrieve_logs(api_key, device_name, app_name, start_time)
-    assert log == logs
+    assert log[0]['logEntries'] == logs
     di.clear_datastore()
 
 
