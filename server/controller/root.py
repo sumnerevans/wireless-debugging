@@ -2,8 +2,6 @@
 Root Controller
 """
 import functools
-import io
-import sys
 
 from bottle import abort, post, redirect, request, response, route, static_file, get
 from kajiki_view import kajiki_view
@@ -123,7 +121,7 @@ def upload_logs():
 @post('/upload_logs')
 @kajiki_view('upload_logs')
 @authenticated()
-def upload_logs():
+def process_uploaded_logs():
     """ This is where the logs will be uploaded from the page. """
     os_type = request.forms.get('os_type')
     log_file = request.files.get('log_file')
@@ -190,6 +188,7 @@ def login():
         redirect('/')
 
     return {
+        'page': 'login',
         'login_fields': Markup(config.user_management_interface.get_login_ui()),
         'logged_in':
         config.user_management_interface.is_user_logged_in(request),
