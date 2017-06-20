@@ -113,6 +113,7 @@ def historical():
 @kajiki_view('upload_logs')
 @authenticated()
 def upload_logs():
+    """ This is to get the webpage. """
     return {
         'page': 'upload_logs',
         'raw_logs': '',
@@ -123,6 +124,7 @@ def upload_logs():
 @kajiki_view('upload_logs')
 @authenticated()
 def upload_logs():
+    """ This is where the logs will be uploaded from the page. """
     os_type = request.forms.get('os_type')
     log_file = request.files.get('log_file')
     raw_text = request.forms.get('message')
@@ -148,7 +150,6 @@ def upload_logs():
         log_entries = parsing_lib.LogParser.convert_to_html(parsed_message)
         return_val['log_entries'] = Markup(log_entries)
     except Exception as e:
-        e = sys.exc_info()[0]
         return_val['flash'] = {
             'content': 'Log format error: %s' % str(e),
             'cls': 'error',
