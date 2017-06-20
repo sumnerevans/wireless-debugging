@@ -2,11 +2,14 @@
 Root Controller
 """
 import functools
+import io
+import sys
 
-from bottle import abort, post, redirect, request, response, route, static_file
+from bottle import abort, post, redirect, request, response, route, static_file, get
 from kajiki_view import kajiki_view
 from markupsafe import Markup
 
+import parsing_lib
 from helpers.config_manager import ConfigManager as config
 
 
@@ -104,6 +107,55 @@ def historical():
     return {
         'page': 'historical',
     }
+
+
+@get('/upload_logs')
+@kajiki_view('upload_logs')
+@authenticated()
+def upload_logs():
+    """ This is to get the webpage. """
+    return {
+        'page': 'upload_logs',
+        'raw_logs': '',
+    }
+
+
+@post('/upload_logs')
+@kajiki_view('upload_logs')
+@authenticated()
+def upload_logs():
+    """ This is where the logs will be uploaded from the page. """
+    os_type = request.forms.get('os_type')
+    log_file = request.files.get('log_file')
+    raw_text = request.forms.get('message')
+    return_val = {
+        'page': 'upload_logs',
+        'raw_logs': raw_text,
+        'log_entries': Markup(''),
+    }
+
+    if log_file:
+        message = str(log_file.file.read(), 'utf-8')
+    elif raw_text.strip():
+        message = raw_text
+    else:
+        return_val['flash'] = {
+            'content': 'Please upload a file or paste logs.',
+            'cls': 'error',
+        }
+        return return_val
+
+    try:
+        parsed_message = parsing_lib.LogParser.parse(message, os_type)
+        log_entries = parsing_lib.LogParser.convert_to_html(parsed_message)
+        return_val['log_entries'] = Markup(log_entries)
+    except Exception as e:
+        return_val['flash'] = {
+            'content': 'Log format error: %s' % str(e),
+            'cls': 'error',
+        }
+    finally:
+        return return_val
 
 
 @route('/<resource_root>/<filepath:path>')

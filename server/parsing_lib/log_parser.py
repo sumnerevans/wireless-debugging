@@ -94,8 +94,10 @@ class LogParser(object):
             if exception_regex:
                 exception_groups = exception_regex.match(line)
                 if exception_groups:
+                    if current_log:
+                        yield current_log
+
                     in_unhandled_exception = True
-                    multiline = True
                     exception_time_string = exception_groups.group(1)
                     current_log = {
                         'time': LogParser._parse_datetime(exception_time_string,
@@ -110,25 +112,24 @@ class LogParser(object):
             # current log.
             if in_unhandled_exception:
                 current_log['text'] += '\n%s' % line
-                multiline = True
             else:
                 # Check if current log has the same time as the previous log
                 # parsed.
                 new_log = LogParser.parse_raw_log(line, os_type)
+
                 if current_log and (current_log['time'] == new_log['time'] and
                         current_log['logType'] == new_log['logType']):
                     # If part of the same event, add the log's text to the
                     # previous parsed log.
                     current_log['text'] += '\n%s' % new_log['text']
-                    multiline = True
                 else:
+                    if current_log:
+                        yield current_log
                     current_log = LogParser.parse_entries(new_log)
-                    multiline = False
-            if not multiline:
-                yield current_log
 
-        # Yield any leftover unhandled exception logs.
-        if in_unhandled_exception:
+
+        # Send any leftover unhandled exception logs.
+        if in_unhandled_exception or current_log:
             yield current_log
 
     @staticmethod
@@ -213,6 +214,7 @@ class LogParser(object):
             log_entry.get('logType', ''),
             log_entry['text'],
         )
+
 
     @staticmethod
     def convert_to_html(log_entries):

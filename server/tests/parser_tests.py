@@ -58,7 +58,6 @@ def test_parse_android():
 
 def test_parse_ios():
     """ Tests that the LogParser.parse method works properly for iOS. """
-
     with open('tests/inputs/test_parse_ios.json') as test_case_file:
         test_cases = json.load(test_case_file, object_hook=_test_case_parser)
 
@@ -90,7 +89,6 @@ def test_parse_raw_log_ios():
     """ Tests that the LogParser.parse_raw_log method works properly for
         iOS.
     """
-
     with open('tests/inputs/test_parse_ios_raw.json') as test_case_file:
         test_cases = json.load(test_case_file, object_hook=_test_case_parser)
 
