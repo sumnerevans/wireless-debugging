@@ -18,5 +18,5 @@ style guides for the languages used in this project:
 
 ## Documentation
 If there are any documentation changes that need to be make for your pull
-request, please include links to the pages that need to be changed and describe
-the change that needs to be made.
+request, please update the appropriate pages in the `/docs` folder and include
+those changes in your pull request.

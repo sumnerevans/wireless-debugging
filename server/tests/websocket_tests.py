@@ -13,11 +13,11 @@ def test_start_session():
     socket = DummySocket()
     _metadata = {}
     message = {
-        "messageType": "startSession",
-        "apiKey": "f983kDduxhnJDKI22D2Kda",
-        "osType": "Android",
-        "deviceName": "Google Pixel",
-        "appName": "Google Hangouts"
+        'messageType': 'startSession',
+        'apiKey': 'f983kDduxhnJDKI22D2Kda',
+        'osType': 'Android',
+        'deviceName': 'Google Pixel',
+        'appName': 'Google Hangouts',
     }
 
     websocket._ws_routes[message['messageType']](message, socket, _metadata)
@@ -38,8 +38,8 @@ def test_associate_user():
     socket = DummySocket()
     _metadata = {}
     message = {
-        "messageType": "associateUser",
-        "apiKey": "cb572446-21f2-44d0-8983-4cf30300b574"
+        'messageType': 'associateUser',
+        'apiKey': 'cb572446-21f2-44d0-8983-4cf30300b574',
     }
 
     websocket._ws_routes[message['messageType']](message, socket, _metadata)

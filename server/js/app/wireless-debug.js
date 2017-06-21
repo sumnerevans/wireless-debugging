@@ -23,8 +23,16 @@ define([
     /** @private @const {?MetricGrapher} */
     this.metricGrapher = null;
 
-    /** @private @const {!DataTable} */
-    this.dataTable = $('#log-table').DataTable();
+    /** @private @const {!Object}*/
+    this.tableConfig_ = {
+      'paging': false,
+      'lengthMenu': [-1],
+      'scrollY': '75vh',
+      'scrollCollapse': true,
+    };
+
+    /** @private @const {?DataTable} */
+    this.dataTable_ = $('#log-table').DataTable(this.tableConfig_);
   }
 
   /**
@@ -39,11 +47,12 @@ define([
     let device = $('#device');
     let app = $('#app');
     let time = $('#start-time');
-    let data_table = $('#historical-log-table').DataTable();
+    let data_table = $('#historical-log-table');
 
     device.on('change', () => {
       let chosen_device = device.val();
       // Gets rid of old data but keeps table structure.
+      data_table = $('#historical-log-table').DataTable();
       data_table.destroy();
       if (chosen_device !== 'None') {
         $('#hidden-dev-alias').css('display', 'block');
@@ -79,6 +88,7 @@ define([
     app.on('change', () => {
       let chosen_app = app.val();
       // Gets rid of old data but keeps table structure.
+      data_table = $('#historical-log-table').DataTable();
       data_table.destroy();
       if (chosen_app !== 'None') {
         $('#hidden-app-alias').css('display', 'block');
@@ -112,6 +122,7 @@ define([
     time.on('change', () => {
       let chosen_starttime = time.val();
       // Gets rid of old data but keeps table structure.
+      data_table = $('#historical-log-table').DataTable();
       data_table.destroy();
       $('#historical-log-table tbody tr').remove();
       if (chosen_starttime !== 'None') {
@@ -126,7 +137,8 @@ define([
           data: data,
           cache: false,
           success: function(data) {
-            $('#historical-log-table').append(data.logs);
+            $('#historical-log-table tbody').append(data.logs);
+            data_table = $('#historical-log-table').DataTable();
           },
         });
       }
@@ -191,7 +203,6 @@ define([
       apiKey: apiKey || '',
     };
 
-    this.data_table = $('#log-table').DataTable();
     this.ws_.send(JSON.stringify(payload));
 
     // Get all the devices for historical sessions.
@@ -207,8 +218,7 @@ define([
         if (data.success) {
           $('#device').append('<option value="None"></option>');
           for (let i of data.devices) {
-            $('#device').append(
-              `<option value="${i}">${i}</option>`);
+            $('#device').append(`<option value="${i}">${i}</option>`);
           }
         } else {
           $('#main-page').html('<p>No Datastore and/or No Data</p>');
@@ -228,9 +238,13 @@ define([
     let messageData = JSON.parse(message.data);
 
     if (messageData.messageType === 'logData') {
-      this.data_table.destroy();
-      this.logTable_.append(messageData.logEntries);
-      this.data_table = $('#log-table').DataTable();
+      // If we get more log data, append the log data to the table and scroll to
+      // the bottom of the table.
+      for (let logEntry of messageData.logEntries) {
+        this.dataTable_.row.add($(logEntry)).draw();
+        let scrollBody = $('.dataTables_scrollBody');
+        scrollBody.scrollTop(scrollBody[0].scrollHeight);
+      }
     }
 
     if (messageData.messageType === 'deviceMetrics') {

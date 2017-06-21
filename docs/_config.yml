@@ -1,0 +1,7 @@
+title: Wireless Debugger
+name: Wireless Debugger
+baseurl: ""
+description: >
+  Wireless Debugger is a mobile SDK and sample web server for streaming and
+  parsing mobile app logs and displaying them in a web UI console.
+theme: jekyll-theme-architect

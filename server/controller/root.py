@@ -2,11 +2,13 @@
 Root Controller
 """
 import functools
-import controller
 
-from bottle import abort, post, redirect, request, response, route, static_file
+from bottle import abort, post, redirect, request, response, route, static_file, get
 from kajiki_view import kajiki_view
 from markupsafe import Markup
+
+import parsing_lib
+from helpers.config_manager import ConfigManager as config
 
 
 def authenticated():
@@ -15,14 +17,14 @@ def authenticated():
 
         When a function is associated with this decorator, if the function
         returns a dict this function will append a bool indicating whether or
-        not the user is logged in. 
+        not the user is logged in.
 
         Args:
             None, but calls the user management interface to determine if the
             user is logged in.
         Returns:
             The dictionary the contained function returns, with an additional
-            entry named 'logged_in' that maps to a boolean that indicates 
+            entry named 'logged_in' that maps to a boolean that indicates
             whether or not the user is logged in.
 
             If the contained function does not return a dict, then this function
@@ -36,14 +38,14 @@ def authenticated():
 
         @functools.wraps(function)
         def wrapper(*args, **kwargs):
-            is_user_logged_in = (
-                controller.user_management_interface.is_user_logged_in(request))
+            is_user_logged_in = config.user_management_interface.is_user_logged_in(
+                request)
             if not is_user_logged_in:
                 redirect('/login_page')
 
             webpage_arguments = function(*args, **kwargs)
 
-            api_key = controller.user_management_interface.get_api_key_for_user(
+            api_key = config.user_management_interface.get_api_key_for_user(
                 request)
             if isinstance(webpage_arguments, dict):
                 webpage_arguments['logged_in'] = is_user_logged_in
@@ -105,11 +107,53 @@ def historical():
     }
 
 
-@route('/new_login')
-@kajiki_view('new_login')
-def new_login():
-    """Shows new login page."""
-    return {'page': 'new_login'}
+@get('/upload_logs')
+@kajiki_view('upload_logs')
+@authenticated()
+def upload_logs():
+    """ This is to get the webpage. """
+    return {
+        'page': 'upload_logs',
+        'raw_logs': '',
+    }
+
+
+@post('/upload_logs')
+@kajiki_view('upload_logs')
+@authenticated()
+def process_uploaded_logs():
+    """ This is where the logs will be uploaded from the page. """
+    os_type = request.forms.get('os_type')
+    log_file = request.files.get('log_file')
+    raw_text = request.forms.get('message')
+    return_val = {
+        'page': 'upload_logs',
+        'raw_logs': raw_text,
+        'log_entries': Markup(''),
+    }
+
+    if log_file:
+        message = str(log_file.file.read(), 'utf-8')
+    elif raw_text.strip():
+        message = raw_text
+    else:
+        return_val['flash'] = {
+            'content': 'Please upload a file or paste logs.',
+            'cls': 'error',
+        }
+        return return_val
+
+    try:
+        parsed_message = parsing_lib.LogParser.parse(message, os_type)
+        log_entries = parsing_lib.LogParser.convert_to_html(parsed_message)
+        return_val['log_entries'] = Markup(log_entries)
+    except Exception as e:
+        return_val['flash'] = {
+            'content': 'Log format error: %s' % str(e),
+            'cls': 'error',
+        }
+    finally:
+        return return_val
 
 
 @route('/<resource_root>/<filepath:path>')
@@ -139,12 +183,15 @@ def login():
         format of the login page, which is specified in the user management
         interface.
     """
+    # Redirect to the home page if the user in already logged in.
+    if config.user_management_interface.is_user_logged_in(request):
+        redirect('/')
 
     return {
-        'login_fields': Markup(
-            controller.user_management_interface.get_login_ui()),
-        'logged_in': controller.user_management_interface.is_user_logged_in(
-            request),
+        'page': 'login',
+        'login_fields': Markup(config.user_management_interface.get_login_ui()),
+        'logged_in':
+        config.user_management_interface.is_user_logged_in(request),
     }
 
 
@@ -152,8 +199,8 @@ def login():
 def handle_login():
     """ Takes a login form and verifies the user's identity. """
     login_successful, error_message = (
-        controller.user_management_interface.handle_login(request.forms,
-                                                          request, response))
+        config.user_management_interface.handle_login(request.forms, request,
+                                                      response))
 
     # If handle_login returned a string, it means it failed and returned an
     # error message.

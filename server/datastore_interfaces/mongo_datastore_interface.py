@@ -73,7 +73,7 @@ class MongoDatastoreInterface(base_datastore_interface.DatastoreInterface):
                                     'app_name':
                                         self.get_raw_app_name_from_alias(
                                             api_key, device_name, app_name),
-                                    'start_time': start_time})[0]['logEntries']
+                                    'start_time': start_time})
 
     def retrieve_devices(self, api_key):
         """This function retrieves a list of devices associated with the given API Key.

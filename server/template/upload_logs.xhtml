@@ -1,0 +1,58 @@
+<html py:extends="master.xhtml" py:strip="True">
+
+<head py:block="head" py:strip="True">
+  <title py:block="master_title">Upload Logs</title>
+</head>
+
+<body py:block="body" py:strip="True">
+  <div class="row">
+    <div class="col-md-12">
+      <form name="upload_form" action="upload_logs" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+          <textarea name="message" rows="10" cols="60" placeholder="Enter logs here or upload a text file below" >${raw_logs}</textarea>
+        </div>
+        <div class="form-group">
+          <input type="file" name="log_file" ></input>
+        </div>
+        <div class="form-group">
+          <div class="radio-inline">
+            <label>
+              <input type="radio" name="os_type" value="iOS" checked="checked" /> iOS
+            </label>
+          </div>
+          <div class="radio-inline">
+            <label>
+              <input type="radio" name="os_type" value="Android" /> Android
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="form-group">
+            <input value="Submit" type="submit" style="height:30px; width:80px" />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <p></p>
+      <table class="table table-hover table-condensed table-bordered log-table" id="log-table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Tag</th>
+            <th>Type</th>
+            <th>Log Text</th>
+          </tr>
+        </thead>
+        <tbody id="log-table-body-upload-logs">
+          <!-- Use kajiki to render the table rows. -->
+          ${log_entries if self.defined('log_entries') else ''}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+
+</html>
