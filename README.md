@@ -10,7 +10,11 @@ This project was done under supervision of Google and was sponsored by the
 Colorado School of Mines for the CSCI-370 course.
 
 ## Getting Started
-Head over to our [Wiki](../../wiki) or jump straight to the [Getting Started](../../wiki/Getting-Started) guide.
+Head over to our [GitHub Pages
+site](https://sumnerevans.github.io/wireless-debugging/) or jump straight to the
+[Getting
+Started](https://sumnerevans.github.io/wireless-debugging/Getting-Started)
+guide.
 
 ## Contributors
 - Jonathan Sumner Evans
