@@ -5,14 +5,12 @@ from datastore_interfaces import base_datastore_interface
 class MongoDatastoreInterface(base_datastore_interface.DatastoreInterface):
     """This is the Mongo Datastore interface implementing the base interface."""
 
-    def __init__(self, hostname="test_database"):
-        """ This function sets up datastore interface.
-        Ensure MongoDB is installed with the default location.
-        Ensure pymongo is installed.
-        Ensure that you run `mongod` before executing the application.
+    def __init__(self, hostname='wireless_debugging'):
+        """ Set up the Datastore by connecting to the MongoDB instance.
 
         Args:
-            hostname : hostname. Defaulted to test_database
+            hostname: the MongoDB hostname to connect to. Defaulted to
+            wireless_debugging.
         """
         super().__init__()
         self._client = MongoClient()
@@ -23,16 +21,16 @@ class MongoDatastoreInterface(base_datastore_interface.DatastoreInterface):
 
     def store_logs(self, api_key, device_name, app_name, start_time, os_type,
                    log_entries):
-        """This function stores a set of log entries to the datastore. This function may
-           be called multiple times per session, so it must append the log entries in
-           the storage mechanism.
+        """ Stores a set of log entries to the datastore. This function may be
+        called multiple times per session, so it must append the log entries in
+        the storage mechanism.
 
         Args
-            api_key: the API Key associated with the logs
+            api_key:     the API Key associated with the logs
             device_name: the name of the device associated with the logs
-            app_name: the name of the app associated with the logs
-            start_time: the time that the session started
-            os_type: the OS type (iOS or Android)
+            app_name:    the name of the app associated with the logs
+            start_time:  the time that the session started
+            os_type:     the OS type (iOS or Android)
             log_entries: the log entries to store
         """
         self._logs.insert_one({
@@ -46,15 +44,14 @@ class MongoDatastoreInterface(base_datastore_interface.DatastoreInterface):
         })
 
     def set_session_over(self, api_key, device_name, app_name, start_time):
-        """This function is called to indicate to the datastore that the session is over.
-           This can set a flag on the session in the datastore indicating that it
-           should not be modified, for example.
+        """ Called to indicate to the datastore that the session is over.  This
+        sets the "ended" flag to true on the session.
 
         Args:
-            api_key: the API Key associated with the logs
+            api_key:     the API Key associated with the logs
             device_name: the name of the device associated with the logs
-            app_name: the name of the app associated with the logs
-            start_time: the time that the session started
+            app_name:    the name of the app associated with the logs
+            start_time:  the time that the session started
         """
         self._logs.update_one(
             {
@@ -68,31 +65,30 @@ class MongoDatastoreInterface(base_datastore_interface.DatastoreInterface):
             upsert=True)
 
     def retrieve_logs(self, api_key, device_name, app_name, start_time):
-        """This function retrieves logs for the given session.
+        """ Retrieves logs for the given session.
 
         Args:
-            api_key: the API Key to retrieve logs for
+            api_key:     the API Key to retrieve logs for
             device_name: the name of the device to retrieve logs for
-            app_name: the name of the app to retrieve logs for
-            start_time: the time that the session started
+            app_name:    the name of the app to retrieve logs for
+            start_time:  the time that the session started
 
         Returns:
-            osType: the OS type
+            osType:     the OS type
             logEntries: a list of log entries as Python dictionaries
         """
+        raw_dev_name = self.get_raw_device_name_from_alias(api_key, device_name)
+        raw_app_name = self.get_raw_app_name_from_alias(api_key, device_name,
+                                                        app_name)
         return self._logs.distinct('log_entries', {
-            'api_key':
-            api_key,
-            'device_name':
-            self.get_raw_device_name_from_alias(api_key, device_name),
-            'app_name':
-            self.get_raw_app_name_from_alias(api_key, device_name, app_name),
-            'start_time':
-            start_time,
+            'api_key': api_key,
+            'device_name': raw_dev_name,
+            'app_name': raw_app_name,
+            'start_time': start_time,
         })
 
     def retrieve_devices(self, api_key):
-        """This function retrieves a list of devices associated with the given API Key.
+        """ Retrieves a list of devices associated with the given API Key.
 
         Args:
             api_key: the API Key to retrieve devices for
@@ -103,52 +99,50 @@ class MongoDatastoreInterface(base_datastore_interface.DatastoreInterface):
         return self._device.distinct('device_alias', {'api_key': api_key})
 
     def retrieve_apps(self, api_key, device_name):
-        """This function retrieves apps given a device.
+        """ Retrieves apps for the given device.
 
         Args:
-            api_key: the API Key to retrieve logs for
+            api_key:     the API Key to retrieve logs for
             device_name: the device name to retrieve logs for
 
         Returns:
             array: array of the names of the apps on the given device
         """
+        raw_dev_name = self.get_raw_device_name_from_alias(api_key, device_name)
         return self._app_name.distinct('app_alias', {
-            'api_key':
-            api_key,
-            'device_name':
-            self.get_raw_device_name_from_alias(api_key, device_name),
+            'api_key': api_key,
+            'device_name': raw_dev_name,
         })
 
     def retrieve_sessions(self, api_key, device_name, app_name):
-        """This function retrieves a list of sessions for a given API Key, device, and app.
+        """ Retrieves a list of sessions for a given API Key, device, and app.
 
         Args:
-            api_key: the API Key to retrieve sessions for
+            api_key:     the API Key to retrieve sessions for
             device_name: the name of the device to retrieve sessions for
-            app_name: the name of the app to retrieve sessions for
+            app_name:    the name of the app to retrieve sessions for
 
         Returns:
             array: list of datetime objects, one for each of the session start
                    times associated with the given API Key, device, and app
         """
+        device_name = self.get_raw_device_name_from_alias(api_key, device_name)
+        app_name = self.get_raw_app_name_from_alias(api_key, device_name,
+                                                    app_name)
         return self._logs.distinct('start_time', {
-            'api_key':
-            api_key,
-            'device_name':
-            self.get_raw_device_name_from_alias(api_key, device_name),
-            'app_name':
-            self.get_raw_app_name_from_alias(api_key, device_name, app_name),
-            'ended':
-            True,
+            'api_key': api_key,
+            'device_name': device_name,
+            'app_name': app_name,
+            'ended': True,
         })
 
     def add_device_app(self, api_key, device_name, app_name):
-        """This function adds a device/app combination to the device/app collection.
+        """ Adds a device/app combination to the device/app collection.
 
         Args:
-            api_key: the API Key
+            api_key:     the API Key
             device_name: the name of the device
-            app_name: the name of the app
+            app_name:    the name of the app
         """
         find_device = self._device.find_one({
             'api_key': api_key,
@@ -160,6 +154,7 @@ class MongoDatastoreInterface(base_datastore_interface.DatastoreInterface):
                 'device_name': device_name,
                 'device_alias': device_name,
             })
+
         find_app = self._app_name.find_one({
             'api_key': api_key,
             'device_name': device_name,
@@ -174,46 +169,44 @@ class MongoDatastoreInterface(base_datastore_interface.DatastoreInterface):
             })
 
     def update_device_alias(self, api_key, device_raw_name, device_alias):
-        """This function updates the alias for a device.
+        """ Updates the alias for a device.
 
         Args:
-            api_key: the API key
+            api_key:         the API key
             device_raw_name: name being aliased
-            device_alias: new alias for device. This is what shows in the web app dropboxes.
+            device_alias:    new alias for device. This is what shows in the web app dropboxes.
         """
+        device_name = self.get_raw_device_name_from_alias(
+            api_key, device_raw_name)
         find_dev_alias = self._device.find_one({
             'api_key': api_key,
             'device_alias': device_alias,
         })
         if find_dev_alias:
             return False
+
         find_device = self._device.find_one({
-            'api_key':
-            api_key,
-            'device_name':
-            self.get_raw_device_name_from_alias(api_key, device_raw_name),
+            'api_key': api_key,
+            'device_name': device_name,
         })
         if find_device:
             find_device['device_alias'] = device_alias
             self._device.update_one(
                 {
-                    'api_key':
-                    api_key,
-                    'device_name':
-                    self.get_raw_device_name_from_alias(api_key,
-                                                        device_raw_name),
+                    'api_key': api_key,
+                    'device_name': device_name,
                 }, {'$set': find_device},
                 upsert=True)
         return True
 
     def update_app_alias(self, api_key, device_name, app_raw_name, app_alias):
-        """This function updates alias for an app.
+        """ Updates the alias for an app.
 
         Args:
-            api_key: the API key
-            device_name: device connected to app
+            api_key:      the API key
+            device_name:  device connected to app
             app_raw_name: name being aliased
-            app_alias: new alias for app. This is what shows in the web app dropboxes.
+            app_alias:    new alias for app. This is what shows in the web app dropboxes.
         """
         find_app_alias = self._app_name.find_one({
             'api_key': api_key,
@@ -221,11 +214,13 @@ class MongoDatastoreInterface(base_datastore_interface.DatastoreInterface):
         })
         if find_app_alias:
             return False
+
         app = self._app_name.find_one({
             'api_key':
             api_key,
             'app_name':
-            self.get_raw_app_name_from_alias(api_key, device_name, app_raw_name),
+            self.get_raw_app_name_from_alias(api_key, device_name,
+                                             app_raw_name),
         })
         if app:
             app['app_alias'] = app_alias
@@ -269,13 +264,11 @@ class MongoDatastoreInterface(base_datastore_interface.DatastoreInterface):
         Returns:
             string: raw app name
         """
+        device_name = self.get_raw_device_name_from_alias(api_key, device_name)
         return self._app_name.find_one({
-            'api_key':
-            api_key,
-            'device_name':
-            self.get_raw_device_name_from_alias(api_key, device_name),
-            'app_alias':
-            app_alias,
+            'api_key': api_key,
+            'device_name': device_name,
+            'app_alias': app_alias,
         })['app_name'].strip()
 
     def clear_datastore(self):

@@ -7,7 +7,7 @@ from datetime import datetime
 
 def serialize_to_json(data):
     """ Serialize an object to JSON, ensuring that the datetimes are formatted
-    according to RFC 3339
+    according to RFC 3339.
 
     Args:
         obj: the object to serialize to JSON

@@ -14,6 +14,6 @@ requirejs.config({
 });
 
 requirejs(['app/wireless-debug', 'jquery'], (WirelessDebug, $) => {
-  // Run the Application
+  // Run the application to start the Wireless Debugger app.
   $(document).ready(() => new WirelessDebug().start());
 });

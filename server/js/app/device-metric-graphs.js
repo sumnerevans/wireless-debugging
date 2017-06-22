@@ -3,7 +3,8 @@
  */
 
 define(['chart'], (Chart) => class MetricGrapher {
-  /** Initializes the graphs for device metrics using chart.js.
+  /** 
+   * Initializes the graphs for device metrics using chart.js.
    * @param {string=} cpuCanvasId
    * @param {string=} memoryCanvasId
    * @param {string=} networkCanvasId
@@ -42,42 +43,40 @@ define(['chart'], (Chart) => class MetricGrapher {
     let networkGraphCanvas = $(`#${networkCanvasId}`)[0].getContext('2d');
 
     /** @public @const {!Chart} */
-    this.cpuGraph = new Chart(cpuGraphCanvas, {
-      type: 'line',
-      data: {
-        labels: this.xAxisScale_,
-        datasets: [
-          this.generateDataset_(this.cpuUsageHistory_, '#3cba9f'),
-        ]
-      },
-      options: this.generateOptions_(100)
+    this.cpuGraph = new Chart(cpuGraphCanvas, 100, {
+      dataset: this.cpuUsageHistory_,
+      color: '3cba9f',
     });
 
     /** @public @const {!Chart} */
-    this.memoryGraph = new Chart(memoryGraphCanvas, {
-      type: 'line',
-      data: {
-        labels: this.xAxisScale_,
-        datasets: [
-          this.generateDataset_(this.memoryUsageHistory_, '#3e95cd'),
-        ]
-      },
-      options: this.generateOptions_(1024)
+    this.memoryGraph = this.createChart(memoryGraphCanvas, {
+      dataset: this.memoryUsageHistory_,
+      color: '3e95cd',
     });
 
     /** @public @const {!Chart} */
-    this.networkGraph = new Chart(networkGraphCanvas, {
+    this.networkGraph = this.createChart(networkGraphCanvas, 1000, [{
+      dataset: this.networkSentHistory_,
+      color: '4EE9E4',
+    },{
+      dataset: this.networkReceiveHistory_,
+      color: '8e5ea2',
+    }]);
+  }
+
+  createChart(canvas, suggestedMax, datasetConfigs) {
+    let datasets = [];
+    for (let config of datasetConfigs) {
+      datasets = this.generateDataset_(config.dataset, config.color);
+    }
+
+    return new Chart(canvas, {
       type: 'line',
-      fullWidth: true,
       data: {
         labels: this.xAxisScale_,
-        datasets: [
-          this.generateDataset_(this.networkSentHistory_, '#4EE9E4'),
-          this.generateDataset_(this.networkReceiveHistory_,
-            '#8e5ea2'),
-        ]
+        datasets: datasets,
       },
-      options: this.generateOptions_(1000)
+      options: this.generateOptions_(suggestedMax),
     });
   }
 
@@ -146,7 +145,7 @@ define(['chart'], (Chart) => class MetricGrapher {
   generateOptions_(suggestedMax) {
     return {
       legend: {
-        display: false
+        display: false,
       },
       scales: {
         xAxes: [{
@@ -155,21 +154,21 @@ define(['chart'], (Chart) => class MetricGrapher {
             maxTicksLimit: 10.1,
             max: 0,
             min: 30,
-          }
+          },
         }],
         yAxes: [{
           display: true,
           ticks: {
             suggestedMax: suggestedMax,
             beginAtZero: true,
-          }
-        }]
+          },
+        }],
       },
       tooltips: {
         enabled: false,
       },
       hover: {
-        mode: null
+        mode: null,
       },
       animation: {
         duration: 0,
@@ -185,7 +184,7 @@ define(['chart'], (Chart) => class MetricGrapher {
   generateDataset_(data, color) {
     return {
       data: data,
-      borderColor: color,
+      borderColor: `#${color}`,
       borderWidth: 2,
       fill: true,
       pointRadius: 0.01,

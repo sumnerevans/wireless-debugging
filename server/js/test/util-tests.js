@@ -14,10 +14,10 @@ describe('Util', () => {
   describe('#getCookie', () => {
     let tests = {
       'session_token=fd797261-5b801a482994; api_key="sumner@flume.live"': [
-        'api_key', 'sumner@flume.live'
+        'api_key', 'sumner@flume.live',
       ],
       'ae=t; s=n; am=google-maps; 5=2; w=w; u=-1; ak=-1; aq=-1; a=p; o=1': [
-        'am', 'google-maps'
+        'am', 'google-maps',
       ],
     };
 

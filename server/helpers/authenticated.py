@@ -1,31 +1,34 @@
 """
-Authenticated Decorator
+Defines the Authenticated Decorator which forces the user to be authenticated
+to perform the request.
 """
 
 import functools
 
+from bottle import request, redirect
+
 
 def authenticated():
-    """ Defines an authenticated decorator, which verifies that the user is logged
-        in.
+    """ Defines an authenticated decorator, which verifies that the user is
+        logged in.
 
-        When a function is associated with this decorator, if the function
-        returns a dict this function will append a bool indicating whether or
-        not the user is logged in.
+    When a function is associated with this decorator, if the function returns
+    a dict this function will append a bool indicating whether or not the user
+    is logged in.
 
-        Args:
-            None, but calls the user management interface to determine if the
-            user is logged in.
-        Returns:
-            The dictionary the contained function returns, with an additional
-            entry named 'logged_in' that maps to a boolean that indicates
-            whether or not the user is logged in.
+    Args:
+        None, but calls the user management interface to determine if the
+        user is logged in.
+    Returns:
+       The dictionary the contained function returns, with an additional entry
+       named 'logged_in' that maps to a boolean that indicates whether or not
+       the user is logged in.
 
-            If the contained function does not return a dict, then this function
-            returns whatever the contained function returns.
+       If the contained function does not return a dict, then this function
+       returns whatever the contained function returns.
 
-            This function will also redirect the user to the login page if the
-            user is not logged in.
+       This function will also redirect the user to the login page if the user
+       is not logged in.
     """
 
     def decorator(function):
