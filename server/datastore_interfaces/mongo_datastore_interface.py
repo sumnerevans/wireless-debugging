@@ -144,7 +144,7 @@ class MongoDatastoreInterface(base_datastore_interface.DatastoreInterface):
             self._app_name.insert_one({'api_key': api_key, 'device_name': device_name,
                                        'app_name': app_name, 'app_alias': app_name})
 
-    def update_alias_device(self, api_key, device_raw_name, device_alias):
+    def update_device_alias(self, api_key, device_raw_name, device_alias):
         """This function updates the alias for a device.
 
         Args:
@@ -168,7 +168,7 @@ class MongoDatastoreInterface(base_datastore_interface.DatastoreInterface):
         return True
 
 
-    def update_alias_app(self, api_key, device_name, app_raw_name, app_alias):
+    def update_app_alias(self, api_key, device_name, app_raw_name, app_alias):
         """This function updates alias for an app.
 
         Args:
