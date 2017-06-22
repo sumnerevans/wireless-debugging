@@ -71,7 +71,7 @@ class LogParser(object):
         """
         # If there are no log lines, don't do anything.
         if not raw_log_lines or raw_log_lines.isspace():
-            return []
+            return
 
         # Grab the regexes from the config.
         filter_regex = LogParser.parser_info[os_type]\
