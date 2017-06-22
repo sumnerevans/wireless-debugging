@@ -13,6 +13,8 @@ matrix:
         - cp sample-config.yaml config.yaml
       script:
         - pytest -vv --cov=./
+      after_script:
+        - codecov
 
     - language: node_js
       node_js:
@@ -24,6 +26,45 @@ matrix:
         - npm install
       script:
         - istanbul cover --hook-run-in-context --dir public/js/coverage ./node_modules/mocha/bin/_mocha -- js/test
+      after_script:
+        - codecov
 
-after_script:
-  - codecov
+    - language: android
+      jdk: oraclejdk8
+      env:
+        global:
+          - ANDROID_API_LEVEL=25
+          - BUILD_TOOLS_VERSION=25.0.2
+          - ANDROID_ABI=armeabi-v7a
+          - ANDROID_TAG=google_apis
+          - ADB_INSTALL_TIMEOUT=20 # minutes (2 minutes by default)
+      android:
+        update_sdk: true
+        components:
+          - tools
+          - android-$ANDROID_API_LEVEL
+          - build-tools-$BUILD_TOOLS_VERSION
+          - extra-android-m2repository
+          - sys-img-armeabi-v7a-$ANDROID_TAG-$ANDROID_API_LEVEL
+      before_script:
+        - cd mobile/android/WirelessDebugger
+
+        # Create an emulator.
+        - android list targets
+        - echo no | android create avd --force -n test -t android-$ANDROID_API_LEVEL --abi $ANDROID_TAG/$ANDROID_ABI
+        - emulator -avd test -no-window & # Start emulator
+        - android-wait-for-emulator
+        - adb shell input keyevent 82 &
+      script:
+        - ./gradlew build connectedAndroidTest test
+      after_success: 
+        — bash <(curl -s https://codecov.io/bash)
+
+    - language: swift
+      osx_image: xcode8.3
+      before_script:
+        - cd mobile/ios/WirelessDebug
+      script:
+        - xcodebuild -scheme Test -destination 'platform=iOS Simulator,name=iPhone 7,OS=10.3.1' build test
+      after_success:
+        - bash <(curl -s https://codecov.io/bash)

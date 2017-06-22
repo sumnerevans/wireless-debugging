@@ -124,7 +124,6 @@ define([
       // Gets rid of old data but keeps table structure.
       data_table = $('#historical-log-table').DataTable();
       data_table.destroy();
-      console.log($('#historical-log-table tbody tr'));
       $('#historical-log-table tbody tr').remove();
       if (chosen_starttime !== 'None') {
         let data = {
