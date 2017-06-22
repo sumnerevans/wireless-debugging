@@ -1,0 +1,3 @@
+ignore:
+  - mobile/ios/WirelessDebugger/WirelessDebugger/SwiftyJSON.swift
+  - mobile/ios/WirelessDebugger/WirelessDebugger/WebSocket.swift
