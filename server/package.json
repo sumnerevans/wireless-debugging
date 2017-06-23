@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "codecov": "^2.2.0",
+    "has-flag": "^2.0.0",
     "mocha": "^3.4.2",
     "requirejs": "^2.3.3",
     "zombie": "^5.0.5"
