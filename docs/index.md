@@ -18,6 +18,7 @@ Colorado School of Mines for the CSCI-370 course.
 - [Mobile Library](Mobile-Library)
     - [Android](Android)
     - [iOS](iOS)
+    - [WebSocket Messages](WebSocket-API-From-Mobile-to-Web-App-Backend)
 - [Development Environment Setup](Development-Environment-Setup)
     - [Project Structure](Project-Structure)
     - [Running Tests](Running-Tests)
@@ -25,7 +26,7 @@ Colorado School of Mines for the CSCI-370 course.
     - [User Management Interface](User-Management-Interface)
     - [Datastore Interface](Datastore-Interface)
 - [Web Application](Web-Application)
-- [Samples](Samples)
-    - [Sample Mobile Apps](Sample-Mobile-Apps)
-    - [Sample Web Server](Sample-Web-Server)
-    - [Sample Web App](Sample-Web-App)
+    - [Web App Backend to Web Interface WebSocket
+      Messages](Web-App-Backend-to-Web-Interface-WebSocket-Messages)
+    - [Web Interface to Web App Backend WebSocket
+      Messages](Web-Interface-to-Web-App-Backend-WebSocket-Messages)
