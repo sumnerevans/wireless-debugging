@@ -1,4 +1,4 @@
-# [Wireless Debug](../wiki)
+# [Wireless Debug](/wireless-debugging)
 - [Getting Started](Getting-Started)
     - [Deployment](Deployment)
     - [Server Configuration](Server-Configuration)
