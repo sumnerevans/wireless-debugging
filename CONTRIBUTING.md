@@ -42,13 +42,13 @@ your issue description and fill it in. You may add additional information about
 the bug if necessary.
 
     ## Steps to reproduce
-    DESRIBE STEPS TO REPRODUCE
+    DESCRIBE STEPS TO REPRODUCE
 
     ## What I expected to see
     DESCRIBE WHAT YOU EXPECTED TO SEE
 
     ## What I saw instead
-    DESCRIBE WHAT YOU SAW INSTEAD OF THE DESIRED RESULT
+    DESCRIBE WHAT YOU SAW INSTEAD OF THE EXPECTED RESULT
 
 After you have described the bug, add the "bug" label to the issue.
 
@@ -69,11 +69,11 @@ into your issue description and fill it in. You may add additional information
 about the feature if desired.
 
     ## Description
-    DESCRIBE THE DESIRED FUNCTINALITY
+    DESCRIBE THE DESIRED FUNCTIONALITY
 
     ## Implementation Details
-    DESRIBE THE DESIRED UI OR API DESIGN
+    DESCRIBE THE DESIRED UI OR API DESIGN
 
     ## Technical Considerations
     DESCRIBE, TO THE EXTENT THAT YOU CAN, ANY TECHNICAL CONSIDERATIONS TO TAKE
-    INTO ACCOUNT WHEN IPLMENTING THIS FEATURE
+    INTO ACCOUNT WHEN IMPLEMENTING THIS FEATURE
