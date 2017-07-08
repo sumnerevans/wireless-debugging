@@ -54,7 +54,9 @@ module.exports = {
     'for-direction': 2,
     'no-extra-parens': [2, 'all', { nestedBinaryExpressions: false }],
     'no-template-curly-in-string': 1,
-    'valid-jsdoc': 2,
+    'valid-jsdoc': [2, {
+      requireReturn: false, // no need for @return when no returns exist
+    }],
 
     //
     // Best Practices
@@ -72,7 +74,8 @@ module.exports = {
     'dot-notation': 2,
     eqeqeq: 2,
     'guard-for-in': 2,
-    'no-alert': 2,
+    // 'no-alert': 2, // disabling for now, we should convert to Bootstrap
+                      // native modals eventually
     'no-caller': 2,
     'no-div-regex': 2,
     'no-else-return': 1,
@@ -276,5 +279,7 @@ module.exports = {
     'yield-star-spacing': 2,
   },
 
-  globals: {},
+  globals: {
+    requirejs: true,
+  },
 };

@@ -2,12 +2,14 @@
  * @fileoverview Contains code for graphing device metrics using Chart.js.
  */
 
-define(['chart'], (Chart) => class MetricGrapher {
-  /** 
+define(['chart'], Chart => class MetricGrapher {
+  /**
    * Initializes the graphs for device metrics using chart.js.
-   * @param {string=} cpuCanvasId
-   * @param {string=} memoryCanvasId
-   * @param {string=} networkCanvasId
+   * @param {string} cpuCanvasId the ID of the CPU Usage Canvas DOM Element
+   * @param {string} memoryCanvasId the ID of the Memory Usage Canvas DOM
+   *                                Element
+   * @param {string} networkCanvasId the ID of the Network Usage Canvas DOM
+   *                                 Element
    */
   constructor(cpuCanvasId, memoryCanvasId, networkCanvasId) {
     let timeInterval = 0.2;
@@ -64,6 +66,15 @@ define(['chart'], (Chart) => class MetricGrapher {
     }]);
   }
 
+  /**
+   * Creates a Chart object.
+   *
+   * @param {HTMLElement} canvas the canvas element to create the chart in
+   * @param {number} suggestedMax the suggested max to use when creating the
+   *                              chart
+   * @param {array} datasetConfigs the configurations for the datasets
+   * @returns {Chart} the created chart
+   */
   createChart(canvas, suggestedMax, datasetConfigs) {
     let datasets = [];
     for (let config of datasetConfigs) {
@@ -82,7 +93,8 @@ define(['chart'], (Chart) => class MetricGrapher {
 
   /**
    * Sets the private variable this.metrics to the metrics passed in.
-   * @param {object} metricsObject
+   *
+   * @param {object} metricsObject the new metrics object
    */
   setMetrics(metricsObject) {
     this.metrics = metricsObject;
@@ -91,7 +103,8 @@ define(['chart'], (Chart) => class MetricGrapher {
   /**
    * Adds null values to arrays that are initially graphed before actual
    * metrics recieved.
-   * @param {number} recordedTime
+   *
+   * @param {number} recordedTime the number of initial data points to graph
    */
   initializeData(recordedTime) {
     //Adding null values to data points initially graphed
@@ -139,8 +152,9 @@ define(['chart'], (Chart) => class MetricGrapher {
 
   /**
    * Generates the style of a graph given the max y value.
-   * @param {number} suggestedMax
-   * @return {object}
+   *
+   * @param {number} suggestedMax the suggested maximum Y value
+   * @return {object} an options object
    */
   generateOptions_(suggestedMax) {
     return {
@@ -178,8 +192,10 @@ define(['chart'], (Chart) => class MetricGrapher {
 
   /**
    * Generates style of the line to be graphed.
-   * @param {number} data
-   * @param {Array<number>} color
+   *
+   * @param {number} data the data from the dataset
+   * @param {string} color the color to use for the dataset
+   * @returns {object} a dataset object
    */
   generateDataset_(data, color) {
     return {
