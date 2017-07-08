@@ -25,6 +25,7 @@ matrix:
         - cd server
         - npm install
       script:
+        - ./node_modules/eslint/bin/eslint.js .
         - istanbul cover --hook-run-in-context --dir public/js/coverage ./node_modules/mocha/bin/_mocha -- js/test
       after_script:
         - codecov
@@ -35,9 +36,6 @@ matrix:
         global:
           - ANDROID_API_LEVEL=25
           - BUILD_TOOLS_VERSION=25.0.2
-          - ANDROID_ABI=armeabi-v7a
-          - ANDROID_TAG=google_apis
-          - ADB_INSTALL_TIMEOUT=20 # minutes (2 minutes by default)
       android:
         update_sdk: true
         components:
@@ -45,19 +43,11 @@ matrix:
           - android-$ANDROID_API_LEVEL
           - build-tools-$BUILD_TOOLS_VERSION
           - extra-android-m2repository
-          - sys-img-armeabi-v7a-$ANDROID_TAG-$ANDROID_API_LEVEL
       before_script:
         - cd mobile/android/WirelessDebugger
-
-        # Create an emulator.
-        - android list targets
-        - echo no | android create avd --force -n test -t android-$ANDROID_API_LEVEL --abi $ANDROID_TAG/$ANDROID_ABI
-        - emulator -avd test -no-window & # Start emulator
-        - android-wait-for-emulator
-        - adb shell input keyevent 82 &
       script:
-        - ./gradlew build connectedAndroidTest test
-      after_success: 
+        - ./gradlew build test
+      after_success:
         — bash <(curl -s https://codecov.io/bash)
 
     - language: swift
