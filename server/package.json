@@ -7,14 +7,12 @@
   "dependencies": {},
   "devDependencies": {
     "codecov": "^2.2.0",
-    "has-flag": "^2.0.0",
-    "eslint": "^4.1.1",
+    "eslint": "^4.2.0",
     "eslint-plugin-requirejs": "^3.1.1",
-    "estraverse": "^4.2.0",
     "istanbul": "^0.4.5",
     "lodash": "^4.17.4",
     "mocha": "^3.4.2",
     "requirejs": "^2.3.3",
-    "zombie": "^5.0.5"
+    "zombie": "^5.0.7"
   }
 }
