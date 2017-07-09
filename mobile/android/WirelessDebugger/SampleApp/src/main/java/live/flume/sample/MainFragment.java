@@ -95,7 +95,6 @@ public class MainFragment extends Fragment implements SensorEventListener {
 
     }
 
-
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (mLogAccelerometerData) {

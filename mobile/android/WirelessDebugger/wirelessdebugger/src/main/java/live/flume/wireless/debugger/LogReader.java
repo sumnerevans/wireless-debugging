@@ -36,6 +36,7 @@ class LogReader implements Runnable {
         if (mWebSocketMessenger == null) {
             Log.e(TAG, "Failed to create WebSocketMessenger Object");
         }
+
         mUpdateTimeInterval = timeInterval;
         systemMonitor = new SystemMonitor();
         totalSystemMemory = systemMonitor.getTotalMemory();
@@ -107,7 +108,6 @@ class LogReader implements Runnable {
         long currentTime = System.currentTimeMillis();
         long timeDifference = currentTime - mLastSendTime;
         if (timeDifference > mUpdateTimeInterval && mWebSocketMessenger.isOpen()) {
-
             mWebSocketMessenger.sendSystemMetrics(
                     systemMonitor.getMemoryUsage(),
                     totalSystemMemory,

@@ -72,15 +72,15 @@ public class WirelessDebugger extends Service {
      * @param appContext Context of the calling application (use getApplicationContext())
      * @param timeInterval Time (in ms) to wait between sending logs to the server
      */
-    public static void start(int hostnameResId, int apiKeyResId, Context appContext, int
-            timeInterval) {
+    public static void start(int hostnameResId, int apiKeyResId, Context appContext,
+            int timeInterval) {
         String hostname = appContext.getResources().getString(hostnameResId);
         String apiKey = appContext.getResources().getString(apiKeyResId);
         start(hostname, apiKey, appContext, timeInterval);
     }
 
     /**
-     * @Private 
+     * @Private
      * Private Constructor that starts the WirelessDebugger service.
      * @param hostname Server IP/Hostname
      * @param apiKey API Key given from the web interface
@@ -134,7 +134,7 @@ public class WirelessDebugger extends Service {
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
         mLogReader.setAppTerminated();
-        while (mLogReader.isThreadRunning()){
+        while (mLogReader.isThreadRunning()) {
             // Wait for mLogReader to finish sending logs
             // Probably should set timeouts for this
         }

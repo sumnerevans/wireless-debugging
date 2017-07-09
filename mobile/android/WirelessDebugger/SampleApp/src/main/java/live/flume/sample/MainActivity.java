@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
 
-        if (fragment == null){
+        if (fragment == null) {
             fragment = new MainFragment();
             fm.beginTransaction().add(R.id.fragment_container, fragment).commit();
         }

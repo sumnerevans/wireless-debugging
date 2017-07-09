@@ -79,10 +79,8 @@ public class MessageFormatTest {
 
         StringBuilder rawLogString = new StringBuilder();
         for (String logLine : testLogs) {
-            rawLogString.append(logLine);
-            rawLogString.append("\n");
+            rawLogString.append(logLine + "\n");
         }
-
 
         JSONObject logMessage = webSocketMessenger.createLogMessageObject(testLogs);
 
