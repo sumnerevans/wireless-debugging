@@ -20,14 +20,33 @@ matrix:
       node_js:
         - "node"
       install:
-        - npm install -g istanbul
-      before_script:
         - cd server
         - npm install
       script:
-        - istanbul cover --hook-run-in-context --dir public/js/coverage ./node_modules/mocha/bin/_mocha -- js/test
+        - ./node_modules/eslint/bin/eslint.js .
+        - ./node_modules/istanbul/lib/cli.js cover --hook-run-in-context --dir public/js/coverage ./node_modules/mocha/bin/_mocha -- js/test
       after_script:
         - codecov
+
+    - language: android
+      jdk: oraclejdk8
+      env:
+        global:
+          - ANDROID_API_LEVEL=25
+          - BUILD_TOOLS_VERSION=25.0.2
+      android:
+        update_sdk: true
+        components:
+          - tools
+          - android-$ANDROID_API_LEVEL
+          - build-tools-$BUILD_TOOLS_VERSION
+          - extra-android-m2repository
+      before_script:
+        - cd mobile/android/WirelessDebugger
+      script:
+        - ./gradlew build test
+      after_success:
+        — bash <(curl -s https://codecov.io/bash)
 
     - language: swift
       osx_image: xcode8.3

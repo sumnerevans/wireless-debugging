@@ -23,16 +23,16 @@ define([
     /** @private @const {?MetricGrapher} */
     this.metricGrapher = null;
 
-    /** @private @const {!Object}*/
+    /** @private @const {!Object} */
     this.tableConfig_ = {
-      'paging': false,
-      'lengthMenu': [-1],
-      'scrollY': '75vh',
-      'scrollCollapse': true,
+      paging: false,
+      lengthMenu: [-1],
+      scrollY: '75vh',
+      scrollCollapse: true,
     };
 
     /** @private @const {?DataTable} */
-    this.dataTable_ = $('#log-table').DataTable(this.tableConfig_);
+    this.dataTable_ = $('#log-table').DataTable(this.tableConfig_); // eslint-disable-line new-cap
   }
 
   /**
@@ -41,39 +41,38 @@ define([
   start() {
     this.ws_ = new WebSocket(`ws://${location.host}/ws`);
     this.ws_.onopen = () => this.websocketOnOpen();
-    this.ws_.onmessage = (message) => this.websocketOnMessage(message);
+    this.ws_.onmessage = message => this.websocketOnMessage(message);
 
-    let api_key = $('#api-key');
-    let device = $('#device');
-    let app = $('#app');
-    let time = $('#start-time');
-    let data_table = $('#historical-log-table');
+    const apiKey = $('#api-key');
+    const device = $('#device');
+    const app = $('#app');
+    const time = $('#start-time');
+    let dataTable = $('#historical-log-table');
 
     device.on('change', () => {
-      let chosen_device = device.val();
+      const chosenDevice = device.val();
       // Gets rid of old data but keeps table structure.
-      data_table = $('#historical-log-table').DataTable();
-      data_table.destroy();
-      if (chosen_device !== 'None') {
+      dataTable = $('#historical-log-table').DataTable(); // eslint-disable-line new-cap
+      dataTable.destroy();
+      if (chosenDevice !== 'None') {
         $('#hidden-dev-alias').css('display', 'block');
         $('#hidden-app').css('display', 'block');
         $('#hidden-app-alias').css('display', 'none');
         $('#dev-alias').val('');
         $('#hidden-start').css('display', 'none');
-        let data = {
-          'apiKey': api_key.html(),
-          'device': chosen_device,
-        };
         $.ajax({
           url: '/appList',
-          data: data,
+          data: {
+            apiKey: apiKey.html(),
+            device: chosenDevice,
+          },
           cache: false,
           success: function(data) {
             app.empty();
             time.empty();
             $('#historical-log-table tbody tr').remove();
             app.append('<option value="None"></option>');
-            for (let i of data.apps) {
+            for (const i of data.apps) {
               app.append(`<option value="${i}">${i}</option>`);
             }
           },
@@ -86,28 +85,27 @@ define([
       }
     });
     app.on('change', () => {
-      let chosen_app = app.val();
+      const chosenApp = app.val();
       // Gets rid of old data but keeps table structure.
-      data_table = $('#historical-log-table').DataTable();
-      data_table.destroy();
-      if (chosen_app !== 'None') {
+      dataTable = $('#historical-log-table').DataTable(); // eslint-disable-line new-cap
+      dataTable.destroy();
+      if (chosenApp !== 'None') {
         $('#hidden-app-alias').css('display', 'block');
         $('#hidden-start').css('display', 'block');
         $('#app-alias').val('');
-        let data = {
-          'apiKey': api_key.html(),
-          'device': device.val(),
-          'app': chosen_app,
-        };
         $.ajax({
           url: '/sessionList',
-          data: data,
+          data: {
+            apiKey: apiKey.html(),
+            device: device.val(),
+            app: chosenApp,
+          },
           cache: false,
           success: function(data) {
             time.empty();
             $('#historical-log-table tbody tr').remove();
             time.append('<option value="None"></option>');
-            for (let i of data.starttimes) {
+            for (const i of data.starttimes) {
               time.append(`<option value="${i}">${i}</option>`);
             }
           },
@@ -120,40 +118,38 @@ define([
     });
 
     time.on('change', () => {
-      let chosen_starttime = time.val();
+      const chosenStarttime = time.val();
       // Gets rid of old data but keeps table structure.
-      data_table = $('#historical-log-table').DataTable();
-      data_table.destroy();
+      dataTable = $('#historical-log-table').DataTable(); // eslint-disable-line new-cap
+      dataTable.destroy();
       $('#historical-log-table tbody tr').remove();
-      if (chosen_starttime !== 'None') {
-        let data = {
-          'apiKey': api_key.html(),
-          'device': device.val(),
-          'app': app.val(),
-          'starttime': chosen_starttime,
-        };
+      if (chosenStarttime !== 'None') {
         $.ajax({
           url: '/logs',
-          data: data,
+          data: {
+            apiKey: apiKey.html(),
+            device: device.val(),
+            app: app.val(),
+            starttime: chosenStarttime,
+          },
           cache: false,
           success: function(data) {
             $('#historical-log-table tbody').append(data.logs);
-            data_table = $('#historical-log-table').DataTable();
+            dataTable = $('#historical-log-table').DataTable(); // eslint-disable-line new-cap
           },
         });
       }
     });
 
-    $('#device-alias').click(function(e) {
+    $('#device-alias').click(e => {
       e.preventDefault();
-      let data = {
-        'apiKey': api_key.html(),
-        'device': device.val(),
-        'alias': $('#dev-alias').val(),
-      };
       $.ajax({
         url: '/aliasDevice',
-        data: data,
+        data: {
+          apiKey: apiKey.html(),
+          device: device.val(),
+          alias: $('#dev-alias').val(),
+        },
         success: function(data) {
           if (data.dev_success) {
             window.location.reload();
@@ -164,17 +160,16 @@ define([
       });
     });
 
-    $('#appname-alias').click(function(e) {
+    $('#appname-alias').click(e => {
       e.preventDefault();
-      let data = {
-        'apiKey': api_key.html(),
-        'device': device.val(),
-        'app': app.val(),
-        'alias': $('#app-alias').val(),
-      };
       $.ajax({
         url: '/aliasApp',
-        data: data,
+        data: {
+          apiKey: apiKey.html(),
+          device: device.val(),
+          app: app.val(),
+          alias: $('#app-alias').val(),
+        },
         success: function(data) {
           if (data.app_success) {
             window.location.reload();
@@ -185,11 +180,11 @@ define([
       });
     });
 
-    $('#clear-datastore').click(function(e) {
+    $('#clear-datastore').click(e => {
       e.preventDefault();
       $.ajax({
         url: '/clearDatastore',
-        success: window.location.reload()
+        success: window.location.reload(),
       });
     });
   }
@@ -198,7 +193,7 @@ define([
   websocketOnOpen() {
     const apiKey = Util.getCookie('api_key');
 
-    let payload = {
+    const payload = {
       messageType: 'associateUser',
       apiKey: apiKey || '',
     };
@@ -206,24 +201,23 @@ define([
     this.ws_.send(JSON.stringify(payload));
 
     // Get all the devices for historical sessions.
-    let data = {
-      'apiKey': payload.apiKey,
-    };
     $.ajax({
       url: '/deviceList',
-      data: data,
+      data: {
+        apiKey: payload.apiKey,
+      },
       dataType: 'json',
       cache: false,
       success: function(data) {
         if (data.success) {
           $('#device').append('<option value="None"></option>');
-          for (let i of data.devices) {
+          for (const i of data.devices) {
             $('#device').append(`<option value="${i}">${i}</option>`);
           }
         } else {
           $('#main-page').html('<p>No Datastore and/or No Data</p>');
         }
-      }
+      },
     });
 
     if ($('#cpu-usage-graph').length > 0) {
@@ -233,16 +227,20 @@ define([
     }
   }
 
-  /** Decodes the WebSocket message and adds to table */
+  /**
+   * Decodes the WebSocket message and adds to table
+   *
+   * @param {MessageEvent} message the message from the WebSocket connection
+   */
   websocketOnMessage(message) {
-    let messageData = JSON.parse(message.data);
+    const messageData = JSON.parse(message.data);
 
     if (messageData.messageType === 'logData') {
       // If we get more log data, append the log data to the table and scroll to
       // the bottom of the table.
-      for (let logEntry of messageData.logEntries) {
+      for (const logEntry of messageData.logEntries) {
         this.dataTable_.row.add($(logEntry)).draw();
-        let scrollBody = $('.dataTables_scrollBody');
+        const scrollBody = $('.dataTables_scrollBody');
         scrollBody.scrollTop(scrollBody[0].scrollHeight);
       }
     }

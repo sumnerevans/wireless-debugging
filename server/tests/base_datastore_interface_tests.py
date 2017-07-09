@@ -85,18 +85,18 @@ def test_add_device_app():
         datastore_interface.add_device_app(api_key, device_name, app_name)
 
 
-def test_update_alias_device():
+def test_update_device_alias():
     """Checks if the function is not implemented"""
     datastore_interface = base_datastore_interface.DatastoreInterface()
     api_key = "23"
     device_raw_name = "Pixel"
     device_alias = "Pixel2"
     with pytest.raises(NotImplementedError):
-        datastore_interface.update_alias_device(
+        datastore_interface.update_device_alias(
             api_key, device_raw_name, device_alias)
 
 
-def test_update_alias_app():
+def test_update_app_alias():
     """Checks if the function is not implemented"""
     datastore_interface = base_datastore_interface.DatastoreInterface()
     api_key = "23"
@@ -104,7 +104,7 @@ def test_update_alias_app():
     app_raw_name = "Hangouts"
     app_alias = "Hangouts2"
     with pytest.raises(NotImplementedError):
-        datastore_interface.update_alias_app(
+        datastore_interface.update_app_alias(
             api_key, device_name, app_raw_name, app_alias)
 
 

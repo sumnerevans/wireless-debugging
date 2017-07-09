@@ -4,24 +4,17 @@ from datastore_interfaces import base_datastore_interface
 class NoDatastoreInterface(base_datastore_interface.DatastoreInterface):
     """ This class sets up the datastore interface. """
 
-    def __init__(self, **kwargs):
-        """ This constructor sets up datastore interface.
-
-        Args:
-            **kwargs: any key arguments to be passed in
-        """
-
     def store_logs(self, api_key, device_name, app_name, start_time, os_type, log_entries):
-        """This function stores a set of log entries to the datastore. This function may
+        """ This function stores a set of log entries to the datastore. This function may
            be called multiple times per session, so it must append the log entries in
            the storage mechanism.
 
         Args
-            api_key: the API Key associated with the logs
+            api_key:     the API Key associated with the logs
             device_name: the name of the device associated with the logs
-            app_name: the name of the app associated with the logs
-            start_time: the time that the session started
-            os_type: the OS type (iOS or Android)
+            app_name:    the name of the app associated with the logs
+            start_time:  the time that the session started
+            os_type:     the OS type (iOS or Android)
             log_entries: the log entries to store
         """
         pass
@@ -101,7 +94,7 @@ class NoDatastoreInterface(base_datastore_interface.DatastoreInterface):
         """
         pass
 
-    def update_alias_device(self, api_key, device_raw_name, device_alias):
+    def update_device_alias(self, api_key, device_raw_name, device_alias):
         """This function updates alias for a device.
 
         Args:
@@ -111,7 +104,7 @@ class NoDatastoreInterface(base_datastore_interface.DatastoreInterface):
         """
         pass
 
-    def update_alias_app(self, api_key, device_name, app_raw_name, app_alias):
+    def update_app_alias(self, api_key, device_name, app_raw_name, app_alias):
         """This function updates alias for an app.
 
         Args:

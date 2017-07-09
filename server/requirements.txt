@@ -1,10 +1,10 @@
-kajiki
 bottle
-markupsafe
-requests
+codecov
 gevent
 gevent-websocket
-PyYaml
+kajiki
+markupsafe
 pymongo
 pytest-cov
-codecov
+PyYaml
+requests

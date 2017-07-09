@@ -1,5 +1,5 @@
 """
-Manages CLI arguments and retrieving arguments from the  configuration YAML.
+Manages CLI arguments and retrieving arguments from the configuration YAML.
 """
 import argparse
 import os
@@ -11,7 +11,13 @@ from user_management_interfaces import *
 
 
 class ConfigManager(object):
-    """ Manages configuration from both the CLI and from the config file. """
+    """ Manages configuration from both the CLI and from the config file.
+
+    This class is a singleton which pulls configuration from the Command Line
+    Interface provided by ArgumentParser and from the configuration file. The
+    command line parameters override any parameters specified in the config
+    file.
+    """
     _config_manager = None
     user_management_interface = None
     datastore_interface = None
@@ -58,9 +64,19 @@ class ConfigManager(object):
             with open(parsed_args.config) as config:
                 self._config = yaml.load(config)
 
+        # Read from the parsed args and override any parameters set by the
+        # config file.
         for arg, value in vars(parsed_args).items():
             if value is not None or arg not in self._config:
                 self._config[arg] = value
+
+        # Ensure that a Datastore Interface and User Management Interface has
+        # been specified.
+        if self._config['datastore_interface'] is None:
+            raise ValueError('No Datastore Interface Specified')
+
+        if self._config['user_management_interface'] is None:
+            raise ValueError('No User Management Interface Specified')
 
         # Initialise the Datastore Interface and User Management Interface
         ConfigManager.datastore_interface = eval(
@@ -73,6 +89,7 @@ class ConfigManager(object):
         """ Used in the tests to force a re-parse of the command line arguments
             and a reload of the file.
         """
+        # Reload the configuration from the config file and CLI.
         ConfigManager._config_manager = ConfigManager()
 
     @staticmethod
@@ -81,11 +98,11 @@ class ConfigManager(object):
 
         Args:
             config_name (string): the name of the configuration to retrieve
-            [default=None]: the value to return if the configuration value is
-                not found in either the config file or the command line
-                arguments
+            [default=None]:       the value to return if the configuration
+                                  value is not found in either the config file
+                                  or the command line arguments
         """
         if ConfigManager._config_manager is None:
-            ConfigManager._config_manager = ConfigManager()
+            ConfigManager.reset()
 
         return ConfigManager._config_manager._config.get(config_name, default)

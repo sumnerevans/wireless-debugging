@@ -63,7 +63,7 @@ def post_alias_device():
     api_key = request.query.get('apiKey').strip()
     device = request.query.get('device').strip()
     dev_alias = request.query.get('alias').strip()
-    dev_success = ConfigManager.datastore_interface.update_alias_device(
+    dev_success = ConfigManager.datastore_interface.update_device_alias(
         api_key, device, dev_alias)
     return {'dev_success': dev_success}
 
@@ -75,7 +75,7 @@ def post_alias_app():
     device = request.query.get('device').strip()
     app = request.query.get('app').strip()
     app_alias = request.query.get('alias').strip()
-    app_success = ConfigManager.datastore_interface.update_alias_app(
+    app_success = ConfigManager.datastore_interface.update_app_alias(
         api_key, device, app, app_alias)
     return {'app_success': app_success}
 

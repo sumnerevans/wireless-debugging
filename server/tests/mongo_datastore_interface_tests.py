@@ -152,32 +152,32 @@ def test_add_device_app():
     di.clear_datastore()
 
 
-def test_update_alias_device():
+def test_update_device_alias():
     """This function checks if class aliases device as expected including ensuring uniqueness."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
     di.add_device_app(api_key, device_name, app_name)
-    assert di.update_alias_device(api_key, device_name, "Alias")
+    assert di.update_device_alias(api_key, device_name, "Alias")
     log_dev = di._device.find_one()
     assert log_dev['api_key'] == api_key
     assert log_dev['device_name'] == device_name
     assert log_dev['device_alias'] == "Alias"
     di.add_device_app("23", "dev", "app")
-    assert not di.update_alias_device("23", "dev", "Alias")
+    assert not di.update_device_alias("23", "dev", "Alias")
     di.clear_datastore()
 
 
-def test_update_alias_app():
+def test_update_app_alias():
     """This function checks if class aliases apps expected including ensuring uniqueness."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
     di.add_device_app(api_key, device_name, app_name)
-    assert di.update_alias_app(api_key, device_name, app_name, "Alias")
+    assert di.update_app_alias(api_key, device_name, app_name, "Alias")
     log_app = di._app_name.find_one()
     assert log_app['api_key'] == api_key
     assert log_app['device_name'] == device_name
     assert log_app['app_name'] == app_name
     assert log_app['app_alias'] == "Alias"
     di.add_device_app("23", "dev", "app")
-    assert not di.update_alias_app("23", "dev", "app", "Alias")
+    assert not di.update_app_alias("23", "dev", "app", "Alias")
     di.clear_datastore()
 
 
@@ -185,7 +185,7 @@ def test_get_raw_device_name_from_alias():
     """This function checks if class retrieves raw device name given an alias as expected."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
     di.add_device_app(api_key, device_name, app_name)
-    di.update_alias_device(api_key, device_name, "Alias")
+    di.update_device_alias(api_key, device_name, "Alias")
     raw_dev_name = di.get_raw_device_name_from_alias(api_key, "Alias")
     assert raw_dev_name == device_name
     di.clear_datastore()
@@ -195,7 +195,7 @@ def test_get_raw_app_name_from_alias():
     """This function checks if class retrieves raw app name given an alias as expected."""
     di = mongo_datastore_interface.MongoDatastoreInterface("testing_database")
     di.add_device_app(api_key, device_name, app_name)
-    di.update_alias_app(api_key, device_name, app_name, "Alias")
+    di.update_app_alias(api_key, device_name, app_name, "Alias")
     raw_app_name = di.get_raw_app_name_from_alias(
         api_key, device_name, "Alias")
     assert raw_app_name == app_name

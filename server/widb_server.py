@@ -3,20 +3,24 @@
 WiDb Server Main Function
 """
 import os
-import argparse
 
 import bottle
 from gevent.pywsgi import WSGIServer
 from geventwebsocket import WebSocketError
 from geventwebsocket.handler import WebSocketHandler
 
+# Import the application.
 import controller
 from helpers.config_manager import ConfigManager
-import parsing_lib
 
 
 def main():
+    # Change the working directory to where this file is (in this case, the
+    # /server folder.) This allows all of the relative paths to work throughout
+    # the application.
     os.chdir(os.path.dirname(__file__))
+
+    # Retrieve the configuration from the ConfigManager.
     hostname = ConfigManager.get('hostname')
     port = ConfigManager.get('port', 80)
 

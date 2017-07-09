@@ -5,8 +5,6 @@ These tests verify mostly nothing is returned from the class.
 These tests are pretty trivial.
 """
 
-import pytest
-
 from datastore_interfaces import no_datastore_interface
 
 api_key = "23"
@@ -70,20 +68,20 @@ def test_store_logs():
     """This function checks if store_logs returns nothing."""
     di = no_datastore_interface.NoDatastoreInterface()
     assert di.store_logs(api_key, device_name, app_name, start_time, os_type,
-                         log_entries) == None
+                         log_entries) is None
 
 
 def test_set_session_over():
     """This function checks if set_session_over returns nothing."""
     di = no_datastore_interface.NoDatastoreInterface()
     assert di.set_session_over(
-        api_key, device_name, app_name, start_time) == None
+        api_key, device_name, app_name, start_time) is None
 
 
 def test_retrieve_logs():
     """This function checks if retrieve_logs returns nothing."""
     di = no_datastore_interface.NoDatastoreInterface()
-    assert di.retrieve_logs(api_key, device_name, app_name, start_time) == None
+    assert di.retrieve_logs(api_key, device_name, app_name, start_time) is None
 
 
 def test_retrieve_devices():
@@ -107,19 +105,19 @@ def test_retrieve_sessions():
 def test_add_device_app():
     """This function checks if add_device_app returns nothing."""
     di = no_datastore_interface.NoDatastoreInterface()
-    assert di.add_device_app(api_key, device_name, app_name) == None
+    assert di.add_device_app(api_key, device_name, app_name) is None
 
 
-def test_update_alias_device():
-    """This function checks if update_alias_device returns nothing."""
+def test_update_device_alias():
+    """This function checks if update_device_alias returns nothing."""
     di = no_datastore_interface.NoDatastoreInterface()
-    assert di.update_alias_device(api_key, device_name, "Alias") == None
+    assert di.update_device_alias(api_key, device_name, "Alias") is None
 
 
-def test_update_alias_app():
-    """This function checks if update_alias_app returns nothing."""
+def test_update_app_alias():
+    """This function checks if update_app_alias returns nothing."""
     di = no_datastore_interface.NoDatastoreInterface()
-    assert di.update_alias_app(api_key, device_name, app_name, "Alias") == None
+    assert di.update_app_alias(api_key, device_name, app_name, "Alias") is None
 
 
 def test_get_raw_device_name_from_alias():
@@ -137,4 +135,4 @@ def test_get_raw_app_name_from_alias():
 def test_clear_datastore():
     """This function checks if clear_datastore returns nothing."""
     di = no_datastore_interface.NoDatastoreInterface()
-    assert di.clear_datastore() == None
+    assert di.clear_datastore() is None
