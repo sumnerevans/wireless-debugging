@@ -12,9 +12,9 @@ define(['chart'], Chart => class MetricGrapher {
    *                                 Element
    */
   constructor(cpuCanvasId, memoryCanvasId, networkCanvasId) {
-    let timeInterval = 0.2;
+    const timeInterval = 0.2;
     // 30 seconds times sample rate gives number of metrics recorded.
-    let recordedTime = 30 * (1 / timeInterval);
+    const recordedTime = 30 * (1 / timeInterval);
 
     /** @private @const Number */
     this.BYTE_CONVERSION = 1024.0;
@@ -40,9 +40,9 @@ define(['chart'], Chart => class MetricGrapher {
 
     this.initializeData(recordedTime);
 
-    let cpuGraphCanvas = $(`#${cpuCanvasId}`)[0].getContext('2d');
-    let memoryGraphCanvas = $(`#${memoryCanvasId}`)[0].getContext('2d');
-    let networkGraphCanvas = $(`#${networkCanvasId}`)[0].getContext('2d');
+    const cpuGraphCanvas = $(`#${cpuCanvasId}`)[0].getContext('2d');
+    const memoryGraphCanvas = $(`#${memoryCanvasId}`)[0].getContext('2d');
+    const networkGraphCanvas = $(`#${networkCanvasId}`)[0].getContext('2d');
 
     /** @public @const {!Chart} */
     this.cpuGraph = new Chart(cpuGraphCanvas, 100, {
@@ -60,7 +60,7 @@ define(['chart'], Chart => class MetricGrapher {
     this.networkGraph = this.createChart(networkGraphCanvas, 1000, [{
       dataset: this.networkSentHistory_,
       color: '4EE9E4',
-    },{
+    }, {
       dataset: this.networkReceiveHistory_,
       color: '8e5ea2',
     }]);
@@ -77,7 +77,7 @@ define(['chart'], Chart => class MetricGrapher {
    */
   createChart(canvas, suggestedMax, datasetConfigs) {
     let datasets = [];
-    for (let config of datasetConfigs) {
+    for (const config of datasetConfigs) {
       datasets = this.generateDataset_(config.dataset, config.color);
     }
 
@@ -107,13 +107,13 @@ define(['chart'], Chart => class MetricGrapher {
    * @param {number} recordedTime the number of initial data points to graph
    */
   initializeData(recordedTime) {
-    //Adding null values to data points initially graphed
+    // Adding null values to data points initially graphed
     for (let i = 0; i < recordedTime; i++) {
       this.cpuUsageHistory_.push(null);
       this.memoryUsageHistory_.push(null);
       this.networkSentHistory_.push(null);
       this.networkReceiveHistory_.push(null);
-      // x values generated based on time (previous 30 seconds)
+      // X values generated based on time (previous 30 seconds)
       this.xAxisScale_.push((recordedTime - i) / 5);
     }
     this.xAxisScale_[recordedTime] = 0;
