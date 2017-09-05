@@ -3,7 +3,7 @@ env: flex
 entrypoint: python widb_server.py
 
 runtime_config:
-        python_version: 3
+  python_version: 3
 
 health_check:
   enable_health_check: False

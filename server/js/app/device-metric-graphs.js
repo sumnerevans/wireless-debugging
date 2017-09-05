@@ -2,16 +2,19 @@
  * @fileoverview Contains code for graphing device metrics using Chart.js.
  */
 
-define(['chart'], (Chart) => class MetricGrapher {
-  /** Initializes the graphs for device metrics using chart.js.
-   * @param {string=} cpuCanvasId
-   * @param {string=} memoryCanvasId
-   * @param {string=} networkCanvasId
+define(['chart'], Chart => class MetricGrapher {
+  /**
+   * Initializes the graphs for device metrics using chart.js.
+   * @param {string} cpuCanvasId the ID of the CPU Usage Canvas DOM Element
+   * @param {string} memoryCanvasId the ID of the Memory Usage Canvas DOM
+   *                                Element
+   * @param {string} networkCanvasId the ID of the Network Usage Canvas DOM
+   *                                 Element
    */
   constructor(cpuCanvasId, memoryCanvasId, networkCanvasId) {
-    let timeInterval = 0.2;
+    const timeInterval = 0.2;
     // 30 seconds times sample rate gives number of metrics recorded.
-    let recordedTime = 30 * (1 / timeInterval);
+    const recordedTime = 30 * (1 / timeInterval);
 
     /** @private @const Number */
     this.BYTE_CONVERSION = 1024.0;
@@ -37,53 +40,61 @@ define(['chart'], (Chart) => class MetricGrapher {
 
     this.initializeData(recordedTime);
 
-    let cpuGraphCanvas = $(`#${cpuCanvasId}`)[0].getContext('2d');
-    let memoryGraphCanvas = $(`#${memoryCanvasId}`)[0].getContext('2d');
-    let networkGraphCanvas = $(`#${networkCanvasId}`)[0].getContext('2d');
+    const cpuGraphCanvas = $(`#${cpuCanvasId}`)[0].getContext('2d');
+    const memoryGraphCanvas = $(`#${memoryCanvasId}`)[0].getContext('2d');
+    const networkGraphCanvas = $(`#${networkCanvasId}`)[0].getContext('2d');
 
     /** @public @const {!Chart} */
-    this.cpuGraph = new Chart(cpuGraphCanvas, {
-      type: 'line',
-      data: {
-        labels: this.xAxisScale_,
-        datasets: [
-          this.generateDataset_(this.cpuUsageHistory_, '#3cba9f'),
-        ]
-      },
-      options: this.generateOptions_(100)
+    this.cpuGraph = new Chart(cpuGraphCanvas, 100, {
+      dataset: this.cpuUsageHistory_,
+      color: '3cba9f',
     });
 
     /** @public @const {!Chart} */
-    this.memoryGraph = new Chart(memoryGraphCanvas, {
-      type: 'line',
-      data: {
-        labels: this.xAxisScale_,
-        datasets: [
-          this.generateDataset_(this.memoryUsageHistory_, '#3e95cd'),
-        ]
-      },
-      options: this.generateOptions_(1024)
+    this.memoryGraph = this.createChart(memoryGraphCanvas, {
+      dataset: this.memoryUsageHistory_,
+      color: '3e95cd',
     });
 
     /** @public @const {!Chart} */
-    this.networkGraph = new Chart(networkGraphCanvas, {
+    this.networkGraph = this.createChart(networkGraphCanvas, 1000, [{
+      dataset: this.networkSentHistory_,
+      color: '4EE9E4',
+    }, {
+      dataset: this.networkReceiveHistory_,
+      color: '8e5ea2',
+    }]);
+  }
+
+  /**
+   * Creates a Chart object.
+   *
+   * @param {HTMLElement} canvas the canvas element to create the chart in
+   * @param {number} suggestedMax the suggested max to use when creating the
+   *                              chart
+   * @param {array} datasetConfigs the configurations for the datasets
+   * @returns {Chart} the created chart
+   */
+  createChart(canvas, suggestedMax, datasetConfigs) {
+    let datasets = [];
+    for (const config of datasetConfigs) {
+      datasets = this.generateDataset_(config.dataset, config.color);
+    }
+
+    return new Chart(canvas, {
       type: 'line',
-      fullWidth: true,
       data: {
         labels: this.xAxisScale_,
-        datasets: [
-          this.generateDataset_(this.networkSentHistory_, '#4EE9E4'),
-          this.generateDataset_(this.networkReceiveHistory_,
-            '#8e5ea2'),
-        ]
+        datasets: datasets,
       },
-      options: this.generateOptions_(1000)
+      options: this.generateOptions_(suggestedMax),
     });
   }
 
   /**
    * Sets the private variable this.metrics to the metrics passed in.
-   * @param {object} metricsObject
+   *
+   * @param {object} metricsObject the new metrics object
    */
   setMetrics(metricsObject) {
     this.metrics = metricsObject;
@@ -92,16 +103,17 @@ define(['chart'], (Chart) => class MetricGrapher {
   /**
    * Adds null values to arrays that are initially graphed before actual
    * metrics recieved.
-   * @param {number} recordedTime
+   *
+   * @param {number} recordedTime the number of initial data points to graph
    */
   initializeData(recordedTime) {
-    //Adding null values to data points initially graphed
+    // Adding null values to data points initially graphed
     for (let i = 0; i < recordedTime; i++) {
       this.cpuUsageHistory_.push(null);
       this.memoryUsageHistory_.push(null);
       this.networkSentHistory_.push(null);
       this.networkReceiveHistory_.push(null);
-      // x values generated based on time (previous 30 seconds)
+      // X values generated based on time (previous 30 seconds)
       this.xAxisScale_.push((recordedTime - i) / 5);
     }
     this.xAxisScale_[recordedTime] = 0;
@@ -140,13 +152,14 @@ define(['chart'], (Chart) => class MetricGrapher {
 
   /**
    * Generates the style of a graph given the max y value.
-   * @param {number} suggestedMax
-   * @return {object}
+   *
+   * @param {number} suggestedMax the suggested maximum Y value
+   * @return {object} an options object
    */
   generateOptions_(suggestedMax) {
     return {
       legend: {
-        display: false
+        display: false,
       },
       scales: {
         xAxes: [{
@@ -155,21 +168,21 @@ define(['chart'], (Chart) => class MetricGrapher {
             maxTicksLimit: 10.1,
             max: 0,
             min: 30,
-          }
+          },
         }],
         yAxes: [{
           display: true,
           ticks: {
             suggestedMax: suggestedMax,
             beginAtZero: true,
-          }
-        }]
+          },
+        }],
       },
       tooltips: {
         enabled: false,
       },
       hover: {
-        mode: null
+        mode: null,
       },
       animation: {
         duration: 0,
@@ -179,13 +192,15 @@ define(['chart'], (Chart) => class MetricGrapher {
 
   /**
    * Generates style of the line to be graphed.
-   * @param {number} data
-   * @param {Array<number>} color
+   *
+   * @param {number} data the data from the dataset
+   * @param {string} color the color to use for the dataset
+   * @returns {object} a dataset object
    */
   generateDataset_(data, color) {
     return {
       data: data,
-      borderColor: color,
+      borderColor: `#${color}`,
       borderWidth: 2,
       fill: true,
       pointRadius: 0.01,

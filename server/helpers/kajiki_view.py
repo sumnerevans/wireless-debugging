@@ -18,8 +18,8 @@ def kajiki_view(template_name):
     rendered template will become the output of the function.
 
     Notes: Used code example from here:
-    https://buxty.com/b/2013/12/jinja2-templates-and-bottle/ but customized for
-    Kajiki instead
+           https://buxty.com/b/2013/12/jinja2-templates-and-bottle/ but
+           customized for Kajiki instead
 
     Args:
         template_name: the name of the xhtml file to use as the template
