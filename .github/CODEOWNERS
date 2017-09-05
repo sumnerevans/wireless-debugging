@@ -1,0 +1,32 @@
+# This file defines who is required for review in each aspect of the codebase.
+# See https://github.com/blog/2392-introducing-code-owners and
+# https://help.github.com/articles/about-codeowners/ for details.
+
+# By default, ping Chris and Sumner
+* @cnavrides @sumnerevans
+
+# Metadata files - Sumner and Chris
+.github @cnavrides @sumnerevans
+LICENSE @cnavrides @sumnerevans
+README.md @cnavrides @sumnerevans
+
+# Config Files - Sumner
+.gitignore @sumnerevans
+.travis.yml @sumnerevans
+
+# Documentation - Sumner
+docs/* @sumnerevans
+
+# MOBILE
+# Android - Reece and Chris
+mobile/android/* @ReeceHughes @cnavrides
+
+# iOS - Sumner, Chris, and Eugene
+mobile/ios/* @sumnerevans @cnavrides @ekw88
+
+# SERVER
+# Datastore Interface - Tiffany
+server/datastore_interfaces/* @TiffanyKalin
+
+# User Management Interfaces - Daichi
+server/user_management_interfaces/* @daichij
