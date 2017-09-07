@@ -28,5 +28,8 @@ mobile/ios/* @sumnerevans @cnavrides @ekw88
 # Datastore Interface - Tiffany
 server/datastore_interfaces/* @TiffanyKalin
 
+# JavaScript - Amanda
+server/js/* @amandagiles95
+
 # User Management Interfaces - Daichi
 server/user_management_interfaces/* @daichij
