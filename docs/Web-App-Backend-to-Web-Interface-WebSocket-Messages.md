@@ -1,13 +1,20 @@
-There is a single type of WebSocket message that goes from the Web App Backend to the Web Interface, and it is the information with the formatted HTML logs.   
+# Web App Backend to Web Interface WebSocket Messages
+There is a single type of WebSocket message that goes from the Web App Backend
+to the Web Interface, and it is the information with the formatted HTML logs.
 
 ## Log Entries
 - **Message Type**: `logData`
 - **Payload Type**: JSON
-- **Purpose**: when the Web App Backend receives a `logDump` from the Mobile API, it will parse the log via the parsing library and then it will send a logData message to all Web Interfaces that the user is connected to.
+- **Purpose**: when the Web App Backend receives a `logDump` from the Mobile
+  API, it will parse the log via the parsing library and then it will send a
+  `logData` message to all Web Interfaces that the user is connected to.
 - **Fields:**
-    - `messageType (string)`: the type of message being sent, which in this case will be `logData`.
-    - `osType (string)`: the type of OS from which the logs are being sent. Valid values are: "Android" and "iOS".
-    - `logEntries (stringHTML)`: formatted HTML table rows to append to the log table. The table divisions will be ordered: time, tag, log type, log text.
+    - `messageType (string)`: the type of message being sent, which in this case
+      will be `logData`.
+    - `osType (string)`: the type of OS from which the logs are being sent.
+      Valid values are: "Android" and "iOS".
+    - `logEntries (stringHTML)`: formatted HTML table rows to append to the log
+      table. The table divisions will be ordered: time, tag, log type, log text.
 - **Example**:
 
       {
