@@ -1,6 +1,6 @@
 title: Wireless Debugger
 name: Wireless Debugger
-baseurl: ""
+baseurl: "https://sumnerevans.github.io/wireless-debugging"
 description: >
   Wireless Debugger is a mobile SDK and sample web server for streaming and
   parsing mobile app logs and displaying them in a web UI console.
