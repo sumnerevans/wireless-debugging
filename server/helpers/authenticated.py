@@ -6,6 +6,7 @@ to perform the request.
 import functools
 
 from bottle import request, redirect
+from helpers.config_manager import ConfigManager
 
 
 def authenticated():
@@ -35,14 +36,14 @@ def authenticated():
 
         @functools.wraps(function)
         def wrapper(*args, **kwargs):
-            is_user_logged_in = config.user_management_interface.is_user_logged_in(
+            is_user_logged_in = ConfigManager.user_management_interface.is_user_logged_in(
                 request)
             if not is_user_logged_in:
                 redirect('/login_page')
 
             webpage_arguments = function(*args, **kwargs)
 
-            api_key = config.user_management_interface.get_api_key_for_user(
+            api_key = ConfigManager.user_management_interface.get_api_key_for_user(
                 request)
             if isinstance(webpage_arguments, dict):
                 webpage_arguments['logged_in'] = is_user_logged_in
