@@ -24,4 +24,3 @@ guide.
 - Daichi Jameson
 - Tiffany Kalin
 - Chris Navrides
-- Yash Sinha
