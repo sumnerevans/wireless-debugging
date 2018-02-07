@@ -11,14 +11,13 @@
 
        gem install compass font-awesome-sass bootstrap-sass
 
-5. Install the necessary Python libraries. You can use `pip3 install -r
-   requirements.txt` or use the following command:
+5. Install the necessary Python libraries:
 
-       pip3 install requirements.txt
+       pip3 install -r requirements.txt
 
 6. Install the necessary NodeJS tools:
 
-       nmp install
+       npm install
 
 7. Run `compass compile` to compile the SASS to CSS.
 
